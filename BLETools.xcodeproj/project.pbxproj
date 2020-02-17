@@ -10,6 +10,13 @@
 		784B76E123FAD83B00E34241 /* BLETools.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 784B76D723FAD83B00E34241 /* BLETools.framework */; };
 		784B76E623FAD83B00E34241 /* BLEToolsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76E523FAD83B00E34241 /* BLEToolsTests.swift */; };
 		784B76E823FAD83B00E34241 /* BLETools.h in Headers */ = {isa = PBXBuildFile; fileRef = 784B76DA23FAD83B00E34241 /* BLETools.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		784B76F223FAD87100E34241 /* BLEReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76F123FAD87100E34241 /* BLEReceiver.swift */; };
+		784B76F423FAD8EC00E34241 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76F323FAD8EC00E34241 /* Log.swift */; };
+		784B76F723FADA5500E34241 /* DataIntExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76F523FADA5500E34241 /* DataIntExtensions.swift */; };
+		784B76F823FADA5500E34241 /* HexToDataExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76F623FADA5500E34241 /* HexToDataExtensions.swift */; };
+		784B76FC23FADA8E00E34241 /* AppleBLEAdvertisement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76FB23FADA8E00E34241 /* AppleBLEAdvertisement.swift */; };
+		784B76FE23FADFB200E34241 /* BLEScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76FD23FADFB200E34241 /* BLEScanner.swift */; };
+		784B770023FAE01B00E34241 /* AppleBLEDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76FF23FAE01B00E34241 /* AppleBLEDevice.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +36,13 @@
 		784B76E023FAD83B00E34241 /* BLEToolsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BLEToolsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		784B76E523FAD83B00E34241 /* BLEToolsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEToolsTests.swift; sourceTree = "<group>"; };
 		784B76E723FAD83B00E34241 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		784B76F123FAD87100E34241 /* BLEReceiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEReceiver.swift; sourceTree = "<group>"; };
+		784B76F323FAD8EC00E34241 /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		784B76F523FADA5500E34241 /* DataIntExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataIntExtensions.swift; sourceTree = "<group>"; };
+		784B76F623FADA5500E34241 /* HexToDataExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HexToDataExtensions.swift; sourceTree = "<group>"; };
+		784B76FB23FADA8E00E34241 /* AppleBLEAdvertisement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleBLEAdvertisement.swift; sourceTree = "<group>"; };
+		784B76FD23FADFB200E34241 /* BLEScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEScanner.swift; sourceTree = "<group>"; };
+		784B76FF23FAE01B00E34241 /* AppleBLEDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleBLEDevice.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +85,12 @@
 		784B76D923FAD83B00E34241 /* BLETools */ = {
 			isa = PBXGroup;
 			children = (
+				784B76FD23FADFB200E34241 /* BLEScanner.swift */,
+				784B76F123FAD87100E34241 /* BLEReceiver.swift */,
+				784B76FB23FADA8E00E34241 /* AppleBLEAdvertisement.swift */,
+				784B76FF23FAE01B00E34241 /* AppleBLEDevice.swift */,
+				784B76F323FAD8EC00E34241 /* Log.swift */,
+				784B76FA23FADA5F00E34241 /* Extensions */,
 				784B76DA23FAD83B00E34241 /* BLETools.h */,
 				784B76DB23FAD83B00E34241 /* Info.plist */,
 			);
@@ -84,6 +104,15 @@
 				784B76E723FAD83B00E34241 /* Info.plist */,
 			);
 			path = BLEToolsTests;
+			sourceTree = "<group>";
+		};
+		784B76FA23FADA5F00E34241 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				784B76F523FADA5500E34241 /* DataIntExtensions.swift */,
+				784B76F623FADA5500E34241 /* HexToDataExtensions.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -148,6 +177,7 @@
 				TargetAttributes = {
 					784B76D623FAD83B00E34241 = {
 						CreatedOnToolsVersion = 11.3.1;
+						LastSwiftMigration = 1130;
 					};
 					784B76DF23FAD83B00E34241 = {
 						CreatedOnToolsVersion = 11.3.1;
@@ -195,6 +225,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				784B76FE23FADFB200E34241 /* BLEScanner.swift in Sources */,
+				784B770023FAE01B00E34241 /* AppleBLEDevice.swift in Sources */,
+				784B76F723FADA5500E34241 /* DataIntExtensions.swift in Sources */,
+				784B76F423FAD8EC00E34241 /* Log.swift in Sources */,
+				784B76F823FADA5500E34241 /* HexToDataExtensions.swift in Sources */,
+				784B76FC23FADA8E00E34241 /* AppleBLEAdvertisement.swift in Sources */,
+				784B76F223FAD87100E34241 /* BLEReceiver.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,6 +376,7 @@
 		784B76EC23FAD83B00E34241 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -356,6 +394,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "de.tu-darmstadt.seemoo.BLETools";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -363,6 +402,7 @@
 		784B76ED23FAD83B00E34241 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -387,6 +427,7 @@
 		784B76EF23FAD83B00E34241 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = A5U65N39SD;
@@ -405,6 +446,7 @@
 		784B76F023FAD83B00E34241 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = A5U65N39SD;

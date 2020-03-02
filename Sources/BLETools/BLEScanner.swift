@@ -68,7 +68,7 @@ public class BLEScanner: BLEReceiverDelegate {
                 }
             }else {
                 //Add a new device
-                let bleDevice = AppleBLEDevice(peripheral: device)
+                var bleDevice = AppleBLEDevice(peripheral: device)
                 bleDevice.add(advertisement: advertisement)
                 self.devices[device.identifier] = bleDevice
                 delegate?.scanner(self, didDiscoverNewDevice: bleDevice)

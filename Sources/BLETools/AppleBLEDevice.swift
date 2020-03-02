@@ -9,7 +9,7 @@
 import Foundation
 import CoreBluetooth
 
-public class AppleBLEDevice: Equatable, CustomDebugStringConvertible, Identifiable {
+public struct AppleBLEDevice: Equatable, CustomDebugStringConvertible, Hashable, Identifiable {
     public var id: String
     public internal(set) var name: String?
     public internal(set) var deviceType: String?
@@ -29,7 +29,7 @@ public class AppleBLEDevice: Equatable, CustomDebugStringConvertible, Identifiab
         lhs.peripheral.identifier == rhs.peripheral.identifier
     }
     
-    func add(advertisement: AppleBLEAdvertisment) {
+    mutating func add(advertisement: AppleBLEAdvertisment) {
         self.advertisements.append(advertisement)
     }
     
@@ -40,5 +40,9 @@ public class AppleBLEDevice: Equatable, CustomDebugStringConvertible, Identifiab
         \t \(String(describing: self.name))
         \t \(self.advertisements.count) advertisements
         """)
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        return hasher.combine(id)
     }
 }

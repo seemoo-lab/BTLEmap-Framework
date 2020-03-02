@@ -29,9 +29,9 @@ public protocol BLEScannerDelegate {
 public class BLEScanner: BLEReceiverDelegate {
     let receiver = BLEReceiver()
     public var devices = [UUID: AppleBLEDevice]()
-    public let delegate: BLEScannerDelegate
+    public let delegate: BLEScannerDelegate?
     
-    public init(delegate: BLEScannerDelegate) {
+    public init(delegate: BLEScannerDelegate? = nil) {
         self.delegate = delegate
         receiver.delegate = self
     }
@@ -48,7 +48,7 @@ public class BLEScanner: BLEReceiverDelegate {
             
             if devices[device.identifier] != nil {
                 devices[device.identifier]?.add(advertisement: advertisement)
-                delegate.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: devices[device.identifier]!)
+                delegate?.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: devices[device.identifier]!)
                 if let name = device.name {
                     devices[device.identifier]?.name = name 
                 }
@@ -57,8 +57,8 @@ public class BLEScanner: BLEReceiverDelegate {
                 let bleDevice = AppleBLEDevice(peripheral: device)
                 bleDevice.add(advertisement: advertisement)
                 self.devices[device.identifier] = bleDevice
-                delegate.scanner(self, didDiscoverNewDevice: bleDevice)
-                delegate.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: bleDevice)
+                delegate?.scanner(self, didDiscoverNewDevice: bleDevice)
+                delegate?.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: bleDevice)
             }
         }catch {
             return

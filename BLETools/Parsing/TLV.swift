@@ -9,39 +9,41 @@
 import Foundation
 
 
-struct TLV {
+public struct TLV {
     let type: UInt
     let length: UInt
     let value: Data
 }
 
-extension TLV {
+public extension TLV {
 
 struct TLVBox {
-    var tlvs: [TLV]
+    public var tlvs: [TLV]
     
     /// Can be 8, 16, 32, 64 and defines the size of type and lenght in bits
-    var tlvSize = Size.tlv8
+    public let tlvSize: Size
     
     private var tlvByteSize: Int {
         return tlvSize.rawValue/8
     }
     
-    init() {
+    public init(size: Size = .tlv8) {
         tlvs = []
+        self.tlvSize = size
     }
     
-    init(tlvs: [TLV]) {
+    public init(tlvs: [TLV], size: Size = .tlv8) {
         self.tlvs = tlvs
+        self.tlvSize = size
     }
     
-    mutating func addValue(withType type: TLVType, andLength length: UInt, andValue value: Data) {
-        let tlv = TLV(type: type.uInt, length: length, value: value)
+    public mutating func addValue(withType type: UInt, andLength length: UInt, andValue value: Data) {
+        let tlv = TLV(type: type, length: length, value: value)
         
         self.tlvs.append(tlv)
     }
     
-    mutating func addInt(withType type: TLVType, andValue value: UInt8) {
+    public mutating func addInt(withType type: UInt, andValue value: UInt8) {
         var val = value
         let dataNum = Data(bytes: &val, count: MemoryLayout.size(ofValue: val))
         
@@ -52,7 +54,7 @@ struct TLVBox {
     /// Get a normal dictionary from the TLV files
     ///
     /// - Returns: Dictionary with TLV types as index and the data value
-    func toDictionary() -> [UInt : Data] {
+    public func toDictionary() -> [UInt : Data] {
         var dict = [UInt : Data]()
         
         tlvs.forEach({dict[$0.type] = $0.value})
@@ -63,7 +65,7 @@ struct TLVBox {
     /// Serialize the TLV to a bytes buffer
     ///
     /// - Returns: Data containing the serialized TLV
-    func serialize() throws -> Data {
+    public func serialize() throws -> Data {
         var serialized = Data()
 
         tlvs.forEach { (tlv) in
@@ -80,13 +82,13 @@ struct TLVBox {
     ///
     /// - Parameter type: a tlv type
     /// - Returns: The assigned value if one is assigned
-    func getValue(forType type: TLVType) -> Data? {
-        let tlv = tlvs.first(where: {$0.type == type.uInt})
+    public func getValue(forType type: UInt) -> Data? {
+        let tlv = tlvs.first(where: {$0.type == type})
         
         return tlv?.value
     }
     
-    func getTypes() -> [UInt] {
+    public func getTypes() -> [UInt] {
         return tlvs.map({$0.type})
     }
     
@@ -96,7 +98,7 @@ struct TLVBox {
     /// - Parameter data: that contains serialized TLV
     /// - Returns: TLVBox that contains all parsed TLVs
     /// - Throws: TLVError if parsing fails
-    static func deserialize(fromData data: Data, withSize size: TLV.Size, bigEndian:Bool=false) throws -> TLVBox {
+    public static func deserialize(fromData data: Data, withSize size: TLV.Size, bigEndian:Bool=false) throws -> TLVBox {
         
         var index: Data.Index = data.startIndex
         var box = TLVBox()
@@ -135,7 +137,7 @@ struct TLVBox {
 }
 
 
-extension TLV {
+public extension TLV {
     enum Error: Swift.Error {
         case serializationPointerFailed
         case parsingFailed
@@ -166,6 +168,6 @@ extension TLV {
     }
 }
 
-protocol TLVType {
+public protocol TLVType {
     var uInt: UInt { get }
 }

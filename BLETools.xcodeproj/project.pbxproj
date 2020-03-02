@@ -20,6 +20,7 @@
 		78844DD1240D076600B8DA67 /* ProtocolParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DD0240D076600B8DA67 /* ProtocolParser.swift */; };
 		78844DEC240D08C900B8DA67 /* TLV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DEB240D08C900B8DA67 /* TLV.swift */; };
 		78844DEE240D09C100B8DA67 /* InttoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DED240D09C100B8DA67 /* InttoData.swift */; };
+		78844DF2240D117B00B8DA67 /* TLVTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DF1240D117B00B8DA67 /* TLVTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		78844DD0240D076600B8DA67 /* ProtocolParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolParser.swift; sourceTree = "<group>"; };
 		78844DEB240D08C900B8DA67 /* TLV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLV.swift; sourceTree = "<group>"; };
 		78844DED240D09C100B8DA67 /* InttoData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InttoData.swift; sourceTree = "<group>"; };
+		78844DF1240D117B00B8DA67 /* TLVTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLVTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				784B76E523FAD83B00E34241 /* BLEToolsTests.swift */,
+				78844DF1240D117B00B8DA67 /* TLVTests.swift */,
 				784B76E723FAD83B00E34241 /* Info.plist */,
 			);
 			path = BLEToolsTests;
@@ -259,6 +262,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78844DF2240D117B00B8DA67 /* TLVTests.swift in Sources */,
 				784B76E623FAD83B00E34241 /* BLEToolsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -13,7 +13,10 @@ import AppKit
 import UIKit
 #endif
 
-public struct AppleBLEAdvertisment: CustomDebugStringConvertible {
+public struct AppleBLEAdvertisment: CustomDebugStringConvertible, Identifiable {
+    /// The id here is the reception date of the advertisement 
+    public var id: Date
+    
     /// An array of all advertisement types that are contained in this advertisement
     public var advertisementTypes = [AdvertisementType]()
     
@@ -28,6 +31,9 @@ public struct AppleBLEAdvertisment: CustomDebugStringConvertible {
         //Parse the advertisement
         self.advertisementTLV = try TLV.TLVBox.deserialize(fromData: manufacturerData, withSize: .tlv8)
         
+        // Id is the reception date
+        self.id = Date()
+        
         self.advertisementTLV.getTypes().forEach { (advTypeRaw) in
             if let advType = AdvertisementType(rawValue: advTypeRaw) {
                 advertisementTypes.append(advType)
@@ -35,6 +41,7 @@ public struct AppleBLEAdvertisment: CustomDebugStringConvertible {
                 advertisementTypes.append(.unknown)
             }
         }
+        
     }
     
     

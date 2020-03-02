@@ -51,6 +51,7 @@
 		78844DEB240D08C900B8DA67 /* TLV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLV.swift; sourceTree = "<group>"; };
 		78844DED240D09C100B8DA67 /* InttoData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InttoData.swift; sourceTree = "<group>"; };
 		78844DF1240D117B00B8DA67 /* TLVTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLVTests.swift; sourceTree = "<group>"; };
+		788D98B4240D4420005FC745 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +76,7 @@
 		784B76CD23FAD83B00E34241 = {
 			isa = PBXGroup;
 			children = (
+				788D98B4240D4420005FC745 /* Package.swift */,
 				784B76D923FAD83B00E34241 /* BLETools */,
 				784B76E423FAD83B00E34241 /* BLEToolsTests */,
 				784B76D823FAD83B00E34241 /* Products */,

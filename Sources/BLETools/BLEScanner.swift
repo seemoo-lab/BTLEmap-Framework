@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreBluetooth
+import Combine
 
 public protocol BLEScannerDelegate {
     
@@ -31,6 +32,19 @@ public class BLEScanner: BLEReceiverDelegate {
     public var devices = [UUID: AppleBLEDevice]()
     public let delegate: BLEScannerDelegate?
     
+    /// Set to true to start scanning for advertisements
+    public var scanning: Bool = false {
+        didSet {
+            guard oldValue != scanning else {return}
+            
+            if scanning == false {
+                self.scanForAppleAdvertisements()
+            }else {
+                self.receiver.stopScanningForAdvertisements()
+            }
+        }
+    }
+    
     public init(delegate: BLEScannerDelegate? = nil) {
         self.delegate = delegate
         receiver.delegate = self
@@ -38,7 +52,7 @@ public class BLEScanner: BLEReceiverDelegate {
     
     
     /// Start scanning for Apple advertisements
-    public func scanForAppleAdvertisements() {
+    func scanForAppleAdvertisements() {
         receiver.scanForAdvertisements()
     }
     

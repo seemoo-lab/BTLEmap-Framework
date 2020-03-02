@@ -44,6 +44,12 @@ class BLEReceiver: NSObject {
         }
     }
     
+    /// Stop scanning for advertisements
+    func stopScanningForAdvertisements() {
+        self.shouldScanForAdvertisements = false
+        self.centralManager.stopScan()
+    }
+    
     
     /// Checks if the manufacturer data matches for an Apple advertisement
     /// - Parameter data: manufacturer data of the received device

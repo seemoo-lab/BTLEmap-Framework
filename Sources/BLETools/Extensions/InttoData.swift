@@ -6,7 +6,7 @@
 //  Copyright © 2019 Alexander Heinrich. All rights reserved.
 //
 
-
+import Foundation
 
 extension Int {
     var data: Data {

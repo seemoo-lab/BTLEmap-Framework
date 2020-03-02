@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+ swift-tools-version:5.1
 import PackageDescription
 
 let package = Package(
@@ -15,6 +15,5 @@ let package = Package(
     ],
     targets: [
         .target(name: "BLETools", dependencies: []),
-        .testTarget(name: "BLEToolsTests", dependencies: ["BLETools"]),
     ]
 )

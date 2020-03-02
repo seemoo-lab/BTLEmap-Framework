@@ -7,8 +7,7 @@
 //
 
 import Foundation
-import OSLog
-@_exported import os.log
+import os
 
 struct Log {
     static func log(log: OSLog, type: OSLogType, message: StaticString,_ a: [CVarArg]) {

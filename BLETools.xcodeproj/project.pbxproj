@@ -21,6 +21,17 @@
 		78844DEC240D08C900B8DA67 /* TLV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DEB240D08C900B8DA67 /* TLV.swift */; };
 		78844DEE240D09C100B8DA67 /* InttoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DED240D09C100B8DA67 /* InttoData.swift */; };
 		78844DF2240D117B00B8DA67 /* TLVTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DF1240D117B00B8DA67 /* TLVTests.swift */; };
+		788D98D0240D4674005FC745 /* BLETools_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 788D98C2240D4674005FC745 /* BLETools_iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		788D98D7240D4686005FC745 /* BLEScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76FD23FADFB200E34241 /* BLEScanner.swift */; };
+		788D98D8240D4686005FC745 /* BLEReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76F123FAD87100E34241 /* BLEReceiver.swift */; };
+		788D98D9240D4686005FC745 /* AppleBLEAdvertisement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76FB23FADA8E00E34241 /* AppleBLEAdvertisement.swift */; };
+		788D98DA240D4686005FC745 /* AppleBLEDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76FF23FAE01B00E34241 /* AppleBLEDevice.swift */; };
+		788D98DB240D4686005FC745 /* ProtocolParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DD0240D076600B8DA67 /* ProtocolParser.swift */; };
+		788D98DC240D4686005FC745 /* TLV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DEB240D08C900B8DA67 /* TLV.swift */; };
+		788D98DD240D4686005FC745 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76F323FAD8EC00E34241 /* Log.swift */; };
+		788D98DE240D4686005FC745 /* InttoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DED240D09C100B8DA67 /* InttoData.swift */; };
+		788D98DF240D4686005FC745 /* DataIntExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76F523FADA5500E34241 /* DataIntExtensions.swift */; };
+		788D98E0240D4686005FC745 /* HexToDataExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76F623FADA5500E34241 /* HexToDataExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +63,9 @@
 		78844DED240D09C100B8DA67 /* InttoData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InttoData.swift; sourceTree = "<group>"; };
 		78844DF1240D117B00B8DA67 /* TLVTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLVTests.swift; sourceTree = "<group>"; };
 		788D98B4240D4420005FC745 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		788D98C0240D4674005FC745 /* BLETools_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BLETools_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		788D98C2240D4674005FC745 /* BLETools_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BLETools_iOS.h; sourceTree = "<group>"; };
+		788D98C3240D4674005FC745 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +84,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		788D98BD240D4674005FC745 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -79,6 +100,7 @@
 				788D98B4240D4420005FC745 /* Package.swift */,
 				788D98B7240D45A3005FC745 /* Sources */,
 				784B76E423FAD83B00E34241 /* BLEToolsTests */,
+				788D98C1240D4674005FC745 /* BLETools-iOS */,
 				784B76D823FAD83B00E34241 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -88,6 +110,7 @@
 			children = (
 				784B76D723FAD83B00E34241 /* BLETools.framework */,
 				784B76E023FAD83B00E34241 /* BLEToolsTests.xctest */,
+				788D98C0240D4674005FC745 /* BLETools_iOS.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -145,6 +168,15 @@
 			path = Sources;
 			sourceTree = "<group>";
 		};
+		788D98C1240D4674005FC745 /* BLETools-iOS */ = {
+			isa = PBXGroup;
+			children = (
+				788D98C2240D4674005FC745 /* BLETools_iOS.h */,
+				788D98C3240D4674005FC745 /* Info.plist */,
+			);
+			path = "BLETools-iOS";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -153,6 +185,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				784B76E823FAD83B00E34241 /* BLETools.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		788D98BB240D4674005FC745 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				788D98D0240D4674005FC745 /* BLETools_iOS.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -195,6 +235,24 @@
 			productReference = 784B76E023FAD83B00E34241 /* BLEToolsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		788D98BF240D4674005FC745 /* BLETools-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 788D98D5240D4674005FC745 /* Build configuration list for PBXNativeTarget "BLETools-iOS" */;
+			buildPhases = (
+				788D98BB240D4674005FC745 /* Headers */,
+				788D98BC240D4674005FC745 /* Sources */,
+				788D98BD240D4674005FC745 /* Frameworks */,
+				788D98BE240D4674005FC745 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "BLETools-iOS";
+			productName = "BLETools-iOS";
+			productReference = 788D98C0240D4674005FC745 /* BLETools_iOS.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -210,6 +268,9 @@
 						LastSwiftMigration = 1130;
 					};
 					784B76DF23FAD83B00E34241 = {
+						CreatedOnToolsVersion = 11.3.1;
+					};
+					788D98BF240D4674005FC745 = {
 						CreatedOnToolsVersion = 11.3.1;
 					};
 				};
@@ -229,6 +290,7 @@
 			targets = (
 				784B76D623FAD83B00E34241 /* BLETools */,
 				784B76DF23FAD83B00E34241 /* BLEToolsTests */,
+				788D98BF240D4674005FC745 /* BLETools-iOS */,
 			);
 		};
 /* End PBXProject section */
@@ -242,6 +304,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		784B76DE23FAD83B00E34241 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		788D98BE240D4674005FC745 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -274,6 +343,23 @@
 			files = (
 				78844DF2240D117B00B8DA67 /* TLVTests.swift in Sources */,
 				784B76E623FAD83B00E34241 /* BLEToolsTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		788D98BC240D4674005FC745 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				788D98DA240D4686005FC745 /* AppleBLEDevice.swift in Sources */,
+				788D98DD240D4686005FC745 /* Log.swift in Sources */,
+				788D98DE240D4686005FC745 /* InttoData.swift in Sources */,
+				788D98D8240D4686005FC745 /* BLEReceiver.swift in Sources */,
+				788D98D9240D4686005FC745 /* AppleBLEAdvertisement.swift in Sources */,
+				788D98D7240D4686005FC745 /* BLEScanner.swift in Sources */,
+				788D98DF240D4686005FC745 /* DataIntExtensions.swift in Sources */,
+				788D98DC240D4686005FC745 /* TLV.swift in Sources */,
+				788D98E0240D4686005FC745 /* HexToDataExtensions.swift in Sources */,
+				788D98DB240D4686005FC745 /* ProtocolParser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -496,6 +582,59 @@
 			};
 			name = Release;
 		};
+		788D98D1240D4674005FC745 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = A5U65N39SD;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "BLETools-iOS/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "de.tu-darmstadt.seemoo.BLETools-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		788D98D2240D4674005FC745 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = A5U65N39SD;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "BLETools-iOS/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "de.tu-darmstadt.seemoo.BLETools-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -522,6 +661,15 @@
 			buildConfigurations = (
 				784B76EF23FAD83B00E34241 /* Debug */,
 				784B76F023FAD83B00E34241 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		788D98D5240D4674005FC745 /* Build configuration list for PBXNativeTarget "BLETools-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				788D98D1240D4674005FC745 /* Debug */,
+				788D98D2240D4674005FC745 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

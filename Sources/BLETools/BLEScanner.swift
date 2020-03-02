@@ -30,7 +30,7 @@ public protocol BLEScannerDelegate {
 public class BLEScanner: BLEReceiverDelegate {
     let receiver = BLEReceiver()
     public var devices = [UUID: AppleBLEDevice]()
-    public var deviceList = Set<AppleBLEDevice>()
+    public var deviceList = Array<AppleBLEDevice>()
     public let delegate: BLEScannerDelegate?
     
     /// Set to true to start scanning for advertisements
@@ -74,7 +74,7 @@ public class BLEScanner: BLEReceiverDelegate {
                 self.devices[device.identifier] = bleDevice
                 delegate?.scanner(self, didDiscoverNewDevice: bleDevice)
                 delegate?.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: bleDevice)
-                self.deviceList = Set(devices.values)
+                self.deviceList = Array(devices.values)
             }
         }catch {
             return

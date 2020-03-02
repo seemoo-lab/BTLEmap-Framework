@@ -72,4 +72,5 @@ extension BLEReceiver: CBCentralManagerDelegate {
         self.delegate?.didReceive(appleAdvertisement: manufacturerData, fromDevice: peripheral)
     }
     
+    
 }

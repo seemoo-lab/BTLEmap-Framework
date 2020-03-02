@@ -9,7 +9,9 @@
 import XCTest
 @testable import BLETools
 
-class BLEToolsTests: XCTestCase {
+class BLEToolsTests: XCTestCase, BLEScannerDelegate {
+
+    
 
     override func setUp() {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -19,16 +21,38 @@ class BLEToolsTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
 
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    func testAttributedStringForAdvertisement() throws {
+        let manufData = "4c000c0e 00d46fd6 c0971400 ee2b84bb 72f31006 7b1ea9ed 12c1".hexadecimal!
+        
+        let adv = try AppleBLEAdvertisment(manufacturerData: manufData)
+        let attributedString = adv.dataAttributedString
+        
+        print(attributedString)
+        
+        
+    }
+    
+    
+
+    func testScanningForDevices() throws {
+        let expect = expectation(description: "BLE Scanner")
+        let scanner = BLEScanner(delegate: self)
+        scanner.scanForAppleAdvertisements()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+            expect.fulfill()
         }
+        wait(for: [expect], timeout: 60.0)
     }
-
+    
+    func scanner(_ scanner: BLEScanner, didReceiveNewAdvertisement advertisement: AppleBLEAdvertisment, forDevice device: AppleBLEDevice) {
+        print("Received advertisement")
+        print(advertisement)
+    }
+    
+    func scanner(_ scanner: BLEScanner, didDiscoverNewDevice device: AppleBLEDevice) {
+        print("Discovered device")
+        print(device)
+    }
 }
+

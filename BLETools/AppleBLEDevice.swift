@@ -9,15 +9,18 @@
 import Foundation
 import CoreBluetooth
 
-public class AppleBLEDevice: Equatable {
+public class AppleBLEDevice: Equatable, CustomDebugStringConvertible {
 
     public internal(set) var name: String?
     public internal(set) var deviceType: String?
     private (set) var advertisements = [AppleBLEAdvertisment]()
     public internal(set) var peripheral: CBPeripheral
     
+    public var uuid: UUID {return peripheral.identifier}
+    
     init(peripheral: CBPeripheral) {
         self.peripheral = peripheral
+        self.name = peripheral.name
     }
     
     public static func == (lhs: AppleBLEDevice, rhs: AppleBLEDevice) -> Bool {
@@ -26,5 +29,14 @@ public class AppleBLEDevice: Equatable {
     
     func add(advertisement: AppleBLEAdvertisment) {
         self.advertisements.append(advertisement)
+    }
+    
+    public var debugDescription: String {
+        return(
+        """
+        \(self.uuid.uuidString)
+        \t \(String(describing: self.name))
+        \t \(self.advertisements.count) advertisements
+        """)
     }
 }

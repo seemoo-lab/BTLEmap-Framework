@@ -118,6 +118,7 @@
 		784B76FA23FADA5F00E34241 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				78844DED240D09C100B8DA67 /* InttoData.swift */,
 				784B76F523FADA5500E34241 /* DataIntExtensions.swift */,
 				784B76F623FADA5500E34241 /* HexToDataExtensions.swift */,
 			);
@@ -130,7 +131,6 @@
 				78844DD0240D076600B8DA67 /* ProtocolParser.swift */,
 				78844DEB240D08C900B8DA67 /* TLV.swift */,
 				784B76F323FAD8EC00E34241 /* Log.swift */,
-				78844DED240D09C100B8DA67 /* InttoData.swift */,
 			);
 			path = Parsing;
 			sourceTree = "<group>";

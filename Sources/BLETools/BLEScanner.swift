@@ -38,7 +38,7 @@ public class BLEScanner: BLEReceiverDelegate {
         didSet {
             guard oldValue != scanning else {return}
             
-            if scanning == false {
+            if scanning {
                 self.scanForAppleAdvertisements()
             }else {
                 self.receiver.stopScanningForAdvertisements()

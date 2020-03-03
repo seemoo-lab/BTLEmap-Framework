@@ -8,7 +8,7 @@
 
 import Foundation 
 
-extension String {
+public extension String {
     
     /// Create `Data` from hexadecimal string representation
     ///
@@ -33,7 +33,7 @@ extension String {
     
 }
 
-extension Data {
+public extension Data {
     
     /// Hexadecimal string representation of `Data` object.
     
@@ -43,7 +43,7 @@ extension Data {
     }
 }
 
-extension String {
+public extension String {
     func separate(every stride: Int = 4, with separator: Character = " ") -> String {
         return String(enumerated().map { $0 > 0 && $0 % stride == 0 ? [separator, $1] : [$1]}.joined())
     }

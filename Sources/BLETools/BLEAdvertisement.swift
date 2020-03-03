@@ -39,7 +39,7 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
     @Published public var receptionDates = [Date]()
     
     /// Advertisements are sent out more oftern than once. This value counts how often an advertisement has been received
-    @Published public var numberOfTimesReceived = 0
+    @Published public var numberOfTimesReceived = 1
     
     /// Initialize an advertisement sent by Apple devices and parse it's TLV content
     /// - Parameter manufacturerData: BLE manufacturer Data that has been received
@@ -170,7 +170,7 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
         advertisementTLV.getTypes().forEach { (rawType) in
             let appleType = AppleAdvertisementType(rawValue: rawType) ?? .unknown
             
-            let typeString = NSAttributedString(string: String(format: "%@ (0x%02x)", appleType.description, UInt8(rawType)), attributes: typeAttributes)
+            let typeString = NSAttributedString(string: String(format: "%@ (0x%02x) ", appleType.description, UInt8(rawType)), attributes: typeAttributes)
             
             attributedString.append(typeString)
             

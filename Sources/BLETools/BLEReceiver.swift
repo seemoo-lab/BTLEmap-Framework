@@ -38,7 +38,7 @@ class BLEReceiver: NSObject {
     /// Start scanning for advertisements
     func scanForAdvertisements() {
         if self.centralManager.state == .poweredOn {
-            self.centralManager.scanForPeripherals(withServices: nil, options: nil)
+            self.centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
         }else {
             self.shouldScanForAdvertisements = true
         }

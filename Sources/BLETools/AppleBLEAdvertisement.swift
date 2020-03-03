@@ -15,7 +15,7 @@ import UIKit
 
 public class AppleBLEAdvertisment: CustomDebugStringConvertible, Identifiable {
     /// The id here is the reception date of the advertisement 
-    public var id: Date
+    public var id: Int
     
     /// An array of all advertisement types that are contained in this advertisement
     public var advertisementTypes = [AdvertisementType]()
@@ -27,12 +27,12 @@ public class AppleBLEAdvertisment: CustomDebugStringConvertible, Identifiable {
     
     /// Initialize an advertisement sent by Apple devices and parse it's TLV content
     /// - Parameter manufacturerData: BLE manufacturer Data that has been received
-    public init(manufacturerData: Data) throws {
+    public init(manufacturerData: Data, id: Int) throws {
         //Parse the advertisement
         self.advertisementTLV = try TLV.TLVBox.deserialize(fromData: manufacturerData, withSize: .tlv8)
         
         // Id is the reception date
-        self.id = Date()
+        self.id = id
         
         self.advertisementTLV.getTypes().forEach { (advTypeRaw) in
             if let advType = AdvertisementType(rawValue: advTypeRaw) {

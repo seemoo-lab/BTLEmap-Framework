@@ -59,17 +59,15 @@ public class BLEScanner: BLEReceiverDelegate {
     
     func didReceive(appleAdvertisement: Data, fromDevice device: CBPeripheral) {
         do {
-            let advertisement = try AppleBLEAdvertisment(manufacturerData: appleAdvertisement)
             
-            if devices[device.identifier] != nil {
-                devices[device.identifier]?.add(advertisement: advertisement)
-                delegate?.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: devices[device.identifier]!)
-                if let name = device.name {
-                    devices[device.identifier]?.name = name 
-                }
+            if let bleDevice = devices[device.identifier] {
+                let advertisement = try AppleBLEAdvertisment(manufacturerData: appleAdvertisement, id: bleDevice.advertisements.count)
+                bleDevice.add(advertisement: advertisement)
+                delegate?.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: bleDevice)
             }else {
                 //Add a new device
-                var bleDevice = AppleBLEDevice(peripheral: device)
+                let advertisement = try AppleBLEAdvertisment(manufacturerData: appleAdvertisement, id: 0)
+                let bleDevice = AppleBLEDevice(peripheral: device)
                 bleDevice.add(advertisement: advertisement)
                 self.devices[device.identifier] = bleDevice
                 delegate?.scanner(self, didDiscoverNewDevice: bleDevice)

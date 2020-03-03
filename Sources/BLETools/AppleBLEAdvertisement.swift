@@ -13,7 +13,7 @@ import AppKit
 import UIKit
 #endif
 
-public struct AppleBLEAdvertisment: CustomDebugStringConvertible, Identifiable {
+public class AppleBLEAdvertisment: CustomDebugStringConvertible, Identifiable {
     /// The id here is the reception date of the advertisement 
     public var id: Date
     

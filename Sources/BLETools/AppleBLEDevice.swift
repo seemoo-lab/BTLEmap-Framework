@@ -8,12 +8,13 @@
 
 import Foundation
 import CoreBluetooth
+import Combine
 
-public struct AppleBLEDevice: Equatable, CustomDebugStringConvertible, Hashable, Identifiable {
+public class AppleBLEDevice: Equatable, CustomDebugStringConvertible, Hashable, Identifiable, ObservableObject {
     public var id: String
     public internal(set) var name: String?
-    public internal(set) var deviceType: String?
-    public private (set) var advertisements = [AppleBLEAdvertisment]()
+    @Published public internal(set) var deviceType: String?
+    @Published public private (set) var advertisements = [AppleBLEAdvertisment]()
     public internal(set) var peripheral: CBPeripheral
     
     public var uuid: UUID {return peripheral.identifier}
@@ -29,7 +30,7 @@ public struct AppleBLEDevice: Equatable, CustomDebugStringConvertible, Hashable,
         lhs.peripheral.identifier == rhs.peripheral.identifier
     }
     
-    mutating func add(advertisement: AppleBLEAdvertisment) {
+    func add(advertisement: AppleBLEAdvertisment) {
         self.advertisements.append(advertisement)
     }
     

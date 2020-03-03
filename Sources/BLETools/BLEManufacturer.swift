@@ -13,7 +13,7 @@ public enum BLEManufacturer: UInt8 {
     case apple = 0x4c
     case unknown = 0x00
     
-    var name: String {
+    public var name: String {
         switch self {
         case .apple:
             return "Apple"

@@ -14,11 +14,12 @@ import os
 /// Delegate used for forwarding Apple advertisements to
 protocol BLEReceiverDelegate {
     
-    /// Called if the `BLEReceiver` has received an advertisement sent by an Apple device
+    
+    /// Called when any advertisement has been received by the `BLEReceiver`
     /// - Parameters:
-    ///   - appleAdvertisement: manufacturer data of the advertisement
-    ///   - device: CBPeripheral device that has sent it
-    func didReceive(appleAdvertisement: Data, fromDevice device: CBPeripheral)
+    ///   - advertisementData: Advertisement dictionary
+    ///   - device: CoreBluetooth Peripheral device
+    func didReceive(advertisementData: [String: Any], rssi: NSNumber, from device: CBPeripheral)
 }
 
 
@@ -38,7 +39,7 @@ class BLEReceiver: NSObject {
     /// Start scanning for advertisements
     func scanForAdvertisements() {
         if self.centralManager.state == .poweredOn {
-            self.centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
+            self.centralManager.scanForPeripherals(withServices: nil, options: nil)
         }else {
             self.shouldScanForAdvertisements = true
         }
@@ -72,10 +73,12 @@ extension BLEReceiver: CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
 
-        guard let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data,
-            self.isAppleAdvertisement(data: manufacturerData) else { return }
+//        if let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data,
+//            self.isAppleAdvertisement(data: manufacturerData)  {
+//            self.delegate?.didReceive(appleAdvertisement: manufacturerData, fromDevice: peripheral)
+//        }
         
-        self.delegate?.didReceive(appleAdvertisement: manufacturerData, fromDevice: peripheral)
+        self.delegate?.didReceive(advertisementData: advertisementData, rssi: RSSI, from: peripheral)
     }
     
     

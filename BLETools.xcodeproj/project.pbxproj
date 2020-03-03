@@ -14,9 +14,9 @@
 		784B76F423FAD8EC00E34241 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76F323FAD8EC00E34241 /* Log.swift */; };
 		784B76F723FADA5500E34241 /* DataIntExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76F523FADA5500E34241 /* DataIntExtensions.swift */; };
 		784B76F823FADA5500E34241 /* HexToDataExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76F623FADA5500E34241 /* HexToDataExtensions.swift */; };
-		784B76FC23FADA8E00E34241 /* AppleBLEAdvertisement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76FB23FADA8E00E34241 /* AppleBLEAdvertisement.swift */; };
+		784B76FC23FADA8E00E34241 /* BLEAdvertisement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76FB23FADA8E00E34241 /* BLEAdvertisement.swift */; };
 		784B76FE23FADFB200E34241 /* BLEScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76FD23FADFB200E34241 /* BLEScanner.swift */; };
-		784B770023FAE01B00E34241 /* AppleBLEDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76FF23FAE01B00E34241 /* AppleBLEDevice.swift */; };
+		784B770023FAE01B00E34241 /* BLEDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76FF23FAE01B00E34241 /* BLEDevice.swift */; };
 		78844DD1240D076600B8DA67 /* ProtocolParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DD0240D076600B8DA67 /* ProtocolParser.swift */; };
 		78844DEC240D08C900B8DA67 /* TLV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DEB240D08C900B8DA67 /* TLV.swift */; };
 		78844DEE240D09C100B8DA67 /* InttoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DED240D09C100B8DA67 /* InttoData.swift */; };
@@ -24,8 +24,8 @@
 		788D98D0240D4674005FC745 /* BLETools_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 788D98C2240D4674005FC745 /* BLETools_iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		788D98D7240D4686005FC745 /* BLEScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76FD23FADFB200E34241 /* BLEScanner.swift */; };
 		788D98D8240D4686005FC745 /* BLEReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76F123FAD87100E34241 /* BLEReceiver.swift */; };
-		788D98D9240D4686005FC745 /* AppleBLEAdvertisement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76FB23FADA8E00E34241 /* AppleBLEAdvertisement.swift */; };
-		788D98DA240D4686005FC745 /* AppleBLEDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76FF23FAE01B00E34241 /* AppleBLEDevice.swift */; };
+		788D98D9240D4686005FC745 /* BLEAdvertisement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76FB23FADA8E00E34241 /* BLEAdvertisement.swift */; };
+		788D98DA240D4686005FC745 /* BLEDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76FF23FAE01B00E34241 /* BLEDevice.swift */; };
 		788D98DB240D4686005FC745 /* ProtocolParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DD0240D076600B8DA67 /* ProtocolParser.swift */; };
 		788D98DC240D4686005FC745 /* TLV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DEB240D08C900B8DA67 /* TLV.swift */; };
 		788D98DD240D4686005FC745 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76F323FAD8EC00E34241 /* Log.swift */; };
@@ -55,9 +55,9 @@
 		784B76F323FAD8EC00E34241 /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		784B76F523FADA5500E34241 /* DataIntExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataIntExtensions.swift; sourceTree = "<group>"; };
 		784B76F623FADA5500E34241 /* HexToDataExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HexToDataExtensions.swift; sourceTree = "<group>"; };
-		784B76FB23FADA8E00E34241 /* AppleBLEAdvertisement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleBLEAdvertisement.swift; sourceTree = "<group>"; };
+		784B76FB23FADA8E00E34241 /* BLEAdvertisement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEAdvertisement.swift; sourceTree = "<group>"; };
 		784B76FD23FADFB200E34241 /* BLEScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEScanner.swift; sourceTree = "<group>"; };
-		784B76FF23FAE01B00E34241 /* AppleBLEDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleBLEDevice.swift; sourceTree = "<group>"; };
+		784B76FF23FAE01B00E34241 /* BLEDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEDevice.swift; sourceTree = "<group>"; };
 		78844DD0240D076600B8DA67 /* ProtocolParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolParser.swift; sourceTree = "<group>"; };
 		78844DEB240D08C900B8DA67 /* TLV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLV.swift; sourceTree = "<group>"; };
 		78844DED240D09C100B8DA67 /* InttoData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InttoData.swift; sourceTree = "<group>"; };
@@ -120,8 +120,8 @@
 			children = (
 				784B76FD23FADFB200E34241 /* BLEScanner.swift */,
 				784B76F123FAD87100E34241 /* BLEReceiver.swift */,
-				784B76FB23FADA8E00E34241 /* AppleBLEAdvertisement.swift */,
-				784B76FF23FAE01B00E34241 /* AppleBLEDevice.swift */,
+				784B76FB23FADA8E00E34241 /* BLEAdvertisement.swift */,
+				784B76FF23FAE01B00E34241 /* BLEDevice.swift */,
 				78844DF0240D09CC00B8DA67 /* Parsing */,
 				784B76FA23FADA5F00E34241 /* Extensions */,
 				784B76DA23FAD83B00E34241 /* BLETools.h */,
@@ -326,12 +326,12 @@
 			files = (
 				78844DEE240D09C100B8DA67 /* InttoData.swift in Sources */,
 				784B76FE23FADFB200E34241 /* BLEScanner.swift in Sources */,
-				784B770023FAE01B00E34241 /* AppleBLEDevice.swift in Sources */,
+				784B770023FAE01B00E34241 /* BLEDevice.swift in Sources */,
 				784B76F723FADA5500E34241 /* DataIntExtensions.swift in Sources */,
 				784B76F423FAD8EC00E34241 /* Log.swift in Sources */,
 				78844DEC240D08C900B8DA67 /* TLV.swift in Sources */,
 				784B76F823FADA5500E34241 /* HexToDataExtensions.swift in Sources */,
-				784B76FC23FADA8E00E34241 /* AppleBLEAdvertisement.swift in Sources */,
+				784B76FC23FADA8E00E34241 /* BLEAdvertisement.swift in Sources */,
 				78844DD1240D076600B8DA67 /* ProtocolParser.swift in Sources */,
 				784B76F223FAD87100E34241 /* BLEReceiver.swift in Sources */,
 			);
@@ -350,11 +350,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				788D98DA240D4686005FC745 /* AppleBLEDevice.swift in Sources */,
+				788D98DA240D4686005FC745 /* BLEDevice.swift in Sources */,
 				788D98DD240D4686005FC745 /* Log.swift in Sources */,
 				788D98DE240D4686005FC745 /* InttoData.swift in Sources */,
 				788D98D8240D4686005FC745 /* BLEReceiver.swift in Sources */,
-				788D98D9240D4686005FC745 /* AppleBLEAdvertisement.swift in Sources */,
+				788D98D9240D4686005FC745 /* BLEAdvertisement.swift in Sources */,
 				788D98D7240D4686005FC745 /* BLEScanner.swift in Sources */,
 				788D98DF240D4686005FC745 /* DataIntExtensions.swift in Sources */,
 				788D98DC240D4686005FC745 /* TLV.swift in Sources */,

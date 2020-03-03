@@ -10,11 +10,11 @@ import Foundation
 import CoreBluetooth
 import Combine
 
-public class AppleBLEDevice: Equatable, CustomDebugStringConvertible, Hashable, Identifiable, ObservableObject {
+public class BLEDevice: Equatable, CustomDebugStringConvertible, Hashable, Identifiable, ObservableObject {
     public var id: String
     public internal(set) var name: String?
     @Published public internal(set) var deviceType: String?
-    @Published public private (set) var advertisements = [AppleBLEAdvertisment]()
+    @Published public private (set) var advertisements = [BLEAdvertisment]()
     public internal(set) var peripheral: CBPeripheral
     
     public var uuid: UUID {return peripheral.identifier}
@@ -26,12 +26,19 @@ public class AppleBLEDevice: Equatable, CustomDebugStringConvertible, Hashable, 
         self.id = peripheral.identifier.uuidString
     }
     
-    public static func == (lhs: AppleBLEDevice, rhs: AppleBLEDevice) -> Bool {
+    public static func == (lhs: BLEDevice, rhs: BLEDevice) -> Bool {
         lhs.peripheral.identifier == rhs.peripheral.identifier
     }
     
-    func add(advertisement: AppleBLEAdvertisment) {
-        self.advertisements.append(advertisement)
+    /// Add a received advertisement to the device
+    /// - Parameter advertisement: received BLE advertisement
+    func add(advertisement: BLEAdvertisment) {
+        // Check if that advertisement has been received before 
+        if let matching = self.advertisements.first(where: {$0.manufacturerData == advertisement.manufacturerData}) {
+            matching.update(with: advertisement)
+        }else {
+            self.advertisements.append(advertisement)
+        }
     }
     
     public var debugDescription: String {

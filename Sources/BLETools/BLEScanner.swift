@@ -16,21 +16,21 @@ public protocol BLEScannerDelegate {
     /// - Parameters:
     ///   - scanner: Current BLE Scanner
     ///   - device: Device that has been discovered
-    func scanner(_ scanner: BLEScanner, didDiscoverNewDevice device: AppleBLEDevice)
+    func scanner(_ scanner: BLEScanner, didDiscoverNewDevice device: BLEDevice)
     
     /// Scanner did receive a new advertisement
     /// - Parameters:
     ///   - scanner: Current BLE Scanner
     ///   - advertisement: Advertisement that has been received
     ///   - device: Device that sent the advertisement
-    func scanner(_ scanner: BLEScanner, didReceiveNewAdvertisement advertisement: AppleBLEAdvertisment, forDevice device: AppleBLEDevice)
+    func scanner(_ scanner: BLEScanner, didReceiveNewAdvertisement advertisement: BLEAdvertisment, forDevice device: BLEDevice)
 }
 
 /// BLE Scanner can be used to discover BLE devices sending advertisements over one of the advertisement channels
 public class BLEScanner: BLEReceiverDelegate {
     let receiver = BLEReceiver()
-    public var devices = [UUID: AppleBLEDevice]()
-    public var deviceList = Array<AppleBLEDevice>()
+    public var devices = [UUID: BLEDevice]()
+    public var deviceList = Array<BLEDevice>()
     public var delegate: BLEScannerDelegate?
     
     /// Set to true to start scanning for advertisements
@@ -57,17 +57,17 @@ public class BLEScanner: BLEReceiverDelegate {
         receiver.scanForAdvertisements()
     }
     
-    func didReceive(appleAdvertisement: Data, fromDevice device: CBPeripheral) {
+    func didReceive(advertisementData: [String : Any], rssi: NSNumber, from device: CBPeripheral) {
         do {
             
             if let bleDevice = devices[device.identifier] {
-                let advertisement = try AppleBLEAdvertisment(manufacturerData: appleAdvertisement, id: bleDevice.advertisements.count)
+                let advertisement = try BLEAdvertisment(advertisementData: advertisementData, rssi: rssi)
                 bleDevice.add(advertisement: advertisement)
                 delegate?.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: bleDevice)
             }else {
                 //Add a new device
-                let advertisement = try AppleBLEAdvertisment(manufacturerData: appleAdvertisement, id: 0)
-                let bleDevice = AppleBLEDevice(peripheral: device)
+                let advertisement = try BLEAdvertisment(advertisementData: advertisementData, rssi: rssi)
+                let bleDevice = BLEDevice(peripheral: device)
                 bleDevice.add(advertisement: advertisement)
                 self.devices[device.identifier] = bleDevice
                 delegate?.scanner(self, didDiscoverNewDevice: bleDevice)

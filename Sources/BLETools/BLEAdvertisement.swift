@@ -13,17 +13,33 @@ import AppKit
 import UIKit
 #endif
 
-public class AppleBLEAdvertisment: CustomDebugStringConvertible, Identifiable {
+import Combine
+
+public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, ObservableObject {
     /// The id here is the reception date of the advertisement 
-    public var id: Int
+    public let id: Int = Int(arc4random())
     
     /// An array of all advertisement types that are contained in this advertisement
-    public var advertisementTypes = [AdvertisementType]()
+    @Published public var advertisementTypes = [AppleAdvertisementType]()
     
     /// All advertisement messages. Keys are the advertisement Type raw value and the advertisement data as value
     /// E.g. 0x0c: Data for Handoff
-    public var advertisementTLV: TLV.TLVBox
+    public var advertisementTLV: TLV.TLVBox?
+    internal private(set) var manufacturerData: Data?
     
+    public var manufacturer: Manufacturer
+    
+    @Published public var connectable: Bool = false
+    
+    @Published public var appleMfgData: [String: Any]?
+    
+    public var channel: Int?
+    
+    @Published public var rssi = [NSNumber]()
+    @Published public var receptionDates = [Date]()
+    
+    /// Advertisements are sent out more oftern than once. This value counts how often an advertisement has been received
+    @Published public var numberOfTimesReceived = 0
     
     /// Initialize an advertisement sent by Apple devices and parse it's TLV content
     /// - Parameter manufacturerData: BLE manufacturer Data that has been received
@@ -31,17 +47,75 @@ public class AppleBLEAdvertisment: CustomDebugStringConvertible, Identifiable {
         //Parse the advertisement
         self.advertisementTLV = try TLV.TLVBox.deserialize(fromData: manufacturerData, withSize: .tlv8)
         
-        // Id is the reception date
-        self.id = id
+        let manufacturerInt = manufacturerData[0]
+        self.manufacturer = Manufacturer(rawValue: manufacturerInt) ?? .unknown
+        self.manufacturerData = manufacturerData
         
-        self.advertisementTLV.getTypes().forEach { (advTypeRaw) in
-            if let advType = AdvertisementType(rawValue: advTypeRaw) {
+        self.advertisementTLV!.getTypes().forEach { (advTypeRaw) in
+            if let advType = AppleAdvertisementType(rawValue: advTypeRaw) {
                 advertisementTypes.append(advType)
             }else {
                 advertisementTypes.append(.unknown)
             }
         }
         
+        self.receptionDates.append(Date())
+    }
+    
+    
+    /// Initialize an advertisement like it has been received by a device from CoreBluetooth
+    /// - Parameters:
+    ///   - advertisementData: Dictionary with advertisement data containing keys: `"kCBAdvDataChannel"`, `"kCBAdvDataIsConnectable"`, `"kCBAdvDataAppleMfgData"`, `"kCBAdvDataManufacturerData"`, `"kCBAdvDataTxPowerLevel"`
+    ///   - rssi: RSSI in decibels
+    public init(advertisementData: [String: Any], rssi: NSNumber) throws {
+        
+        self.channel = advertisementData["kCBAdvDataChannel"] as? Int
+        self.connectable = advertisementData["kCBAdvDataIsConnectable"] as? Bool ?? false
+        self.appleMfgData = advertisementData["kCBAdvDataAppleMfgData"] as? [String : Any]
+        
+        if let manufacturerData = advertisementData["kCBAdvDataManufacturerData"] as? Data {
+            let manufacturerInt = manufacturerData[0]
+            self.manufacturer = Manufacturer(rawValue: manufacturerInt) ?? .unknown
+            self.manufacturerData = manufacturerData
+            
+            self.advertisementTLV = try TLV.TLVBox.deserialize(fromData: manufacturerData, withSize: .tlv8)
+            
+            self.advertisementTLV!.getTypes().forEach { (advTypeRaw) in
+                if let advType = AppleAdvertisementType(rawValue: advTypeRaw) {
+                    advertisementTypes.append(advType)
+                }else {
+                    advertisementTypes.append(.unknown)
+                }
+            }
+        }else {
+            manufacturer = .unknown
+            self.advertisementTLV = nil
+        }
+        
+        self.receptionDates.append(Date())
+        self.rssi.append(rssi)
+        
+    }
+    
+    
+    /// Update the advertisement with a newly received advertisment that is equal to the current advertisement
+    /// - Parameters:
+    ///   - advertisementData: advertisement data as received from Core Bluetooth
+    ///   - rssi: current RSSI in decibels
+    func update(with advertisementData: [String: Any], rssi: NSNumber) {
+        self.rssi.append(rssi)
+        self.receptionDates.append(Date())
+        
+        self.numberOfTimesReceived += 1
+    }
+    
+    
+    ///  Update the advertisement with a newly received advertisment that is equal to the current advertisement
+    /// - Parameter advertisment: newly received advertisement
+    func update(with advertisment: BLEAdvertisment) {
+        self.rssi.append(advertisment.rssi[0])
+        self.receptionDates.append(Date())
+        self.numberOfTimesReceived += 1
     }
     
     
@@ -89,11 +163,11 @@ public class AppleBLEAdvertisment: CustomDebugStringConvertible, Identifiable {
             #endif
         }()
         
-        advertisementTLV.getTypes().forEach { (rawType) in
+        self.advertisementTLV?.getTypes().forEach { (rawType) in
             let typeString = NSAttributedString(string: String(format: "0x%02x ", UInt8(rawType)), attributes: typeAttributes)
             attributedString.append(typeString)
             
-            if let data = advertisementTLV.getValue(forType: rawType) {
+            if let data = advertisementTLV?.getValue(forType: rawType) {
                 let lengthString =  NSAttributedString(string: String(format: "%02x: ", UInt8(data.count)), attributes: lengthAttributes)
                 attributedString.append(lengthString)
                 
@@ -123,7 +197,7 @@ public class AppleBLEAdvertisment: CustomDebugStringConvertible, Identifiable {
     }
     
     
-    public enum AdvertisementType: UInt {
+    public enum AppleAdvertisementType: UInt {
         case handoff = 0x0c
         case wifiSettings = 0x0d
         case instantHotspot = 0x0e
@@ -132,5 +206,10 @@ public class AppleBLEAdvertisment: CustomDebugStringConvertible, Identifiable {
 
         case unknown = 0x00
         
+    }
+    
+    public enum Manufacturer: UInt8 {
+        case apple = 0x4c
+        case unknown = 0x00
     }
 }

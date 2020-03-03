@@ -25,7 +25,7 @@ class BLEToolsTests: XCTestCase, BLEScannerDelegate {
     func testAttributedStringForAdvertisement() throws {
         let manufData = "4c000c0e 00d46fd6 c0971400 ee2b84bb 72f31006 7b1ea9ed 12c1".hexadecimal!
         
-        let adv = try AppleBLEAdvertisment(manufacturerData: manufData, id: 0)
+        let adv = try BLEAdvertisment(manufacturerData: manufData, id: 0)
         let attributedString = adv.dataAttributedString
         
         print(attributedString)
@@ -45,12 +45,12 @@ class BLEToolsTests: XCTestCase, BLEScannerDelegate {
         wait(for: [expect], timeout: 60.0)
     }
     
-    func scanner(_ scanner: BLEScanner, didReceiveNewAdvertisement advertisement: AppleBLEAdvertisment, forDevice device: AppleBLEDevice) {
+    func scanner(_ scanner: BLEScanner, didReceiveNewAdvertisement advertisement: BLEAdvertisment, forDevice device: BLEDevice) {
         print("Received advertisement")
         print(advertisement)
     }
     
-    func scanner(_ scanner: BLEScanner, didDiscoverNewDevice device: AppleBLEDevice) {
+    func scanner(_ scanner: BLEScanner, didDiscoverNewDevice device: BLEDevice) {
         print("Discovered device")
         print(device)
     }

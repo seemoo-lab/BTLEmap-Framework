@@ -78,6 +78,8 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
             self.manufacturer = BLEManufacturer(rawValue: manufacturerInt) ?? .unknown
             self.manufacturerData = manufacturerData
             
+            guard manufacturer == .apple else {return}
+            
             self.advertisementTLV = try TLV.TLVBox.deserialize(fromData: manufacturerData, withSize: .tlv8)
             
             self.advertisementTLV!.getTypes().forEach { (advTypeRaw) in

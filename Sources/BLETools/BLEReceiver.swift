@@ -73,11 +73,6 @@ extension BLEReceiver: CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
 
-//        if let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data,
-//            self.isAppleAdvertisement(data: manufacturerData)  {
-//            self.delegate?.didReceive(appleAdvertisement: manufacturerData, fromDevice: peripheral)
-//        }
-        
         self.delegate?.didReceive(advertisementData: advertisementData, rssi: RSSI, from: peripheral)
     }
     

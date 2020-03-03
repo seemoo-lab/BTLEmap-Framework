@@ -13,7 +13,7 @@ public struct AppleBLEDevice: Equatable, CustomDebugStringConvertible, Hashable,
     public var id: String
     public internal(set) var name: String?
     public internal(set) var deviceType: String?
-    private (set) var advertisements = [AppleBLEAdvertisment]()
+    public private (set) var advertisements = [AppleBLEAdvertisment]()
     public internal(set) var peripheral: CBPeripheral
     
     public var uuid: UUID {return peripheral.identifier}

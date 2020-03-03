@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		78232036240EA6FC00D4FDE3 /* BLEManufacturer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78232035240EA6FC00D4FDE3 /* BLEManufacturer.swift */; };
 		784B76E123FAD83B00E34241 /* BLETools.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 784B76D723FAD83B00E34241 /* BLETools.framework */; };
 		784B76E623FAD83B00E34241 /* BLEToolsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76E523FAD83B00E34241 /* BLEToolsTests.swift */; };
 		784B76E823FAD83B00E34241 /* BLETools.h in Headers */ = {isa = PBXBuildFile; fileRef = 784B76DA23FAD83B00E34241 /* BLETools.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -45,6 +46,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		78232035240EA6FC00D4FDE3 /* BLEManufacturer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEManufacturer.swift; sourceTree = "<group>"; };
 		784B76D723FAD83B00E34241 /* BLETools.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BLETools.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		784B76DA23FAD83B00E34241 /* BLETools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BLETools.h; sourceTree = "<group>"; };
 		784B76DB23FAD83B00E34241 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -122,6 +124,7 @@
 				784B76F123FAD87100E34241 /* BLEReceiver.swift */,
 				784B76FB23FADA8E00E34241 /* BLEAdvertisement.swift */,
 				784B76FF23FAE01B00E34241 /* BLEDevice.swift */,
+				78232035240EA6FC00D4FDE3 /* BLEManufacturer.swift */,
 				78844DF0240D09CC00B8DA67 /* Parsing */,
 				784B76FA23FADA5F00E34241 /* Extensions */,
 				784B76DA23FAD83B00E34241 /* BLETools.h */,
@@ -328,6 +331,7 @@
 				784B76FE23FADFB200E34241 /* BLEScanner.swift in Sources */,
 				784B770023FAE01B00E34241 /* BLEDevice.swift in Sources */,
 				784B76F723FADA5500E34241 /* DataIntExtensions.swift in Sources */,
+				78232036240EA6FC00D4FDE3 /* BLEManufacturer.swift in Sources */,
 				784B76F423FAD8EC00E34241 /* Log.swift in Sources */,
 				78844DEC240D08C900B8DA67 /* TLV.swift in Sources */,
 				784B76F823FADA5500E34241 /* HexToDataExtensions.swift in Sources */,

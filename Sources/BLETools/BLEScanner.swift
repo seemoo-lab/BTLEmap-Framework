@@ -67,8 +67,7 @@ public class BLEScanner: BLEReceiverDelegate {
             }else {
                 //Add a new device
                 let advertisement = try BLEAdvertisment(advertisementData: advertisementData, rssi: rssi)
-                let bleDevice = BLEDevice(peripheral: device)
-                bleDevice.add(advertisement: advertisement)
+                let bleDevice = BLEDevice(peripheral: device, and: advertisement)
                 self.devices[device.identifier] = bleDevice
                 delegate?.scanner(self, didDiscoverNewDevice: bleDevice)
                 delegate?.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: bleDevice)

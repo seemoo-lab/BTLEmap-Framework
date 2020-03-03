@@ -19,11 +19,14 @@ public class BLEDevice: Equatable, CustomDebugStringConvertible, Hashable, Ident
     
     public var uuid: UUID {return peripheral.identifier}
     
+    public private(set) var manufacturer: BLEManufacturer
     
-    init(peripheral: CBPeripheral) {
+    init(peripheral: CBPeripheral, and advertisement: BLEAdvertisment) {
         self.peripheral = peripheral
         self.name = peripheral.name
         self.id = peripheral.identifier.uuidString
+        self.manufacturer = advertisement.manufacturer
+        self.advertisements.append(advertisement)
     }
     
     public static func == (lhs: BLEDevice, rhs: BLEDevice) -> Bool {
@@ -33,7 +36,7 @@ public class BLEDevice: Equatable, CustomDebugStringConvertible, Hashable, Ident
     /// Add a received advertisement to the device
     /// - Parameter advertisement: received BLE advertisement
     func add(advertisement: BLEAdvertisment) {
-        // Check if that advertisement has been received before 
+        // Check if that advertisement has been received before
         if let matching = self.advertisements.first(where: {$0.manufacturerData == advertisement.manufacturerData}) {
             matching.update(with: advertisement)
         }else {

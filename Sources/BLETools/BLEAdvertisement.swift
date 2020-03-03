@@ -27,7 +27,7 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
     public var advertisementTLV: TLV.TLVBox?
     internal private(set) var manufacturerData: Data?
     
-    public var manufacturer: Manufacturer
+    public var manufacturer: BLEManufacturer
     
     @Published public var connectable: Bool = false
     
@@ -48,7 +48,7 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
         self.advertisementTLV = try TLV.TLVBox.deserialize(fromData: manufacturerData, withSize: .tlv8)
         
         let manufacturerInt = manufacturerData[0]
-        self.manufacturer = Manufacturer(rawValue: manufacturerInt) ?? .unknown
+        self.manufacturer = BLEManufacturer(rawValue: manufacturerInt) ?? .unknown
         self.manufacturerData = manufacturerData
         
         self.advertisementTLV!.getTypes().forEach { (advTypeRaw) in
@@ -75,7 +75,7 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
         
         if let manufacturerData = advertisementData["kCBAdvDataManufacturerData"] as? Data {
             let manufacturerInt = manufacturerData[0]
-            self.manufacturer = Manufacturer(rawValue: manufacturerInt) ?? .unknown
+            self.manufacturer = BLEManufacturer(rawValue: manufacturerInt) ?? .unknown
             self.manufacturerData = manufacturerData
             
             self.advertisementTLV = try TLV.TLVBox.deserialize(fromData: manufacturerData, withSize: .tlv8)
@@ -236,10 +236,5 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
             }
         }
         
-    }
-    
-    public enum Manufacturer: UInt8 {
-        case apple = 0x4c
-        case unknown = 0x00
     }
 }

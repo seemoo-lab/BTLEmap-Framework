@@ -31,7 +31,7 @@ public class BLEScanner: BLEReceiverDelegate {
     let receiver = BLEReceiver()
     public var devices = [UUID: AppleBLEDevice]()
     public var deviceList = Array<AppleBLEDevice>()
-    public let delegate: BLEScannerDelegate?
+    public var delegate: BLEScannerDelegate?
     
     /// Set to true to start scanning for advertisements
     public var scanning: Bool = false {

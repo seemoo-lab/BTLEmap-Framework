@@ -121,6 +121,10 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
     
     /// Hex encoded attributed string for displaying manufacturer data sent in advertisements
     public lazy var dataAttributedString: NSAttributedString = {
+        guard let advertisementTLV = self.advertisementTLV else {
+            return NSAttributedString(string: "Empty")
+        }
+        
         let attributedString = NSMutableAttributedString()
         
         let fontSize: CGFloat = 13.0
@@ -163,11 +167,14 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
             #endif
         }()
         
-        self.advertisementTLV?.getTypes().forEach { (rawType) in
-            let typeString = NSAttributedString(string: String(format: "0x%02x ", UInt8(rawType)), attributes: typeAttributes)
+        advertisementTLV.getTypes().forEach { (rawType) in
+            let appleType = AppleAdvertisementType(rawValue: rawType) ?? .unknown
+            
+            let typeString = NSAttributedString(string: String(format: "%@ (0x%02x)", appleType.description, UInt8(rawType)), attributes: typeAttributes)
+            
             attributedString.append(typeString)
             
-            if let data = advertisementTLV?.getValue(forType: rawType) {
+            if let data = advertisementTLV.getValue(forType: rawType) {
                 let lengthString =  NSAttributedString(string: String(format: "%02x: ", UInt8(data.count)), attributes: lengthAttributes)
                 attributedString.append(lengthString)
                 
@@ -203,8 +210,31 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
         case instantHotspot = 0x0e
         case wifiPasswordSharing = 0xf
         case nearby = 0x10
-
+        case airpods = 0x07
+        case apple = 0x4c
+        
         case unknown = 0x00
+        
+        var description: String {
+            switch self {
+            case .airpods:
+                return "AirPods"
+            case .handoff:
+                return "Handoff / UC"
+            case .instantHotspot:
+                return "Instant Hotspot"
+            case .nearby:
+                return "Nearby"
+            case .wifiPasswordSharing:
+                return "Wi-Fi Password sharing"
+            case .wifiSettings:
+                return "Wi-Fi Settings open"
+            case .apple:
+                return "Apple"
+            case .unknown:
+                return "Unknown"
+            }
+        }
         
     }
     

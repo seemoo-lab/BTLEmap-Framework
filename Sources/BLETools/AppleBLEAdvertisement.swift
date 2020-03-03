@@ -46,7 +46,7 @@ public class AppleBLEAdvertisment: CustomDebugStringConvertible, Identifiable {
     
     
     /// Hex encoded attributed string for displaying manufacturer data sent in advertisements
-    public var dataAttributedString: NSAttributedString {
+    public lazy var dataAttributedString: NSAttributedString = {
         let attributedString = NSMutableAttributedString()
         
         let fontSize: CGFloat = 13.0
@@ -112,7 +112,7 @@ public class AppleBLEAdvertisment: CustomDebugStringConvertible, Identifiable {
         }
         
         return attributedString
-    }
+    }()
     
     public var debugDescription: String {
         return(

@@ -8,31 +8,31 @@ import Foundation
 
 extension Data {
     
-    var uint8: UInt8 {
-        get {
-            var number: UInt8 = 0
-            self.copyBytes(to:&number, count: MemoryLayout<UInt8>.size)
-            return number
-        }
-    }
-    
-    var uint16: UInt16 {
-        get {
-            let i16array = self.withUnsafeBytes {
-                UnsafeBufferPointer<UInt16>(start: $0, count: self.count/2).map(UInt16.init(littleEndian:))
-            }
-            return i16array[0]
-        }
-    }
-    
-    var uint32: UInt32 {
-        get {
-            let i32array = self.withUnsafeBytes {
-                UnsafeBufferPointer<UInt32>(start: $0, count: self.count/2).map(UInt32.init(littleEndian:))
-            }
-            return i32array[0]
-        }
-    }
+//    var uint8: UInt8 {
+//        get {
+//            var number: UInt8 = 0
+//            self.copyBytes(to:&number, count: MemoryLayout<UInt8>.size)
+//            return number
+//        }
+//    }
+//    
+//    var uint16: UInt16 {
+//        get {
+//            let i16array = self.withUnsafeBytes {
+//                UnsafeBufferPointer<UInt16>(start: $0, count: self.count/2).map(UInt16.init(littleEndian:))
+//            }
+//            return i16array[0]
+//        }
+//    }
+//    
+//    var uint32: UInt32 {
+//        get {
+//            let i32array = self.withUnsafeBytes {
+//                UnsafeBufferPointer<UInt32>(start: $0, count: self.count/2).map(UInt32.init(littleEndian:))
+//            }
+//            return i32array[0]
+//        }
+//    }
     
     var uuid: NSUUID? {
         get {

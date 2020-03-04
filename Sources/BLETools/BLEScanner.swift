@@ -64,6 +64,10 @@ public class BLEScanner: BLEReceiverDelegate {
                 let advertisement = try BLEAdvertisment(advertisementData: advertisementData, rssi: rssi)
                 bleDevice.add(advertisement: advertisement)
                 delegate?.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: bleDevice)
+                if bleDevice.deviceType == nil {
+                    self.receiver.detectDeviceType(for: bleDevice)
+                }
+                
             }else {
                 //Add a new device
                 let advertisement = try BLEAdvertisment(advertisementData: advertisementData, rssi: rssi)
@@ -72,10 +76,17 @@ public class BLEScanner: BLEReceiverDelegate {
                 delegate?.scanner(self, didDiscoverNewDevice: bleDevice)
                 delegate?.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: bleDevice)
                 self.deviceList = Array(devices.values)
+                self.receiver.detectDeviceType(for: bleDevice)
             }
         }catch {
             return
         }
     }
     
+    func didUpdateModelNumber(_ modelNumber: String, for peripheral: CBPeripheral) {
+        guard let device = self.devices[peripheral.identifier] else {return}
+        
+        device.modelNumber = modelNumber
+        
+    }
 }

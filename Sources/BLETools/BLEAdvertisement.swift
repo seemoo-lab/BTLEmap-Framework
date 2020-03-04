@@ -213,15 +213,15 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
         case instantHotspot = 0x0e
         case wifiPasswordSharing = 0xf
         case nearby = 0x10
-        case airpods = 0x07
+        case airpodsOrPencil = 0x07
         case apple = 0x4c
         
         case unknown = 0x00
         
         var description: String {
             switch self {
-            case .airpods:
-                return "AirPods"
+            case .airpodsOrPencil:
+                return "AirPodsOrPencil"
             case .handoff:
                 return "Handoff / UC"
             case .instantHotspot:

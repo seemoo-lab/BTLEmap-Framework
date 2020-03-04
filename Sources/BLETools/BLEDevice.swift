@@ -10,10 +10,9 @@ import Foundation
 import CoreBluetooth
 import Combine
 
-public class BLEDevice: Equatable, CustomDebugStringConvertible, Hashable, Identifiable, ObservableObject {
+public class BLEDevice: NSObject, Identifiable, ObservableObject {
     public var id: String
     public internal(set) var name: String?
-    @Published public internal(set) var deviceType: String?
     @Published public private (set) var advertisements = [BLEAdvertisment]()
     public internal(set) var peripheral: CBPeripheral
     
@@ -21,16 +20,59 @@ public class BLEDevice: Equatable, CustomDebugStringConvertible, Hashable, Ident
     
     public private(set) var manufacturer: BLEManufacturer
     
+    @Published public internal(set) var deviceType: DeviceType?
+    @Published public internal(set) var modelNumber: String? {
+        // Set the device type to the according model number
+        didSet {
+            guard let modelNumber = self.modelNumber else {return}
+            
+            switch modelNumber {
+            case let s where s.lowercased().contains("macbook"):
+                self.deviceType = .macBook
+                
+            case let s where s.lowercased().contains("imac"):
+                self.deviceType = .iMac
+                
+            case let s where s.lowercased().contains("iphone"):
+                self.deviceType = .iPhone
+                
+            case let s where s.lowercased().contains("ipad"):
+                self.deviceType = .iPad
+                
+            case let s where s.lowercased().contains("ipod"):
+                self.deviceType = .iPod
+            
+            case let s where s.lowercased().contains("airpods"):
+                self.deviceType = .AirPods
+                
+            case let s where s.lowercased().contains("watch"):
+                self.deviceType = .AppleWatch
+                
+            default:
+                self.deviceType = .other
+            }
+        }
+    }
+    
+    
+    
     public var lastRSSI: NSNumber {
         return self.advertisements.first?.rssi.last ?? NSNumber(value: -100)
     }
     
+    public var connectable: Bool {
+        return self.advertisements.last(where: {$0.connectable}) != nil
+    }
+    
     init(peripheral: CBPeripheral, and advertisement: BLEAdvertisment) {
+        
         self.peripheral = peripheral
         self.name = peripheral.name
         self.id = peripheral.identifier.uuidString
         self.manufacturer = advertisement.manufacturer
+        super.init()
         self.advertisements.append(advertisement)
+        
     }
     
     public static func == (lhs: BLEDevice, rhs: BLEDevice) -> Bool {
@@ -47,8 +89,9 @@ public class BLEDevice: Equatable, CustomDebugStringConvertible, Hashable, Ident
             self.advertisements.append(advertisement)
         }
     }
+
     
-    public var debugDescription: String {
+    public override var debugDescription: String {
         return(
         """
         \(self.uuid.uuidString)
@@ -57,7 +100,24 @@ public class BLEDevice: Equatable, CustomDebugStringConvertible, Hashable, Ident
         """)
     }
     
-    public func hash(into hasher: inout Hasher) {
-        return hasher.combine(id)
+//    public override func hash(into hasher: inout Hasher) {
+//        return hasher.combine(id)
+//    }
+
+    public enum DeviceType {
+        case iPhone
+        case macBook
+        case iMac
+        case iPad
+        case iPod
+        case AirPods
+        case Pencil
+        case AppleWatch
+        case appleEmbedded
+        case other
     }
+}
+
+extension BLEDevice: CBPeripheralDelegate {
+    
 }

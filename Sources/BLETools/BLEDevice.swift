@@ -20,7 +20,9 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     
     public private(set) var manufacturer: BLEManufacturer
     
+    /// Device type can be retrieved from device information or advertisement data
     @Published public internal(set) var deviceType: DeviceType?
+    /// Model number string received from device information service
     @Published public internal(set) var modelNumber: String? {
         // Set the device type to the according model number
         didSet {
@@ -55,7 +57,6 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     }
     
     
-    
     public var lastRSSI: NSNumber {
         return self.advertisements.first?.rssi.last ?? NSNumber(value: -100)
     }
@@ -63,6 +64,8 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     public var connectable: Bool {
         return self.advertisements.last(where: {$0.connectable}) != nil
     }
+    
+    public private(set) var lastUpdate: Date = Date()
     
     init(peripheral: CBPeripheral, and advertisement: BLEAdvertisment) {
         
@@ -88,6 +91,8 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
         }else {
             self.advertisements.append(advertisement)
         }
+        
+        self.lastUpdate = advertisement.receptionDates.last!
     }
 
     

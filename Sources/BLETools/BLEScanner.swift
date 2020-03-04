@@ -33,6 +33,12 @@ public class BLEScanner: BLEReceiverDelegate {
     public var deviceList = Array<BLEDevice>()
     public var delegate: BLEScannerDelegate?
     
+    /// If set to false no timeouts will happen
+    public var devicesCanTimeout = true
+    
+    /// Devices time out after 5 minuites without an update. Therefore, they will disappear afterwards
+    let timeout: TimeInterval = 5.0 * 60.0
+    
     /// Set to true to start scanning for advertisements
     public var scanning: Bool = false {
         didSet {
@@ -81,12 +87,22 @@ public class BLEScanner: BLEReceiverDelegate {
         }catch {
             return
         }
+        
+        if self.devicesCanTimeout {
+            checkForTimeouts()
+        }
     }
     
     func didUpdateModelNumber(_ modelNumber: String, for peripheral: CBPeripheral) {
         guard let device = self.devices[peripheral.identifier] else {return}
-        
         device.modelNumber = modelNumber
-        
+    }
+    
+    func checkForTimeouts() {
+        let timedOutDevices = self.deviceList.filter {$0.lastUpdate.timeIntervalSinceNow < -self.timeout}
+        timedOutDevices.forEach { (d) in
+            self.devices[d.uuid] = nil
+        }
+        self.deviceList = Array(self.devices.values)
     }
 }

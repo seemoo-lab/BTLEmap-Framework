@@ -99,15 +99,14 @@ extension BLEReceiver: CBPeripheralDelegate {
         
         let isAppleEmbedded = device.advertisements.contains(where: {$0.advertisementTypes.contains(.airpodsOrPencil)})
         
-        guard !isAppleEmbedded else {
-            device.deviceType = .appleEmbedded
+        //Make GATT connection
+        device.peripheral.delegate = self
+        guard device.connectable else {
+            if isAppleEmbedded {
+                device.deviceType = .appleEmbedded
+            }
             return
         }
-        
-        //Make GATT connection
-        
-        device.peripheral.delegate = self
-        guard device.connectable else {return}
         
         self.centralManager.connect(device.peripheral, options: nil)
     }

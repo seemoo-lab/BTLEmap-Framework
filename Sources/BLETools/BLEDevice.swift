@@ -21,6 +21,10 @@ public class BLEDevice: Equatable, CustomDebugStringConvertible, Hashable, Ident
     
     public private(set) var manufacturer: BLEManufacturer
     
+    public var lastRSSI: NSNumber {
+        return self.advertisements.first?.rssi.last ?? NSNumber(value: -100)
+    }
+    
     init(peripheral: CBPeripheral, and advertisement: BLEAdvertisment) {
         self.peripheral = peripheral
         self.name = peripheral.name

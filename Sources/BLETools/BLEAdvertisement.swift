@@ -215,6 +215,16 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
         case nearby = 0x10
         case airpodsOrPencil = 0x07
         case apple = 0x4c
+        case airDrop = 0x05
+        case airplaySource = 0x0A
+        case airplayTarget = 0x09
+        case airprint = 0x03
+        case heySiri = 0x08
+        case homeKit = 0x06
+        case magicSwitch = 0x0B // Apple watch lost connection
+//        case nearbyAction = 0x0f // Change of device state e.g. joining wiFi
+        
+        case applePencilLostConnection = 0x12
         
         case unknown = 0x00
         
@@ -234,6 +244,22 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
                 return "Wi-Fi Settings open"
             case .apple:
                 return "Apple"
+            case .airDrop:
+                return "AirDrop"
+            case .airplaySource:
+                return "AirPlay Source"
+            case .airplayTarget:
+                return "AirPlay Target"
+            case .airprint:
+                return "AirPrint"
+            case .heySiri:
+                return "Hey Siri"
+            case .homeKit:
+                return "HomeKit"
+            case .magicSwitch:
+                return "Apple Watch Pairing"
+            case .applePencilLostConnection:
+                return "Apple Pencil lost connection"
             case .unknown:
                 return "Unknown"
             }

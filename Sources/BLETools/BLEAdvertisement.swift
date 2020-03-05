@@ -27,7 +27,9 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
     public var advertisementTLV: TLV.TLVBox?
     public private(set) var manufacturerData: Data?
     
-    public var manufacturer: BLEManufacturer
+    public private(set) var companyIdentifier: Data?
+    
+    public var manufacturer: BLEManufacturer = .unknown
     
     @Published public var connectable: Bool = false
     
@@ -45,18 +47,11 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
     /// - Parameter manufacturerData: BLE manufacturer Data that has been received
     public init(manufacturerData: Data, id: Int) throws {
         //Parse the advertisement
-        self.advertisementTLV = try TLV.TLVBox.deserialize(fromData: manufacturerData, withSize: .tlv8)
         
-        let manufacturerInt = manufacturerData[0]
-        self.manufacturer = BLEManufacturer(rawValue: manufacturerInt) ?? .unknown
         self.manufacturerData = manufacturerData
-        
-        self.advertisementTLV!.getTypes().forEach { (advTypeRaw) in
-            if let advType = AppleAdvertisementType(rawValue: advTypeRaw) {
-                advertisementTypes.append(advType)
-            }else {
-                advertisementTypes.append(.unknown)
-            }
+        self.intializeManufacturer()
+        if self.manufacturer == .apple {
+            try self.intitializeTLVForApple()
         }
         
         self.receptionDates.append(Date())
@@ -74,21 +69,12 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
         self.appleMfgData = advertisementData["kCBAdvDataAppleMfgData"] as? [String : Any]
         
         if let manufacturerData = advertisementData["kCBAdvDataManufacturerData"] as? Data {
-            let manufacturerInt = manufacturerData[0]
-            self.manufacturer = BLEManufacturer(rawValue: manufacturerInt) ?? .unknown
             self.manufacturerData = manufacturerData
             
+            self.intializeManufacturer()
+            
             if  manufacturer == .apple {
-                
-                self.advertisementTLV = try TLV.TLVBox.deserialize(fromData: manufacturerData, withSize: .tlv8)
-                
-                self.advertisementTLV!.getTypes().forEach { (advTypeRaw) in
-                    if let advType = AppleAdvertisementType(rawValue: advTypeRaw) {
-                        advertisementTypes.append(advType)
-                    }else {
-                        advertisementTypes.append(.unknown)
-                    }
-                }
+                try self.intitializeTLVForApple()
             }
         }else {
             manufacturer = .unknown
@@ -98,6 +84,29 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
         self.receptionDates.append(Date())
         self.rssi.append(rssi)
         
+    }
+    
+    func intializeManufacturer() {
+        guard let manufacturerData = self.manufacturerData, manufacturerData.count >= 2 else {return}
+        
+        let companyID = manufacturerData[manufacturerData.startIndex..<manufacturerData.startIndex.advanced(by: 2)]
+        self.companyIdentifier = companyID
+        
+        self.manufacturer = BLEManufacturer.fromCompanyId(companyID)
+    }
+    
+    func intitializeTLVForApple() throws {
+        guard let manufacturerData = self.manufacturerData, manufacturerData.count >= 2 else {return}
+        
+        self.advertisementTLV = try TLV.TLVBox.deserialize(fromData: manufacturerData, withSize: .tlv8)
+        
+        self.advertisementTLV!.getTypes().forEach { (advTypeRaw) in
+            if let advType = AppleAdvertisementType(rawValue: advTypeRaw) {
+                advertisementTypes.append(advType)
+            }else {
+                advertisementTypes.append(.unknown)
+            }
+        }
     }
     
     

@@ -202,7 +202,7 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
     public var debugDescription: String {
         return(
         """
-        \(self.dataAttributedString.string)
+            \(self.dataAttributedString?.string ?? self.manufacturerData?.hexadecimal.separate(every: 8, with: " "))
         """
         )
     }

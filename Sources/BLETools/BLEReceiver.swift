@@ -70,7 +70,7 @@ class BLEReceiver: NSObject {
 
 extension BLEReceiver: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        print("CBCentralManager did Update state \(central.state)")
+        print("CBCentralManager did Update state \(central.state.description)")
         if central.state == .poweredOn && self.shouldScanForAdvertisements {
             self.scanForAdvertisements()
             self.shouldScanForAdvertisements = false

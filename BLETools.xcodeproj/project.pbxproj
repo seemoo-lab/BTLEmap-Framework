@@ -33,6 +33,7 @@
 		788D98DE240D4686005FC745 /* InttoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DED240D09C100B8DA67 /* InttoData.swift */; };
 		788D98DF240D4686005FC745 /* DataIntExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76F523FADA5500E34241 /* DataIntExtensions.swift */; };
 		788D98E0240D4686005FC745 /* HexToDataExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76F623FADA5500E34241 /* HexToDataExtensions.swift */; };
+		78B8661E2410E88F003761D0 /* CBCentralManagerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B8661D2410E88F003761D0 /* CBCentralManagerExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +69,7 @@
 		788D98C0240D4674005FC745 /* BLETools_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BLETools_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		788D98C2240D4674005FC745 /* BLETools_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BLETools_iOS.h; sourceTree = "<group>"; };
 		788D98C3240D4674005FC745 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		78B8661D2410E88F003761D0 /* CBCentralManagerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBCentralManagerExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +151,7 @@
 				78844DED240D09C100B8DA67 /* InttoData.swift */,
 				784B76F523FADA5500E34241 /* DataIntExtensions.swift */,
 				784B76F623FADA5500E34241 /* HexToDataExtensions.swift */,
+				78B8661D2410E88F003761D0 /* CBCentralManagerExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -335,6 +338,7 @@
 				784B76F423FAD8EC00E34241 /* Log.swift in Sources */,
 				78844DEC240D08C900B8DA67 /* TLV.swift in Sources */,
 				784B76F823FADA5500E34241 /* HexToDataExtensions.swift in Sources */,
+				78B8661E2410E88F003761D0 /* CBCentralManagerExtension.swift in Sources */,
 				784B76FC23FADA8E00E34241 /* BLEAdvertisement.swift in Sources */,
 				78844DD1240D076600B8DA67 /* ProtocolParser.swift in Sources */,
 				784B76F223FAD87100E34241 /* BLEReceiver.swift in Sources */,

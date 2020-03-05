@@ -27,17 +27,17 @@ public protocol BLEScannerDelegate {
 }
 
 /// BLE Scanner can be used to discover BLE devices sending advertisements over one of the advertisement channels
-public class BLEScanner: BLEReceiverDelegate {
+public class BLEScanner: BLEReceiverDelegate, ObservableObject {
     let receiver = BLEReceiver()
-    public var devices = [UUID: BLEDevice]()
-    public var deviceList = Array<BLEDevice>()
+    @Published public var devices = [UUID: BLEDevice]()
+    @Published public var deviceList = Array<BLEDevice>()
     public var delegate: BLEScannerDelegate?
     
     /// If set to false no timeouts will happen
     public var devicesCanTimeout = true
     
     /// Devices time out after 5 minuites without an update. Therefore, they will disappear afterwards
-    let timeout: TimeInterval = 5.0 * 60.0
+    public var timeoutInterval: TimeInterval = 5.0 * 60.0
     
     /// Set to true to start scanning for advertisements
     public var scanning: Bool = false {
@@ -99,7 +99,7 @@ public class BLEScanner: BLEReceiverDelegate {
     }
     
     func checkForTimeouts() {
-        let timedOutDevices = self.deviceList.filter {$0.lastUpdate.timeIntervalSinceNow < -self.timeout}
+        let timedOutDevices = self.deviceList.filter {$0.lastUpdate.timeIntervalSinceNow < -self.timeoutInterval}
         timedOutDevices.forEach { (d) in
             self.devices[d.uuid] = nil
         }

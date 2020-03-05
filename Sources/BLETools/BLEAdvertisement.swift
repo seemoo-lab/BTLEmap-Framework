@@ -123,9 +123,9 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
     
     
     /// Hex encoded attributed string for displaying manufacturer data sent in advertisements
-    public lazy var dataAttributedString: NSAttributedString = {
+    public lazy var dataAttributedString: NSAttributedString? = {
         guard let advertisementTLV = self.advertisementTLV else {
-            return NSAttributedString(string: "Empty")
+            return nil
         }
         
         let attributedString = NSMutableAttributedString()

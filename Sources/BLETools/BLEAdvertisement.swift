@@ -25,7 +25,7 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
     /// All advertisement messages. Keys are the advertisement Type raw value and the advertisement data as value
     /// E.g. 0x0c: Data for Handoff
     public var advertisementTLV: TLV.TLVBox?
-    internal private(set) var manufacturerData: Data?
+    public private(set) var manufacturerData: Data?
     
     public var manufacturer: BLEManufacturer
     
@@ -197,6 +197,7 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
         
         return attributedString
     }()
+    
     
     public var debugDescription: String {
         return(

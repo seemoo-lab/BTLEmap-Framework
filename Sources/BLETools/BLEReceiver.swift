@@ -127,7 +127,7 @@ extension BLEReceiver: CBPeripheralDelegate {
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         
-        print(peripheral.services ?? "None")
+        print(peripheral.services?.map{$0.uuid} ?? "None")
         
         guard let services = peripheral.services,
             let deviceInfoService = services.first(where: {$0.uuid == CBServiceUUIDs.deviceInformation.uuid}) else {return}

@@ -82,7 +82,7 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     init(peripheral: CBPeripheral, and advertisement: BLEAdvertisment) {
         
         self.peripheral = peripheral
-        self.name = peripheral.name
+        self._name = peripheral.name
         self.id = peripheral.identifier.uuidString
         self.manufacturer = advertisement.manufacturer
         super.init()

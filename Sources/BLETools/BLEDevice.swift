@@ -65,6 +65,10 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
             default:
                 self.deviceType = .other
             }
+            
+            if self.deviceType != .other && self.manufacturer == .unknown {
+                self.manufacturer = .apple
+            }
         }
     }
     

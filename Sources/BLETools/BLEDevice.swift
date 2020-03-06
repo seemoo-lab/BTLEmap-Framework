@@ -12,7 +12,19 @@ import Combine
 
 public class BLEDevice: NSObject, Identifiable, ObservableObject {
     public var id: String
-    public internal(set) var name: String?
+    private var _name: String?
+    public internal(set) var name: String? {
+        get {
+            if let n = _name {
+                return n
+            }
+            
+            return self.peripheral.name
+        }
+        set(v) {
+            self._name = name
+        }
+    }
     @Published public private (set) var advertisements = [BLEAdvertisment]()
     public internal(set) var peripheral: CBPeripheral
     

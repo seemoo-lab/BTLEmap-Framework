@@ -9,7 +9,7 @@
 import Foundation
 
 
-public enum BLEManufacturer: String {
+public enum BLEManufacturer: String, CaseIterable {
     case apple
     case unknown
     case samsung
@@ -27,7 +27,7 @@ public enum BLEManufacturer: String {
     case ibm
     case motorola
     case broadcom
-    case amazon 
+    case amazon
     
     public var name: String {
         switch self {

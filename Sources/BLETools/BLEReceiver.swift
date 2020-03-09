@@ -48,7 +48,7 @@ class BLEReceiver: NSObject {
         if self.centralManager.state == .poweredOn {
             var scanOptions = [String: Any]()
             #if os(iOS)
-            scanOptions["CBCentralManagerScanOptionIsPrivilegedDaemonKey"] = true
+            scanOptions["CBCentralManagerScanOptionIsPrivilegedDaemonKey"] = NSNumber(booleanLiteral: true)
             #endif
             self.centralManager.scanForPeripherals(withServices: nil, options: scanOptions)
             self.isScanning = true

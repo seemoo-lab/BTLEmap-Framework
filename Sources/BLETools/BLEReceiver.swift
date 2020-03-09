@@ -46,7 +46,11 @@ class BLEReceiver: NSObject {
     /// Start scanning for advertisements
     func scanForAdvertisements() {
         if self.centralManager.state == .poweredOn {
-            self.centralManager.scanForPeripherals(withServices: nil, options: nil)
+            var scanOptions = [String: Any]()
+            #if os(iOS)
+            scanOptions["CBCentralManagerScanOptionIsPrivilegedDaemonKey"] = true
+            #endif
+            self.centralManager.scanForPeripherals(withServices: nil, options: scanOptions)
             self.isScanning = true
         }else {
             self.shouldScanForAdvertisements = true

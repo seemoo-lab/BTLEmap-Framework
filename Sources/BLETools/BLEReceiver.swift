@@ -33,6 +33,7 @@ protocol BLEReceiverDelegate {
 class BLEReceiver: NSObject {
     var centralManager: CBCentralManager!
     var delegate: BLEReceiverDelegate?
+    private var isScanning = false
     
     private var shouldScanForAdvertisements = false
     
@@ -46,6 +47,7 @@ class BLEReceiver: NSObject {
     func scanForAdvertisements() {
         if self.centralManager.state == .poweredOn {
             self.centralManager.scanForPeripherals(withServices: nil, options: nil)
+            self.isScanning = true
         }else {
             self.shouldScanForAdvertisements = true
         }
@@ -55,6 +57,7 @@ class BLEReceiver: NSObject {
     func stopScanningForAdvertisements() {
         self.shouldScanForAdvertisements = false
         self.centralManager.stopScan()
+        self.isScanning = false
     }
     
     
@@ -74,6 +77,12 @@ extension BLEReceiver: CBCentralManagerDelegate {
         if central.state == .poweredOn && self.shouldScanForAdvertisements {
             self.scanForAdvertisements()
             self.shouldScanForAdvertisements = false
+        }
+        
+        if central.state == .poweredOff {
+            guard self.isScanning else {return}
+            self.stopScanningForAdvertisements()
+            self.shouldScanForAdvertisements = true
         }
     }
     

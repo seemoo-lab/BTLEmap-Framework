@@ -217,7 +217,7 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
     }
     
     
-    public enum AppleAdvertisementType: UInt {
+    public enum AppleAdvertisementType: UInt, CaseIterable {
         case handoff = 0x0c
         case wifiSettings = 0x0d
         case instantHotspot = 0x0e

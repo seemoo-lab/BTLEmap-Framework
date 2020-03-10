@@ -116,8 +116,8 @@ extension BLEReceiver: CBPeripheralDelegate {
         
         // Embedded Apple devices don't offer GATT by default.
         // We can detect the device type from their advertisements
-        if let advertisement = device.advertisements.first(where: {$0.advertisementTypes.contains(.airpodsOrPencil)}),
-            let advData = advertisement.advertisementTLV?.getValue(forType: BLEAdvertisment.AppleAdvertisementType.airpodsOrPencil.rawValue),
+        if let advertisement = device.advertisements.first(where: {$0.advertisementTypes.contains(.proximityPairing)}),
+            let advData = advertisement.advertisementTLV?.getValue(forType: BLEAdvertisment.AppleAdvertisementType.proximityPairing.rawValue),
         advData.count >= 1 {
             let deviceTypeByte = advData[advData.startIndex]
             

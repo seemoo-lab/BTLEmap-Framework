@@ -22,14 +22,16 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
             return self.peripheral.name
         }
         set(v) {
-            self._name = name
+            self._name = v
         }
     }
     @Published public private (set) var advertisements = [BLEAdvertisment]()
     public internal(set) var peripheral: CBPeripheral
     
+    /// The UUID of the peripheral
     public var uuid: UUID {return peripheral.identifier}
     
+    /// The manufacturer of this device. Mostly taken from advertisement
     public private(set) var manufacturer: BLEManufacturer
     
     /// Device type can be retrieved from device information or advertisement data
@@ -73,15 +75,21 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     }
     
     
+    /// Last RSSI value that has been received
     public var lastRSSI: NSNumber {
         return self.advertisements.first?.rssi.last ?? NSNumber(value: -100)
     }
     
+    /// True if the device marks itself as connectable
     public var connectable: Bool {
         return self.advertisements.last(where: {$0.connectable}) != nil
     }
     
+    /// The last time when this device has sent an advertisement
     public private(set) var lastUpdate: Date = Date()
+    
+    /// Subject to which can be subscribed to receive every new advertisement individually after it has been added to the device.
+    public let newAdvertisementSubject = PassthroughSubject<BLEAdvertisment, Never>()
     
     init(peripheral: CBPeripheral, and advertisement: BLEAdvertisment) {
         

@@ -87,7 +87,7 @@ struct TLVBox {
         
         return tlv?.value
     }
-    
+
     public func getTypes() -> [UInt] {
         return tlvs.map({$0.type})
     }

@@ -10,6 +10,8 @@ import Foundation
 import CoreBluetooth
 import Combine
 
+
+
 public protocol BLEScannerDelegate {
     
     /// Scanner did discover a new device
@@ -52,6 +54,9 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
         }
     }
     
+    public let newAdvertisementSubject = PassthroughSubject<BLE_Event,Never>()
+    public let newDeviceSubject = PassthroughSubject<BLEDevice,Never>()
+    
     public init(delegate: BLEScannerDelegate? = nil) {
         self.delegate = delegate
         receiver.delegate = self
@@ -73,6 +78,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
                 if bleDevice.deviceType == nil {
                     self.receiver.detectDeviceType(for: bleDevice)
                 }
+                self.newAdvertisementSubject.send(BLE_Event(advertisement: advertisement, device: bleDevice))
                 
             }else {
                 //Add a new device
@@ -83,6 +89,8 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
                 delegate?.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: bleDevice)
                 self.deviceList = Array(devices.values)
                 self.receiver.detectDeviceType(for: bleDevice)
+                self.newDeviceSubject.send(bleDevice)
+                self.newAdvertisementSubject.send(BLE_Event(advertisement: advertisement, device: bleDevice))
             }
         }catch {
             return
@@ -104,5 +112,10 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
             self.devices[d.uuid] = nil
         }
         self.deviceList = Array(self.devices.values)
+    }
+    
+    public struct BLE_Event {
+        let advertisement: BLEAdvertisment
+        let device: BLEDevice
     }
 }

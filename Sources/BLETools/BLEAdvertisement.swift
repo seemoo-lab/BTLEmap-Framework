@@ -224,7 +224,6 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
         case wifiPasswordSharing = 0xf
         case nearby = 0x10
         case proximityPairing = 0x07
-        case apple = 0x4c
         case airDrop = 0x05
         case airplaySource = 0x0A
         case airplayTarget = 0x09
@@ -251,9 +250,7 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
             case .wifiPasswordSharing:
                 return "Wi-Fi Password sharing"
             case .wifiSettings:
-                return "Wi-Fi Settings open"
-            case .apple:
-                return "Apple"
+                return "Wi-Fi Settings"
             case .airDrop:
                 return "AirDrop"
             case .airplaySource:

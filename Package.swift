@@ -11,7 +11,7 @@ let package = Package(
         .library(name: "BLETools", targets: ["BLETools"]),
     ],
     dependencies: [
-        
+        .package(url:"https://dev.seemoo.tu-darmstadt.de/aheinrich/apple-ble-decoder.git", .branch("master"))
     ],
     targets: [
         .target(name: "BLETools", dependencies: []),

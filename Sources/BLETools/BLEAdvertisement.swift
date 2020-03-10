@@ -238,7 +238,7 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
         
         case unknown = 0x00
         
-        var description: String {
+        public var description: String {
             switch self {
             case .proximityPairing:
                 return "Proximity Pairing"

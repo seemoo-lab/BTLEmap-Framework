@@ -10,9 +10,9 @@ import Foundation
 
 
 public struct TLV {
-    let type: UInt
-    let length: UInt
-    let value: Data
+    public let type: UInt
+    public let length: UInt
+    public let value: Data
 }
 
 public extension TLV {

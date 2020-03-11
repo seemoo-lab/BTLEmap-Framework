@@ -104,7 +104,7 @@ struct TLVBox {
         var box = TLVBox()
         
         //Iterate over the bytes until every TLV is parsed
-        while index < data.endIndex {
+        while index.advanced(by: 2) < data.endIndex {
             //Get type and length
             guard var type = data[index..<index.advanced(by: size.bytes)].uint else {throw Error.parsingFailed}
             index = index.advanced(by: size.bytes)

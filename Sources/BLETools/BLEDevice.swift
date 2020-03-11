@@ -141,16 +141,36 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
             case .iOS11:
                 self.osVersion = "iOS 11"
             case .iOS12OrIPadOS13WiFiOn:
-                self.osVersion = "iOS 12 / iPadOS 13"
+                if self.modelNumber?.lowercased().contains("ipad") == true {
+                    self.osVersion = "iPadOS 13"
+                }else {
+                    self.osVersion = "iOS 12"
+                }
+                
                 self.wiFiOn = true
             case .iOS12WiFiOn:
-                self.osVersion = "iOS 12"
+                if self.modelNumber?.lowercased().contains("mac") == true {
+                    self.osVersion = "macOS"
+                }else {
+                    self.osVersion = "iOS 12"
+                }
+                
                 self.wiFiOn = true
             case .iOS12WiFiOff:
-                self.osVersion = "iOS 12"
+                if self.modelNumber?.lowercased().contains("mac") == true {
+                    self.osVersion = "macOS"
+                }else {
+                    self.osVersion = "iOS 12"
+                }
+                
                 self.wiFiOn = false
             case .iOS12OrMacOSWifiOn:
-                self.osVersion = "iOS 12 / macOS"
+                if self.modelNumber?.lowercased().contains("mac") == true {
+                    self.osVersion = "macOS"
+                }else {
+                    self.osVersion = "iOS 12"
+                }
+                
                 self.wiFiOn = true
             case .iOS13WiFiOn:
                 self.osVersion = "iOS 13"

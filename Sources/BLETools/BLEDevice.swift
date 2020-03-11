@@ -9,6 +9,7 @@
 import Foundation
 import CoreBluetooth
 import Combine
+import Apple_BLE_Decoder
 
 public class BLEDevice: NSObject, Identifiable, ObservableObject {
     public var id: String
@@ -91,6 +92,10 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     /// Subject to which can be subscribed to receive every new advertisement individually after it has been added to the device.
     public let newAdvertisementSubject = PassthroughSubject<BLEAdvertisment, Never>()
     
+    public private(set) var osVersion: String?
+    
+    public private(set) var wiFiOn: Bool?
+    
     init(peripheral: CBPeripheral, and advertisement: BLEAdvertisment) {
         
         self.peripheral = peripheral
@@ -117,6 +122,49 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
         }
         
         self.lastUpdate = advertisement.receptionDates.last!
+        
+        let nearbyInt = BLEAdvertisment.AppleAdvertisementType.nearby.rawValue
+        if let nearby = advertisement.advertisementTLV?.getValue(forType: nearbyInt),
+            let description = try? AppleBLEDecoding.decoder(forType: UInt8(nearbyInt)).decode(nearby),
+            let wifiState = description["wiFiState"] as? AppleBLEDecoding.NearbyDecoder.DeviceFlags {
+            
+            switch wifiState {
+            case .iOS10:
+                self.osVersion = "iOS 10"
+            case .iOS11:
+                self.osVersion = "iOS 11"
+            case .iOS12OrIPadOS13WiFiOn:
+                self.osVersion = "iOS 12 / iPadOS 13"
+                self.wiFiOn = true
+            case .iOS12WiFiOn:
+                self.osVersion = "iOS 12"
+                self.wiFiOn = true
+            case .iOS12WiFiOff:
+                self.osVersion = "iOS 12"
+                self.wiFiOn = false
+            case .iOS12OrMacOSWifiOn:
+                self.osVersion = "iOS 12 / macOS"
+                self.wiFiOn = true
+            case .iOS13WiFiOn:
+                self.osVersion = "iOS 13"
+                self.wiFiOn = true
+            case .iOS13WiFiOff:
+                self.osVersion = "iOS 13"
+                self.wiFiOn = false
+            case .iOS13WifiOn2:
+                self.osVersion = "iOS 13"
+                self.wiFiOn = true
+            case .macOSWiFiUnknown:
+                self.osVersion = "macOS"
+            case .macOSWiFiOn:
+                self.osVersion = "macOS"
+                self.wiFiOn = true
+            case .watchWiFiUnknown:
+                self.osVersion = "watchOS"
+            case .unknown:
+                break
+            }
+        }
     }
 
     

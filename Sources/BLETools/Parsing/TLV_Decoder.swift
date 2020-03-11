@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Apple_BLE_Decoder
+import AppleBLEDecoder
 
 extension TLV.TLVBox {
     

@@ -95,7 +95,7 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     /// If available the current os version will be set. Is a string like: iOS 13 or macOS
     @Published public private(set) var osVersion: String?
     
-    /// If available the state of the wifi setting will be set 
+    /// If available the state of the wifi setting will be set
     @Published public private(set) var wiFiOn: Bool?
     
     init(peripheral: CBPeripheral, and advertisement: BLEAdvertisment) {
@@ -106,6 +106,7 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
         self.manufacturer = advertisement.manufacturer
         super.init()
         self.advertisements.append(advertisement)
+        self.detectOSVersion(from: advertisement)
         
     }
     
@@ -125,6 +126,10 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
         
         self.lastUpdate = advertisement.receptionDates.last!
         
+        self.detectOSVersion(from: advertisement)
+    }
+    
+    private func detectOSVersion(from advertisement: BLEAdvertisment) {
         let nearbyInt = BLEAdvertisment.AppleAdvertisementType.nearby.rawValue
         if let nearby = advertisement.advertisementTLV?.getValue(forType: nearbyInt),
             let description = try? AppleBLEDecoding.decoder(forType: UInt8(nearbyInt)).decode(nearby),

@@ -92,9 +92,11 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     /// Subject to which can be subscribed to receive every new advertisement individually after it has been added to the device.
     public let newAdvertisementSubject = PassthroughSubject<BLEAdvertisment, Never>()
     
-    public private(set) var osVersion: String?
+    /// If available the current os version will be set. Is a string like: iOS 13 or macOS
+    @Published public private(set) var osVersion: String?
     
-    public private(set) var wiFiOn: Bool?
+    /// If available the state of the wifi setting will be set 
+    @Published public private(set) var wiFiOn: Bool?
     
     init(peripheral: CBPeripheral, and advertisement: BLEAdvertisment) {
         

@@ -98,6 +98,20 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     /// If available the state of the wifi setting will be set
     @Published public private(set) var wiFiOn: Bool?
     
+    
+    /// A CSV file string that contains all advertisements
+    public var  advertisementCSV: String {
+        var csv = ""
+        //Header
+        csv += "Manufacturer data"
+        
+        //Add hex encoded content
+        let manufacturerDataHex = advertisements.compactMap({$0.manufacturerData?.hexadecimal})
+        csv += "\n"
+        csv += manufacturerDataHex.joined(separator: "\n")
+        return csv
+    }
+    
     init(peripheral: CBPeripheral, and advertisement: BLEAdvertisment) {
         
         self.peripheral = peripheral

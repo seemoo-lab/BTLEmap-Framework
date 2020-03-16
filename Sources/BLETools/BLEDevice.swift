@@ -131,6 +131,10 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
                                     return "\(key): \t\(data.hexadecimal.separate(every: 8, with: " ")) \t"
                                 }
                                 
+                                if let array = value as? [Any] {
+                                    return "\(key): \t \(array.map{String(describing: $0)}) \t"
+                                }
+                                
                                 return "\(key):\t\(value),\t"
 
                             })

@@ -112,15 +112,19 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
             //Formatted TLV (if it's not containing TLVs  the data will be omitted)
             let tlvString = advertisement.advertisementTLV.flatMap { tlvBox -> String  in
                 tlvBox.tlvs.map { (tlv) -> String in
-                    String(format: "%02x ", tlv.type) + String(format: "%02x ", tlv.type) + tlv.value.hexadecimal.separate(every: 8, with: " ")
+                    String(format: "%02x ", tlv.type) + String(format: "%02x ", tlv.length) + tlv.value.hexadecimal.separate(every: 8, with: " ")
                 }.joined(separator: ", ")
             } ?? "no data"
             
             // Description for all contained TLV types
             let descriptionDicts = advertisement.advertisementTLV.flatMap { (tlvBox) -> [String] in
-                // Map all TLVs to a string describing their content 
+                // Map all TLVs to a string describing their content
                 tlvBox.tlvs.map { (tlv) -> String in
-                    let typeString = String(format: "%02x ", tlv.type)
+                    
+                    guard tlv.type != 0x4c else {return ""}
+                    
+                    let typeString = BLEAdvertisment.AppleAdvertisementType(rawValue: tlv.type)?.description ?? "Unknown type"
+                    
                     let descriptionString = ((try? AppleBLEDecoding.decoder(forType: UInt8(tlv.type)).decode(tlv.value)) ?? ["unkowntype": tlv.type])
                             .flatMap({ (key, value) -> String in
                                 if let data = value as? Data {

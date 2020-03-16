@@ -103,12 +103,42 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     public var  advertisementCSV: String {
         var csv = ""
         //Header
-        csv += "Manufacturer data"
+        csv += "Manufacturer data; TLV; Description"
         
         //Add hex encoded content
-        let manufacturerDataHex = advertisements.compactMap({$0.manufacturerData?.hexadecimal})
+        let advertisementStrings = advertisements.compactMap { advertisement -> String in
+            // Manufacturer data hex
+            let mData = (advertisement.manufacturerData?.hexadecimal ?? "no data")
+            //Formatted TLV (if it's not containing TLVs  the data will be omitted)
+            let tlvString = advertisement.advertisementTLV.flatMap { tlvBox -> String  in
+                tlvBox.tlvs.map { (tlv) -> String in
+                    String(format: "%02x ", tlv.type) + String(format: "%02x ", tlv.type) + tlv.value.hexadecimal.separate(every: 8, with: " ")
+                }.joined(separator: ", ")
+            } ?? "no data"
+            
+            // Description for all contained TLV types
+            let descriptionDicts = advertisement.advertisementTLV.flatMap { (tlvBox) -> [String] in
+                // Map all TLVs to a string describing their content 
+                tlvBox.tlvs.map { (tlv) -> String in
+                    let typeString = String(format: "%02x ", tlv.type)
+                    let descriptionString = ((try? AppleBLEDecoding.decoder(forType: UInt8(tlv.type)).decode(tlv.value)) ?? ["unkowntype": tlv.type])
+                            .flatMap({ (key, value) -> String in
+                                if let data = value as? Data {
+                                    return "\(key): \t\(data.hexadecimal.separate(every: 8, with: " ")) \t"
+                                }
+                                
+                                return "\(key):\t\(value),\t"
+
+                            })
+                    
+                    return typeString + descriptionString
+                }
+            }?.joined(separator: ",\t") ?? "no data"
+            
+            return mData + ";" + tlvString + ";" + descriptionDicts
+        }
         csv += "\n"
-        csv += manufacturerDataHex.joined(separator: "\n")
+        csv += advertisementStrings.joined(separator: "\n")
         return csv
     }
     

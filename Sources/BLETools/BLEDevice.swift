@@ -121,7 +121,7 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
                 // Map all TLVs to a string describing their content
                 tlvBox.tlvs.map { (tlv) -> String in
                     
-                    guard tlv.type != 0x4c else {return ""}
+                    guard tlv.type != 0x4c else {return "Apple BLE"}
                     
                     let typeString = BLEAdvertisment.AppleAdvertisementType(rawValue: tlv.type)?.description ?? "Unknown type"
                     
@@ -135,7 +135,7 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
 
                             })
                     
-                    return typeString + descriptionString
+                    return typeString + "\t: " + descriptionString
                 }
             }?.joined(separator: ",\t") ?? "no data"
             

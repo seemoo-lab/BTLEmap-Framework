@@ -47,11 +47,11 @@ class BLEReceiver: NSObject {
     func scanForAdvertisements() {
         if self.centralManager.state == .poweredOn {
             var scanOptions = [String: Any]()
-            #if os(iOS)
-            scanOptions["CBCentralManagerScanOptionIsPrivilegedDaemonKey"] = NSNumber(booleanLiteral: true)
-            scanOptions["kCBScanOptionIsPrivilegedDaemon"] = NSNumber(booleanLiteral: true)
-            scanOptions["kCBMsgArgIsPrivilegedDaemon"] = NSNumber(booleanLiteral: true)
-            #endif
+//            #if os(iOS)
+//            scanOptions["CBCentralManagerScanOptionIsPrivilegedDaemonKey"] = NSNumber(booleanLiteral: true)
+//            scanOptions["kCBScanOptionIsPrivilegedDaemon"] = NSNumber(booleanLiteral: true)
+//            scanOptions["kCBMsgArgIsPrivilegedDaemon"] = NSNumber(booleanLiteral: true)
+//            #endif
 //            scanOptions[CBCentralManagerScanOptionAllowDuplicatesKey] = NSNumber(booleanLiteral: false)
             self.centralManager.scanForPeripherals(withServices: nil, options: scanOptions)
             self.isScanning = true

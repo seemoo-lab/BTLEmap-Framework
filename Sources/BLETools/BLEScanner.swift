@@ -42,7 +42,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
     public var timeoutInterval: TimeInterval = 5.0 * 60.0
     
     /// Set to true to start scanning for advertisements
-    public var scanning: Bool = false {
+    @Published public var scanning: Bool = false {
         didSet {
             guard oldValue != scanning else {return}
             
@@ -51,6 +51,17 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
             }else {
                 self.receiver.stopScanningForAdvertisements()
             }
+        }
+    }
+    
+    
+    /// If set to false much more advertisements will be received, this might block parts of the UI thread
+    @Published public var filterDuplicates: Bool = true {
+        didSet {
+            guard self.scanning else {return}
+            //Restart the scan with the new setting 
+            self.receiver.stopScanningForAdvertisements()
+            self.receiver.scanForAdvertisements(filterDuplicates: self.filterDuplicates)
         }
     }
     
@@ -65,7 +76,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
     
     /// Start scanning for Apple advertisements
     func scanForAppleAdvertisements() {
-        receiver.scanForAdvertisements()
+        receiver.scanForAdvertisements(filterDuplicates: self.filterDuplicates)
     }
     
     func didReceive(advertisementData: [String : Any], rssi: NSNumber, from device: CBPeripheral) {

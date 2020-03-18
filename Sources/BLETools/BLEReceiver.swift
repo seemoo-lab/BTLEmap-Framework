@@ -36,6 +36,7 @@ class BLEReceiver: NSObject {
     private var isScanning = false
     
     private var shouldScanForAdvertisements = false
+    private var filterDuplicates = true
     
     override init() {
         super.init()
@@ -44,7 +45,9 @@ class BLEReceiver: NSObject {
     
     
     /// Start scanning for advertisements
-    func scanForAdvertisements() {
+    func scanForAdvertisements(filterDuplicates: Bool) {
+        self.filterDuplicates = filterDuplicates
+        
         if self.centralManager.state == .poweredOn {
             var scanOptions = [String: Any]()
 //            #if os(iOS)
@@ -52,7 +55,10 @@ class BLEReceiver: NSObject {
 //            scanOptions["kCBScanOptionIsPrivilegedDaemon"] = NSNumber(booleanLiteral: true)
 //            scanOptions["kCBMsgArgIsPrivilegedDaemon"] = NSNumber(booleanLiteral: true)
 //            #endif
-            scanOptions[CBCentralManagerScanOptionAllowDuplicatesKey] = NSNumber(booleanLiteral: true)
+            if !filterDuplicates {
+                scanOptions[CBCentralManagerScanOptionAllowDuplicatesKey] = NSNumber(booleanLiteral: true)
+                
+            }
             self.centralManager.scanForPeripherals(withServices: nil, options: scanOptions)
             self.isScanning = true
         }else {
@@ -82,7 +88,7 @@ extension BLEReceiver: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         print("CBCentralManager did Update state \(central.state.description)")
         if central.state == .poweredOn && self.shouldScanForAdvertisements {
-            self.scanForAdvertisements()
+            self.scanForAdvertisements(filterDuplicates: self.filterDuplicates)
             self.shouldScanForAdvertisements = false
         }
         

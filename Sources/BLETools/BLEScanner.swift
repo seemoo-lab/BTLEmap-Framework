@@ -115,7 +115,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
     }
     
     public struct BLE_Event {
-        let advertisement: BLEAdvertisment
-        let device: BLEDevice
+        public let advertisement: BLEAdvertisment
+        public let device: BLEDevice
     }
 }

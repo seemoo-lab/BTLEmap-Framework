@@ -52,7 +52,7 @@ class BLEReceiver: NSObject {
 //            scanOptions["kCBScanOptionIsPrivilegedDaemon"] = NSNumber(booleanLiteral: true)
 //            scanOptions["kCBMsgArgIsPrivilegedDaemon"] = NSNumber(booleanLiteral: true)
 //            #endif
-//            scanOptions[CBCentralManagerScanOptionAllowDuplicatesKey] = NSNumber(booleanLiteral: false)
+            scanOptions[CBCentralManagerScanOptionAllowDuplicatesKey] = NSNumber(booleanLiteral: true)
             self.centralManager.scanForPeripherals(withServices: nil, options: scanOptions)
             self.isScanning = true
         }else {

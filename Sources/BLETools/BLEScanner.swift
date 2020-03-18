@@ -59,7 +59,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
     @Published public var filterDuplicates: Bool = true {
         didSet {
             guard self.scanning else {return}
-            //Restart the scan with the new setting 
+            //Restart the scan with the new setting
             self.receiver.stopScanningForAdvertisements()
             self.receiver.scanForAdvertisements(filterDuplicates: self.filterDuplicates)
         }
@@ -68,9 +68,12 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
     public let newAdvertisementSubject = PassthroughSubject<BLE_Event,Never>()
     public let newDeviceSubject = PassthroughSubject<BLEDevice,Never>()
     
-    public init(delegate: BLEScannerDelegate? = nil) {
+    public init(delegate: BLEScannerDelegate? = nil, devicesCanTimeout:Bool = false, timeoutInterval: TimeInterval = 5.0 * 60.0, filterDuplicates: Bool=false) {
         self.delegate = delegate
         receiver.delegate = self
+        self.devicesCanTimeout = devicesCanTimeout
+        self.timeoutInterval = timeoutInterval
+        self.filterDuplicates = filterDuplicates
     }
     
     

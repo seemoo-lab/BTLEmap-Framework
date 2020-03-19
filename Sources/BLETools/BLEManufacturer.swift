@@ -28,6 +28,7 @@ public enum BLEManufacturer: String, CaseIterable {
     case motorola
     case broadcom
     case amazon
+    case seemoo
     
     public var name: String {
         switch self {
@@ -79,6 +80,8 @@ public enum BLEManufacturer: String, CaseIterable {
             return .broadcom
         case [0x71,0x01]:
             return .amazon
+        case [0x5e,0x00]:
+            return .seemoo
         default:
             return .unknown
         }

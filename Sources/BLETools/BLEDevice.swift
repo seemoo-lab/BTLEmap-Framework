@@ -279,7 +279,7 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
         case appleEmbedded
         case other
         
-        var string: String {
+        public var string: String {
             switch self {
             case .AirPods:
                 return "AirPods"

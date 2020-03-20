@@ -33,7 +33,13 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     public var uuid: UUID {return peripheral.identifier}
     
     /// The manufacturer of this device. Mostly taken from advertisement
-    public private(set) var manufacturer: BLEManufacturer
+    public private(set) var manufacturer: BLEManufacturer {
+        didSet {
+            if self.manufacturer == .seemoo {
+                self.deviceType = .seemoo
+            }
+        }
+    }
     
     /// Device type can be retrieved from device information or advertisement data
     @Published public internal(set) var deviceType: DeviceType?
@@ -277,6 +283,7 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
         case Pencil
         case AppleWatch
         case appleEmbedded
+        case seemoo
         case other
         
         public var string: String {
@@ -296,6 +303,7 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
             case .other:
                 return "BluetoothDevice"
             case .Pencil: return "Pencil"
+            case .seemoo: return "seemoo"
             }
         }
     }

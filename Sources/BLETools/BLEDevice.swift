@@ -278,6 +278,26 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
         case AppleWatch
         case appleEmbedded
         case other
+        
+        var string: String {
+            switch self {
+            case .AirPods:
+                return "AirPods"
+            case .appleEmbedded:
+                return "Embedded"
+            case .iMac:
+                return "iMac"
+            case .AppleWatch:
+                return "Apple Watch"
+            case .iPad: return "iPad"
+            case .iPod: return "iPod"
+            case .iPhone: return "iPhone"
+            case .macBook: return "MacBook"
+            case .other:
+                return "BluetoothDevice"
+            case .Pencil: return "Pencil"
+            }
+        }
     }
 }
 

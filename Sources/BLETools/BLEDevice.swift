@@ -77,9 +77,11 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     
     
     /// Last RSSI value that has been received
-    public var lastRSSI: NSNumber {
-        return self.advertisements.first?.rssi.last ?? NSNumber(value: -100)
-    }
+    @Published public var lastRSSI: Float = -100
+    
+//    public var lastRSSI: NSNumber {
+//        return self.advertisements.first?.rssi.last ?? NSNumber(value: -100)
+//    }
     
     /// True if the device marks itself as connectable
     public var connectable: Bool {
@@ -159,6 +161,7 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
         super.init()
         self.advertisements.append(advertisement)
         self.detectOSVersion(from: advertisement)
+        self.lastRSSI = advertisement.rssi.last?.floatValue ?? -100.0
         
     }
     
@@ -179,6 +182,10 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
         self.lastUpdate = advertisement.receptionDates.last!
         
         self.detectOSVersion(from: advertisement)
+        if let rssi = advertisement.rssi.last?.floatValue {
+            self.lastRSSI = rssi
+        }
+        
     }
     
     private func detectOSVersion(from advertisement: BLEAdvertisment) {

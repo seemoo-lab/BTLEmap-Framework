@@ -43,6 +43,8 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
     /// Advertisements are sent out more oftern than once. This value counts how often an advertisement has been received
     @Published public var numberOfTimesReceived = 1
     
+    @Published public private(set) var macAddress: String?
+    
     /// Initialize an advertisement sent by Apple devices and parse it's TLV content
     /// - Parameter manufacturerData: BLE manufacturer Data that has been received
     public init(manufacturerData: Data, id: Int) throws {
@@ -84,6 +86,11 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
         self.receptionDates.append(Date())
         self.rssi.append(rssi)
         
+    }
+    
+    init(relayedAdvertisement: BLERelayedAdvertisement) {
+        //TODO
+        fatalError("TODO")
     }
     
     func intializeManufacturer() {

@@ -116,12 +116,14 @@ extension BLEReceiver: CBCentralManagerDelegate {
 
 extension BLEReceiver: CBPeripheralDelegate {
     func detectDeviceType(for device: BLEDevice) {
+        guard let peripheral = device.peripheral else {return}
+        
         //Set to other initially to prevent from multiple calls
         device.deviceType = .other
         
         
         //Make GATT connection
-        device.peripheral.delegate = self
+        peripheral.delegate = self
         
         // Embedded Apple devices don't offer GATT by default.
         // We can detect the device type from their advertisements
@@ -144,7 +146,7 @@ extension BLEReceiver: CBPeripheralDelegate {
             return
         }
         
-        self.centralManager.connect(device.peripheral, options: nil)
+        self.centralManager.connect(peripheral, options: nil)
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {

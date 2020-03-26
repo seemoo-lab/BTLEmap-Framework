@@ -25,6 +25,8 @@
 		78844DEC240D08C900B8DA67 /* TLV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DEB240D08C900B8DA67 /* TLV.swift */; };
 		78844DEE240D09C100B8DA67 /* InttoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DED240D09C100B8DA67 /* InttoData.swift */; };
 		78844DF2240D117B00B8DA67 /* TLVTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DF1240D117B00B8DA67 /* TLVTests.swift */; };
+		7888CFD4242D134B00A2C971 /* BLERelayReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7888CFD3242D134B00A2C971 /* BLERelayReceiver.swift */; };
+		7888CFD8242D168900A2C971 /* BLERelayedAdvertisement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7888CFD7242D168900A2C971 /* BLERelayedAdvertisement.swift */; };
 		788D98D0240D4674005FC745 /* BLETools_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 788D98C2240D4674005FC745 /* BLETools_iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		788D98D7240D4686005FC745 /* BLEScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76FD23FADFB200E34241 /* BLEScanner.swift */; };
 		788D98D8240D4686005FC745 /* BLEReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76F123FAD87100E34241 /* BLEReceiver.swift */; };
@@ -70,6 +72,8 @@
 		78844DEB240D08C900B8DA67 /* TLV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLV.swift; sourceTree = "<group>"; };
 		78844DED240D09C100B8DA67 /* InttoData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InttoData.swift; sourceTree = "<group>"; };
 		78844DF1240D117B00B8DA67 /* TLVTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLVTests.swift; sourceTree = "<group>"; };
+		7888CFD3242D134B00A2C971 /* BLERelayReceiver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLERelayReceiver.swift; sourceTree = "<group>"; };
+		7888CFD7242D168900A2C971 /* BLERelayedAdvertisement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLERelayedAdvertisement.swift; sourceTree = "<group>"; };
 		788D98B4240D4420005FC745 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		788D98C0240D4674005FC745 /* BLETools_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BLETools_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		788D98C2240D4674005FC745 /* BLETools_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BLETools_iOS.h; sourceTree = "<group>"; };
@@ -131,6 +135,8 @@
 			children = (
 				784B76FD23FADFB200E34241 /* BLEScanner.swift */,
 				784B76F123FAD87100E34241 /* BLEReceiver.swift */,
+				7888CFD3242D134B00A2C971 /* BLERelayReceiver.swift */,
+				7888CFD7242D168900A2C971 /* BLERelayedAdvertisement.swift */,
 				784B76FB23FADA8E00E34241 /* BLEAdvertisement.swift */,
 				784B76FF23FAE01B00E34241 /* BLEDevice.swift */,
 				78232035240EA6FC00D4FDE3 /* BLEManufacturer.swift */,
@@ -364,7 +370,9 @@
 				78B8661E2410E88F003761D0 /* CBCentralManagerExtension.swift in Sources */,
 				784B76FC23FADA8E00E34241 /* BLEAdvertisement.swift in Sources */,
 				78844DD1240D076600B8DA67 /* ProtocolParser.swift in Sources */,
+				7888CFD8242D168900A2C971 /* BLERelayedAdvertisement.swift in Sources */,
 				784B76F223FAD87100E34241 /* BLEReceiver.swift in Sources */,
+				7888CFD4242D134B00A2C971 /* BLERelayReceiver.swift in Sources */,
 				7879E3B92417D4B1003AA8DF /* TLV_Decoder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

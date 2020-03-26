@@ -20,23 +20,23 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
                 return n
             }
             
-            return self.peripheral.name
+            return self.peripheral?.name
         }
         set(v) {
             self._name = v
         }
     }
     @Published public private (set) var advertisements = [BLEAdvertisment]()
-    public internal(set) var peripheral: CBPeripheral
+    public internal(set) var peripheral: CBPeripheral?
     
     /// The UUID of the peripheral
-    public var uuid: UUID {return peripheral.identifier}
+    public var uuid: UUID {return peripheral?.identifier ?? UUID()}
     
     /// The manufacturer of this device. Mostly taken from advertisement
     public private(set) var manufacturer: BLEManufacturer {
         didSet {
             if self.manufacturer == .seemoo {
-                self.deviceType = .seemoo
+                self.deviceType = .seemoo 
             }
         }
     }
@@ -109,53 +109,7 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     
     /// A CSV file string that contains all advertisements
     public var  advertisementCSV: String {
-        var csv = ""
-        //Header
-        csv += "Manufacturer data; TLV; Description"
-        
-        //Add hex encoded content
-        let advertisementStrings = advertisements.compactMap { advertisement -> String in
-            // Manufacturer data hex
-            let mData = (advertisement.manufacturerData?.hexadecimal ?? "no data")
-            //Formatted TLV (if it's not containing TLVs  the data will be omitted)
-            let tlvString = advertisement.advertisementTLV.flatMap { tlvBox -> String  in
-                tlvBox.tlvs.map { (tlv) -> String in
-                    String(format: "%02x ", tlv.type) + String(format: "%02x ", tlv.length) + tlv.value.hexadecimal.separate(every: 8, with: " ")
-                }.joined(separator: ", ")
-            } ?? "no data"
-            
-            // Description for all contained TLV types
-            let descriptionDicts = advertisement.advertisementTLV.flatMap { (tlvBox) -> [String] in
-                // Map all TLVs to a string describing their content
-                tlvBox.tlvs.map { (tlv) -> String in
-                    
-                    guard tlv.type != 0x4c else {return "Apple BLE"}
-                    
-                    let typeString = BLEAdvertisment.AppleAdvertisementType(rawValue: tlv.type)?.description ?? "Unknown type"
-                    
-                    let descriptionString = ((try? AppleBLEDecoding.decoder(forType: UInt8(tlv.type)).decode(tlv.value)) ?? ["unkowntype": tlv.type])
-                            .flatMap({ (key, value) -> String in
-                                if let data = value as? Data {
-                                    return "\(key): \t\(data.hexadecimal.separate(every: 8, with: " ")) \t"
-                                }
-                                
-                                if let array = value as? [Any] {
-                                    return "\(key): \t \(array.map{String(describing: $0)}) \t"
-                                }
-                                
-                                return "\(key):\t\(value),\t"
-
-                            })
-                    
-                    return typeString + "\t: " + descriptionString
-                }
-            }?.joined(separator: ",\t") ?? "no data"
-            
-            return mData + ";" + tlvString + ";" + descriptionDicts
-        }
-        csv += "\n"
-        csv += advertisementStrings.joined(separator: "\n")
-        return csv
+        self.convertAdvertisementsToCSV()
     }
     
     init(peripheral: CBPeripheral, and advertisement: BLEAdvertisment) {
@@ -171,8 +125,24 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
         
     }
     
+    /// Initializer for using other inputsources than CoreBluetooth. This needs a **MAC address** in the advertisement
+    /// - Parameter advertisement: BLE Advertisement
+    /// - Throws:Error if no **MAC address** is passed in the advertisement
+    init(with advertisement: BLEAdvertisment) throws {
+//        self._name =
+        guard let macAddress = advertisement.macAddress else {
+            throw Error.noMacAddress
+        }
+        self.id = macAddress
+        self.manufacturer = advertisement.manufacturer
+        super.init()
+        self.advertisements.append(advertisement)
+        self.detectOSVersion(from: advertisement)
+        self.lastRSSI = advertisement.rssi.last?.floatValue ?? -100.0
+    }
+    
     public static func == (lhs: BLEDevice, rhs: BLEDevice) -> Bool {
-        lhs.peripheral.identifier == rhs.peripheral.identifier
+        lhs.id == rhs.id
     }
     
     /// Add a received advertisement to the device
@@ -269,6 +239,56 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
         """)
     }
     
+    func convertAdvertisementsToCSV() -> String {
+        var csv = ""
+        //Header
+        csv += "Manufacturer data; TLV; Description"
+        
+        //Add hex encoded content
+        let advertisementStrings = advertisements.compactMap { advertisement -> String in
+            // Manufacturer data hex
+            let mData = (advertisement.manufacturerData?.hexadecimal ?? "no data")
+            //Formatted TLV (if it's not containing TLVs  the data will be omitted)
+            let tlvString = advertisement.advertisementTLV.flatMap { tlvBox -> String  in
+                tlvBox.tlvs.map { (tlv) -> String in
+                    String(format: "%02x ", tlv.type) + String(format: "%02x ", tlv.length) + tlv.value.hexadecimal.separate(every: 8, with: " ")
+                }.joined(separator: ", ")
+                } ?? "no data"
+            
+            // Description for all contained TLV types
+            let descriptionDicts = advertisement.advertisementTLV.flatMap { (tlvBox) -> [String] in
+                // Map all TLVs to a string describing their content
+                tlvBox.tlvs.map { (tlv) -> String in
+                    
+                    guard tlv.type != 0x4c else {return "Apple BLE"}
+                    
+                    let typeString = BLEAdvertisment.AppleAdvertisementType(rawValue: tlv.type)?.description ?? "Unknown type"
+                    
+                    let descriptionString = ((try? AppleBLEDecoding.decoder(forType: UInt8(tlv.type)).decode(tlv.value)) ?? ["unkowntype": tlv.type])
+                        .flatMap({ (key, value) -> String in
+                            if let data = value as? Data {
+                                return "\(key): \t\(data.hexadecimal.separate(every: 8, with: " ")) \t"
+                            }
+                            
+                            if let array = value as? [Any] {
+                                return "\(key): \t \(array.map{String(describing: $0)}) \t"
+                            }
+                            
+                            return "\(key):\t\(value),\t"
+                            
+                        })
+                    
+                    return typeString + "\t: " + descriptionString
+                }
+                }?.joined(separator: ",\t") ?? "no data"
+            
+            return mData + ";" + tlvString + ";" + descriptionDicts
+        }
+        csv += "\n"
+        csv += advertisementStrings.joined(separator: "\n")
+        return csv
+    }
+    
 //    public override func hash(into hasher: inout Hasher) {
 //        return hasher.combine(id)
 //    }
@@ -306,6 +326,10 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
             case .seemoo: return "seemoo"
             }
         }
+    }
+    
+    public enum Error: Swift.Error {
+        case noMacAddress
     }
 }
 

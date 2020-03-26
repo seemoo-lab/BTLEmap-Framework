@@ -47,7 +47,7 @@ struct Log {
         
         static let ble = LogSystem(OSLog(subsystem: "de.tu-darmstadt.seemoo.BLETools", category: "BLE"))
         static let crypto = LogSystem(OSLog(subsystem: "de.tu-darmstadt.seemoo.BLETools.crypto", category: "Crypto"))
-        
          static let app = LogSystem(OSLog(subsystem: "de.tu-darmstadt.seemoo.BLETools.app", category: "App"))
+        static let BLERelay = LogSystem(OSLog(subsystem: "de.tu-darmstadt.seemoo.BLERelay", category: "BLERelay"))
     }
 }

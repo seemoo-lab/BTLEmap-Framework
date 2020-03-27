@@ -30,7 +30,7 @@ public protocol BLEScannerDelegate {
 
 /// BLE Scanner can be used to discover BLE devices sending advertisements over one of the advertisement channels
 public class BLEScanner: BLEReceiverDelegate, ObservableObject {
-    var receiver: BLEReceiverProtocol!
+    var receiver: BLEReceiverProtocol! = BLEReceiver()
     
     public var receiverType: Receiver = .coreBluetooth {
         didSet {

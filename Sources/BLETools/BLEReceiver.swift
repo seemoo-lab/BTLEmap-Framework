@@ -29,6 +29,13 @@ protocol BLEReceiverDelegate {
     ///   - modelNumber: The model number that has been received
     ///   - peripheral: The peripheral to which the model number belongs
     func didUpdateModelNumber(_ modelNumber: String, for peripheral: CBPeripheral)
+    
+    
+    /// The services for a peripheral have been updated
+    /// - Parameters:
+    ///   - services: Array of services
+    ///   - peripheral: peripheral that has this services
+    func didUpdateServices(services: [CBService], for peripheral: CBPeripheral)
 }
 
 
@@ -167,6 +174,8 @@ extension BLEReceiver: CBPeripheralDelegate {
             let deviceInfoService = services.first(where: {$0.uuid == CBServiceUUIDs.deviceInformation.uuid}) else {return}
         
         peripheral.discoverCharacteristics(nil, for: deviceInfoService)
+        
+        self.delegate?.didUpdateServices(services: services, for: peripheral)
     }
     
     func peripheralDidUpdateName(_ peripheral: CBPeripheral) {

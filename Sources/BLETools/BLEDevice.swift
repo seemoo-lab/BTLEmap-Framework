@@ -27,6 +27,9 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
         }
     }
     @Published public private (set) var advertisements = [BLEAdvertisment]()
+    
+    @Published public internal(set) var services = [BLEService]()
+    
     public internal(set) var peripheral: CBPeripheral?
     
     /// The UUID of the peripheral

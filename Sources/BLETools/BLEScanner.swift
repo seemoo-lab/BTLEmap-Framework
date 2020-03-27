@@ -21,7 +21,7 @@ public protocol BLEScannerDelegate {
     func scanner(_ scanner: BLEScanner, didDiscoverNewDevice device: BLEDevice)
     
     /// Scanner did receive a new advertisement
-    /// - Parameters:
+    /// - Parameters: 
     ///   - scanner: Current BLE Scanner
     ///   - advertisement: Advertisement that has been received
     ///   - device: Device that sent the advertisement
@@ -117,6 +117,8 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
         self.deviceList.removeAll()
     }
     
+    //MARK:- BLE Receiver Delegate
+    
     func didReceive(advertisementData: [String : Any], rssi: NSNumber, from device: CBPeripheral) {
         do {
             
@@ -184,6 +186,11 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
         device.modelNumber = modelNumber
     }
     
+    func didUpdateServices(services: [CBService], for peripheral: CBPeripheral) {
+        guard let device = self.devices[peripheral.identifier.uuidString] else {return}
+        device.services = services.map{BLEService(with: $0)}
+    }
+    
     func checkForTimeouts() {
         let timedOutDevices = self.deviceList.filter {$0.lastUpdate.timeIntervalSinceNow < -self.timeoutInterval}
         timedOutDevices.forEach { (d) in
@@ -191,6 +198,8 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
         }
         self.deviceList = Array(self.devices.values)
     }
+    
+    //MARK: - Structs
     
     public struct BLE_Event {
         public let advertisement: BLEAdvertisment

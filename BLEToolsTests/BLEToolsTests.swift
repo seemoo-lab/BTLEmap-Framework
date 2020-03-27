@@ -58,7 +58,6 @@ class BLEToolsTests: XCTestCase, BLEScannerDelegate {
             }
         }
 
-        
         scanner.scanForAppleAdvertisements()
         
         wait(for: [expect], timeout: 60.0)

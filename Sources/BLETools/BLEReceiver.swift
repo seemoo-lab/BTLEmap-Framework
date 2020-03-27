@@ -206,6 +206,7 @@ extension BLEReceiver: CBPeripheralDelegate {
         
         self.delegate?.didUpdateModelNumber(modelNumber, for: peripheral)
     }
+
 }
 
 

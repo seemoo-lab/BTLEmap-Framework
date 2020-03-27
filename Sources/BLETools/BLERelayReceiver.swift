@@ -63,10 +63,19 @@ class BLERelayReceiver: NSObject, ObservableObject, BLEReceiverProtocol {
     
     /// Received a message from the BLE receiver (Raspberry Pi)
     /// - Parameter message: Message as Data that has been received
-    func received(message: Data) {
+    func received(message: Data, of type: MessageType) {
         Log.debug(system: .BLERelay, message: "Received packet from BLE Relay\n %@", String(data: message, encoding: .ascii) ?? "nil")
         self.receivedMessages.append(message)
-        
+      
+        switch type {
+        case .advertisement:
+            self.receivedAdvertisement(message: message)
+        case .unknown:
+            Log.error(system: .BLERelay, message: "Received unknown message")
+        }
+    }
+    
+    func receivedAdvertisement(message: Data) {
         //Decode the json to a relayed advertisement
         do {
             let adv = try JSONDecoder().decode(BLERelayedAdvertisement.self, from: message)
@@ -78,7 +87,6 @@ class BLERelayReceiver: NSObject, ObservableObject, BLEReceiverProtocol {
         }catch let error {
             Log.error(system: .BLERelay, message: "Could not decode JSON %@", String(describing: error))
         }
-        
     }
     
     /// Read messages from the current input stream
@@ -87,14 +95,19 @@ class BLERelayReceiver: NSObject, ObservableObject, BLEReceiverProtocol {
         
         while true {
             //Read how many bytes the next packet will have
-            var lenBuffer = Array<UInt8>(repeatElement(0x00, count: 4))
+            var lenBuffer = Array<UInt8>(repeatElement(0x00, count: 5))
             guard inputStream.read(&lenBuffer, maxLength: lenBuffer.count) > 0 else {
                 Log.error(system: .BLERelay, message: "Did not receive bytes. Waiting until new bytes are available")
                 break
             }
-            //Read packet
+            //Get type
+            let typeByte = lenBuffer[0]
+            //Get message length
+            lenBuffer = Array(lenBuffer[1...])
             let packetLength = UInt32(littleEndian: unsafeBitCast((lenBuffer[0], lenBuffer[1], lenBuffer[2], lenBuffer[3]), to: UInt32.self))
             var packetBuffer = Array<UInt8>(repeatElement(0x00, count: Int(packetLength)))
+            
+            //Read packet
             guard  inputStream.read(&packetBuffer, maxLength: packetBuffer.count) > 0 else {
                 Log.error(system: .BLERelay, message: "Did not receive bytes that have been expected. Stopping.")
                 inputStream.close()
@@ -104,9 +117,14 @@ class BLERelayReceiver: NSObject, ObservableObject, BLEReceiverProtocol {
             //Call receive method
             let message = Data(packetBuffer)
             DispatchQueue.main.async {
-                self.received(message: message)
+                self.received(message: message, of: MessageType(rawValue: typeByte) ?? .unknown)
             }
         }
+    }
+    
+    enum MessageType: UInt8 {
+        case advertisement = 0x00
+        case unknown = 0xf0
     }
 }
 

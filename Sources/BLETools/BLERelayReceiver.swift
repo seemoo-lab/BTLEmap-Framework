@@ -114,12 +114,14 @@ class BLERelayReceiver: NSObject, ObservableObject, BLEReceiverProtocol {
 extension BLERelayReceiver: NetServiceDelegate {
     func netServiceDidPublish(_ sender: NetService) {
         self.port = sender.port
+        Log.debug(system: .BLERelay, message: "Service published")
     }
     
     func netService(_ sender: NetService, didAcceptConnectionWith inputStream: InputStream, outputStream: OutputStream) {
 //        inputStream.delegate = self
         
         self.connected = true
+        self.delegate?.didStartScanning()
         
         //Open the streams
         inputStream.open()

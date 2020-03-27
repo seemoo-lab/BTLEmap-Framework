@@ -45,6 +45,25 @@ class BLEToolsTests: XCTestCase, BLEScannerDelegate {
         wait(for: [expect], timeout: 60.0)
     }
     
+    func testConnectingToExternalscanner() {
+        let expect = expectation(description: "BLE Scanner")
+        
+        let scanner = BLEScanner(delegate: self)
+        scanner.scanForAppleAdvertisements()
+        scanner.receiverType = .external
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 15.0) {
+            if scanner.connectedToReceiver {
+                expect.fulfill()
+            }
+        }
+
+        
+        scanner.scanForAppleAdvertisements()
+        
+        wait(for: [expect], timeout: 60.0)
+    }
+    
     func scanner(_ scanner: BLEScanner, didReceiveNewAdvertisement advertisement: BLEAdvertisment, forDevice device: BLEDevice) {
         print("Received advertisement")
         print(advertisement)
@@ -54,5 +73,6 @@ class BLEToolsTests: XCTestCase, BLEScannerDelegate {
         print("Discovered device")
         print(device)
     }
+    
 }
 

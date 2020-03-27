@@ -110,7 +110,6 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
             self.connectedToReceiver = true
         case .external:
             let relayReceiver = BLERelayReceiver()
-            let _ = relayReceiver.$connected.assign(to: \BLEScanner.connectedToReceiver, on: self)
             self.receiver = relayReceiver
         }
         
@@ -124,6 +123,11 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
     }
     
     //MARK:- BLE Receiver Delegate
+    
+    func didStartScanning() {
+        self.connectedToReceiver = true
+        self.scanning = true
+    }
     
     func didReceive(advertisementData: [String : Any], rssi: NSNumber, from device: CBPeripheral) {
         do {

@@ -14,6 +14,9 @@ import os
 /// Delegate used for forwarding Apple advertisements to
 protocol BLEReceiverDelegate {
     
+    /// Called when the service connected and started scanning
+    func didStartScanning()
+    
     /// Called when the advertisement has been received over a relayed service
     /// - Parameter advertisement:An advertisement that has been received over relay
     func didReceive(advertisement: BLEAdvertisment)
@@ -78,6 +81,7 @@ class BLEReceiver: NSObject, BLEReceiverProtocol {
             }
             self.centralManager.scanForPeripherals(withServices: nil, options: scanOptions)
             self.isScanning = true
+            self.delegate?.didStartScanning()
         }else {
             self.shouldScanForAdvertisements = true
         }

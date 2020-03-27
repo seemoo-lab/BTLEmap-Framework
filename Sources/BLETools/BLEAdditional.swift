@@ -32,5 +32,6 @@ public struct BLEService {
     init(with cbService: CBService) {
         self.uuidString = cbService.uuid.uuidString
         self.isPrimary = cbService.isPrimary
+        self.description = cbService.uuid.description
     }
 }

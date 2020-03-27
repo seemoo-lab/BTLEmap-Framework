@@ -79,7 +79,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
     public let newAdvertisementSubject = PassthroughSubject<BLE_Event,Never>()
     public let newDeviceSubject = PassthroughSubject<BLEDevice,Never>()
     
-    public init(delegate: BLEScannerDelegate? = nil, devicesCanTimeout:Bool = false, timeoutInterval: TimeInterval = 5.0 * 60.0, filterDuplicates: Bool=false, receiverType: Receiver) {
+    public init(delegate: BLEScannerDelegate? = nil, devicesCanTimeout:Bool = false, timeoutInterval: TimeInterval = 5.0 * 60.0, filterDuplicates: Bool=false, receiverType: Receiver = .coreBluetooth) {
         self.delegate = delegate
         self.receiverType = receiverType
         self.devicesCanTimeout = devicesCanTimeout

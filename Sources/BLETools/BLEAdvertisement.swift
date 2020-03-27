@@ -19,31 +19,44 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
     /// The id here is the reception date of the advertisement 
     public let id: Int = Int(arc4random())
     
+    /// The **MAC address** of the device that sent the advertisement to the time of sending
+    @Published public private(set) var macAddress: BLEMACAddress?
+    
     /// An array of all advertisement types that are contained in this advertisement
     @Published public var advertisementTypes = [AppleAdvertisementType]()
     
     /// All advertisement messages. Keys are the advertisement Type raw value and the advertisement data as value
     /// E.g. 0x0c: Data for Handoff
     public var advertisementTLV: TLV.TLVBox?
+    
+    /// Manufacturer Data of the advertisement
     public private(set) var manufacturerData: Data?
     
-    public private(set) var companyIdentifier: Data?
-    
-    public var manufacturer: BLEManufacturer = .unknown
-    
+    /// True if the device marked itself as connectable
     @Published public var connectable: Bool = false
     
     @Published public var appleMfgData: [String: Any]?
     
+    /// The channel over which this advertisement has been sent
     public var channel: Int?
     
+    /// All RSSI values of the advetisements
     @Published public var rssi = [NSNumber]()
+    /// All reception dates when this advertisement has been received
     @Published public var receptionDates = [Date]()
     
     /// Advertisements are sent out more oftern than once. This value counts how often an advertisement has been received
     @Published public var numberOfTimesReceived = 1
     
-    @Published public private(set) var macAddress: String?
+    /// The company identifier that is sent in the front of all manufacturer data
+    public private(set) var companyIdentifier: Data?
+    
+    /// The Manufacturer of the device that sent the advertisement, according to the company identifier.
+    /// Many companies do not follow that rule! E.g. iBeacons use Apple identifiers (Nuki lock), UE uses IBM identifier
+    public var manufacturer: BLEManufacturer = .unknown
+    
+    /// Optional device name that can be part of an advertisement
+    public private(set) var deviceName: String?
     
     /// Initialize an advertisement sent by Apple devices and parse it's TLV content
     /// - Parameter manufacturerData: BLE manufacturer Data that has been received
@@ -88,9 +101,22 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
         
     }
     
-    init(relayedAdvertisement: BLERelayedAdvertisement) {
-        //TODO
-        fatalError("TODO")
+    /// Intialize the BLE advertisement with the data of a relayed advertisement
+    /// - Parameter relayedAdvertisement: Relayed advertisements are received by external sources, like a raspberry pi
+    init(relayedAdvertisement: BLERelayedAdvertisement) throws {
+        self.manufacturerData = relayedAdvertisement.manufacturerDataHex.hexadecimal
+        self.rssi.append(NSNumber(value: relayedAdvertisement.rssi))
+        self.deviceName = relayedAdvertisement.name
+        self.macAddress = BLEMACAddress(addressString: relayedAdvertisement.macAddress, addressType: BLEMACAddress.BLEAddressType(rawValue: relayedAdvertisement.addressType) ?? .random)
+        self.connectable = relayedAdvertisement.connectable
+        
+        self.intializeManufacturer()
+        
+        if  manufacturer == .apple {
+            try self.intitializeTLVForApple()
+        }
+        
+        self.receptionDates.append(Date())
     }
     
     func intializeManufacturer() {

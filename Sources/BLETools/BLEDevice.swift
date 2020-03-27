@@ -32,6 +32,8 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     /// The UUID of the peripheral
     public var uuid: UUID {return peripheral?.identifier ?? UUID()}
     
+    public private(set) var macAddress: BLEMACAddress?
+    
     /// The manufacturer of this device. Mostly taken from advertisement
     public private(set) var manufacturer: BLEManufacturer {
         didSet {
@@ -133,12 +135,14 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
         guard let macAddress = advertisement.macAddress else {
             throw Error.noMacAddress
         }
-        self.id = macAddress
+        self.id = macAddress.addressString
+        self.macAddress = macAddress
         self.manufacturer = advertisement.manufacturer
         super.init()
         self.advertisements.append(advertisement)
         self.detectOSVersion(from: advertisement)
         self.lastRSSI = advertisement.rssi.last?.floatValue ?? -100.0
+        self._name = advertisement.deviceName
     }
     
     public static func == (lhs: BLEDevice, rhs: BLEDevice) -> Bool {

@@ -30,8 +30,17 @@ public protocol BLEScannerDelegate {
 
 /// BLE Scanner can be used to discover BLE devices sending advertisements over one of the advertisement channels
 public class BLEScanner: BLEReceiverDelegate, ObservableObject {
-    let receiver = BLEReceiver()
-    @Published public var devices = [UUID: BLEDevice]()
+    var receiver: BLEReceiverProtocol = BLEReceiver()
+    
+    var receiverType: Receiver = .coreBluetooth {
+        didSet {
+            if oldValue != receiverType {
+                self.changeReceiver(to: receiverType)
+            }
+        }
+    }
+    
+    @Published public var devices = [String: BLEDevice]()
     @Published public var deviceList = Array<BLEDevice>()
     public var delegate: BLEScannerDelegate?
     
@@ -77,20 +86,46 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
     }
     
     
+    //MARK:- Implementation
+    
     /// Start scanning for Apple advertisements
     func scanForAppleAdvertisements() {
         receiver.scanForAdvertisements(filterDuplicates: self.filterDuplicates)
     }
     
+    
+    /// Switch the BLE Receiver
+    /// - Parameter receiver: the selected receiver type
+    func changeReceiver(to receiver: Receiver) {
+        //Remove old receiver's delegate
+        self.receiver.delegate = nil
+        self.receiver.stopScanningForAdvertisements()
+        
+        switch receiver {
+        case .coreBluetooth:
+            self.receiver = BLEReceiver()
+        case .external:
+            self.receiver = BLERelayReceiver()
+        }
+        
+        self.receiver.delegate = self
+        if self.scanning {
+            self.receiver.scanForAdvertisements(filterDuplicates: filterDuplicates)
+        }
+        
+        self.devices.removeAll()
+        self.deviceList.removeAll()
+    }
+    
     func didReceive(advertisementData: [String : Any], rssi: NSNumber, from device: CBPeripheral) {
         do {
             
-            if let bleDevice = devices[device.identifier] {
+            if let bleDevice = devices[device.identifier.uuidString] {
                 let advertisement = try BLEAdvertisment(advertisementData: advertisementData, rssi: rssi)
                 bleDevice.add(advertisement: advertisement)
                 delegate?.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: bleDevice)
-                if bleDevice.deviceType == nil {
-                    self.receiver.detectDeviceType(for: bleDevice)
+                if let recv = self.receiver as? BLEReceiver, bleDevice.deviceType == nil {
+                    recv.detectDeviceType(for: bleDevice)
                 }
                 self.newAdvertisementSubject.send(BLE_Event(advertisement: advertisement, device: bleDevice))
                 
@@ -98,11 +133,13 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
                 //Add a new device
                 let advertisement = try BLEAdvertisment(advertisementData: advertisementData, rssi: rssi)
                 let bleDevice = BLEDevice(peripheral: device, and: advertisement)
-                self.devices[device.identifier] = bleDevice
+                self.devices[device.identifier.uuidString] = bleDevice
                 delegate?.scanner(self, didDiscoverNewDevice: bleDevice)
                 delegate?.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: bleDevice)
                 self.deviceList = Array(devices.values)
-                self.receiver.detectDeviceType(for: bleDevice)
+                if let recv = self.receiver as? BLEReceiver {
+                    recv.detectDeviceType(for: bleDevice)
+                }
                 self.newDeviceSubject.send(bleDevice)
                 self.newAdvertisementSubject.send(BLE_Event(advertisement: advertisement, device: bleDevice))
             }
@@ -115,15 +152,42 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
         }
     }
     
+    func didReceive(advertisement: BLEAdvertisment) {
+        guard let macAddress = advertisement.macAddress?.addressString else {
+            Log.error(system: .BLERelay, message: "Received corrupted advertisement without mac address")
+            return
+        }
+        
+        
+        if let bleDevice = devices[macAddress] {
+            bleDevice.add(advertisement: advertisement)
+            delegate?.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: bleDevice)
+            self.newAdvertisementSubject.send(BLE_Event(advertisement: advertisement, device: bleDevice))
+        }else {
+            do {
+                //Add new device
+                let bleDevice = try BLEDevice(with: advertisement)
+                self.devices[macAddress] = bleDevice
+                delegate?.scanner(self, didDiscoverNewDevice: bleDevice)
+                delegate?.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: bleDevice)
+                self.deviceList = Array(devices.values)
+                self.newDeviceSubject.send(bleDevice)
+                self.newAdvertisementSubject.send(BLE_Event(advertisement: advertisement, device: bleDevice))
+            }catch {
+                Log.error(system: .ble, message: "Failed setting up device %@", String(describing: error))
+            }
+        }
+    }
+    
     func didUpdateModelNumber(_ modelNumber: String, for peripheral: CBPeripheral) {
-        guard let device = self.devices[peripheral.identifier] else {return}
+        guard let device = self.devices[peripheral.identifier.uuidString] else {return}
         device.modelNumber = modelNumber
     }
     
     func checkForTimeouts() {
         let timedOutDevices = self.deviceList.filter {$0.lastUpdate.timeIntervalSinceNow < -self.timeoutInterval}
         timedOutDevices.forEach { (d) in
-            self.devices[d.uuid] = nil
+            self.devices[d.uuid.uuidString] = nil
         }
         self.deviceList = Array(self.devices.values)
     }
@@ -131,5 +195,19 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
     public struct BLE_Event {
         public let advertisement: BLEAdvertisment
         public let device: BLEDevice
+    }
+    
+    enum Receiver {
+        case coreBluetooth
+        case external
+        
+        var name: String {
+            switch self {
+            case .coreBluetooth:
+                return "CoreBluetooth"
+            case .external:
+                return "External - Raspberry Pi"
+            }
+        }
     }
 }

@@ -9,7 +9,7 @@
 import Foundation
 
 struct BLERelayedAdvertisement: Codable {
-    var advertisementHex: String
+    var manufacturerDataHex: String
     var macAddress: String
     var rssi: Int
     var name: String?
@@ -17,3 +17,5 @@ struct BLERelayedAdvertisement: Codable {
     var addressType: String
     var connectable: Bool
 }
+
+

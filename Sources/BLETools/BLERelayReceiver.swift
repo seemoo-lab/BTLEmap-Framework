@@ -12,7 +12,9 @@ import Combine
 /// This class is used to relayed BLE advertisements from a BLE Receiver.
 /// The receiver connects to this service and sends all BLE advertisements as TCP Packets.
 /// The packets will be received here and can be forwarded by any application
-class BLERelayReceiver: NSObject, ObservableObject {
+class BLERelayReceiver: NSObject, ObservableObject, BLEReceiverProtocol {
+    var delegate: BLEReceiverDelegate?
+    
     var port: Int = -1
     
     var inputStreams = [InputStream]()
@@ -39,11 +41,24 @@ class BLERelayReceiver: NSObject, ObservableObject {
         service.includesPeerToPeer = true
     }
     
+    /// Start receiving advertisements from an external source
+    /// - Parameter filterDuplicates: Currently ignored for this receiver -> Always *false*
+    func scanForAdvertisements(filterDuplicates: Bool) {
+        self.announceService()
+    }
+    
+    func stopScanningForAdvertisements() {
+        self.service.stop()
+        self.inputStreams.forEach({$0.close()})
+        self.inputStreams.removeAll()
+        self.outputStreams.forEach({$0.close()})
+        self.outputStreams.removeAll()
+    }
+    
     
     /// Announce the service on all interfaces
     func announceService() {
         service.publish(options: [.listenForConnections])
-        
     }
     
     /// Received a message from the BLE receiver (Raspberry Pi)
@@ -51,6 +66,19 @@ class BLERelayReceiver: NSObject, ObservableObject {
     func received(message: Data) {
         Log.debug(system: .BLERelay, message: "Received packet from BLE Relay\n %@", String(data: message, encoding: .ascii) ?? "nil")
         self.receivedMessages.append(message)
+        
+        //Decode the json to a relayed advertisement
+        do {
+            let adv = try JSONDecoder().decode(BLERelayedAdvertisement.self, from: message)
+            
+            let bleAdv = try BLEAdvertisment(relayedAdvertisement: adv)
+            
+            self.delegate?.didReceive(advertisement: bleAdv)
+            
+        }catch let error {
+            Log.error(system: .BLERelay, message: "Could not decode JSON %@", String(describing: error))
+        }
+        
     }
     
     /// Read messages from the current input stream

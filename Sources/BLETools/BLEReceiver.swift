@@ -14,6 +14,9 @@ import os
 /// Delegate used for forwarding Apple advertisements to
 protocol BLEReceiverDelegate {
     
+    /// Called when the advertisement has been received over a relayed service
+    /// - Parameter advertisement:An advertisement that has been received over relay
+    func didReceive(advertisement: BLEAdvertisment)
     
     /// Called when any advertisement has been received by the `BLEReceiver`
     /// - Parameters:
@@ -29,8 +32,15 @@ protocol BLEReceiverDelegate {
 }
 
 
+protocol BLEReceiverProtocol {
+    func scanForAdvertisements(filterDuplicates: Bool)
+    func stopScanningForAdvertisements()
+    
+    var delegate: BLEReceiverDelegate? { get set }
+}
+
 /// Class used to scan for BLE Advertisements and receiving them. Uses delegate to inform about advertisements sent by Apple devices
-class BLEReceiver: NSObject {
+class BLEReceiver: NSObject, BLEReceiverProtocol {
     var centralManager: CBCentralManager!
     var delegate: BLEReceiverDelegate?
     private var isScanning = false

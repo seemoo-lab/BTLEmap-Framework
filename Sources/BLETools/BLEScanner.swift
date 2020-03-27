@@ -216,9 +216,9 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
         public let device: BLEDevice
     }
     
-    public enum Receiver: CaseIterable {
-        case coreBluetooth
-        case external
+    public enum Receiver: Int, CaseIterable {
+        case coreBluetooth = 0
+        case external = 1
         
         public var name: String {
             switch self {

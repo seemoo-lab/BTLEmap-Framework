@@ -212,11 +212,11 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
         public let device: BLEDevice
     }
     
-    enum Receiver: CaseIterable {
+    public enum Receiver: CaseIterable {
         case coreBluetooth
         case external
         
-        var name: String {
+        public var name: String {
             switch self {
             case .coreBluetooth:
                 return "CoreBluetooth"

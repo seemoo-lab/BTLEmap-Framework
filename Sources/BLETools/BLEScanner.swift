@@ -40,6 +40,8 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
         }
     }
     
+    @Published public var connectedToReceiver: Bool = true
+    
     @Published public var devices = [String: BLEDevice]()
     @Published public var deviceList = Array<BLEDevice>()
     public var delegate: BLEScannerDelegate?
@@ -100,12 +102,16 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
         //Remove old receiver's delegate
         self.receiver.delegate = nil
         self.receiver.stopScanningForAdvertisements()
+        self.connectedToReceiver = false
         
         switch receiver {
         case .coreBluetooth:
             self.receiver = BLEReceiver()
+            self.connectedToReceiver = true
         case .external:
-            self.receiver = BLERelayReceiver()
+            let relayReceiver = BLERelayReceiver()
+            let _ = relayReceiver.$connected.assign(to: \BLEScanner.connectedToReceiver, on: self)
+            self.receiver = relayReceiver
         }
         
         self.receiver.delegate = self
@@ -206,7 +212,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
         public let device: BLEDevice
     }
     
-    enum Receiver {
+    enum Receiver: CaseIterable {
         case coreBluetooth
         case external
         

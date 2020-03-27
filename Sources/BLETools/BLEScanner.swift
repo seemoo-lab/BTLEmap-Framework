@@ -30,7 +30,7 @@ public protocol BLEScannerDelegate {
 
 /// BLE Scanner can be used to discover BLE devices sending advertisements over one of the advertisement channels
 public class BLEScanner: BLEReceiverDelegate, ObservableObject {
-    var receiver: BLEReceiverProtocol = BLEReceiver()
+    var receiver: BLEReceiverProtocol!
     
     public var receiverType: Receiver = .coreBluetooth {
         didSet {
@@ -79,12 +79,13 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
     public let newAdvertisementSubject = PassthroughSubject<BLE_Event,Never>()
     public let newDeviceSubject = PassthroughSubject<BLEDevice,Never>()
     
-    public init(delegate: BLEScannerDelegate? = nil, devicesCanTimeout:Bool = false, timeoutInterval: TimeInterval = 5.0 * 60.0, filterDuplicates: Bool=false) {
+    public init(delegate: BLEScannerDelegate? = nil, devicesCanTimeout:Bool = false, timeoutInterval: TimeInterval = 5.0 * 60.0, filterDuplicates: Bool=false, receiverType: Receiver) {
         self.delegate = delegate
-        receiver.delegate = self
+        self.receiverType = receiverType
         self.devicesCanTimeout = devicesCanTimeout
         self.timeoutInterval = timeoutInterval
         self.filterDuplicates = filterDuplicates
+        self.changeReceiver(to: self.receiverType)
     }
     
     

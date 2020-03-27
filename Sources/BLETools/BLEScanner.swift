@@ -32,7 +32,7 @@ public protocol BLEScannerDelegate {
 public class BLEScanner: BLEReceiverDelegate, ObservableObject {
     var receiver: BLEReceiverProtocol = BLEReceiver()
     
-    var receiverType: Receiver = .coreBluetooth {
+    public var receiverType: Receiver = .coreBluetooth {
         didSet {
             if oldValue != receiverType {
                 self.changeReceiver(to: receiverType)

@@ -192,15 +192,23 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
         }
     }
     
+    func didUpdateServices(services: [BLEService], forDevice id: String) {
+        guard let device = self.devices[id] else {return}
+        device.services = Set(services)
+    }
+    
+    func didUpdateCharacteristics(characteristics: [BLECharacteristic], andDevice id: String) {
+        guard let device = self.devices[id] else {return}
+        let allChars = device.characteristics.union(characteristics)
+        device.characteristics = allChars
+    }
+    
+    
     func didUpdateModelNumber(_ modelNumber: String, for peripheral: CBPeripheral) {
         guard let device = self.devices[peripheral.identifier.uuidString] else {return}
         device.modelNumber = modelNumber
     }
     
-    func didUpdateServices(services: [CBService], for peripheral: CBPeripheral) {
-        guard let device = self.devices[peripheral.identifier.uuidString] else {return}
-        device.services = services.map{BLEService(with: $0)}
-    }
     
     func checkForTimeouts() {
         let timedOutDevices = self.deviceList.filter {$0.lastUpdate.timeIntervalSinceNow < -self.timeoutInterval}

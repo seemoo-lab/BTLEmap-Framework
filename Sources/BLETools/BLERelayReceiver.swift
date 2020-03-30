@@ -70,11 +70,17 @@ class BLERelayReceiver: NSObject, ObservableObject, BLEReceiverProtocol {
         switch type {
         case .advertisement:
             self.receivedAdvertisement(message: message)
+        case .services:
+            self.receivedServices(message: message)
+        case .serviceCharacteristicsInfo:
+            self.receivedServiceCharacteristics(message: message)
         case .unknown:
             Log.error(system: .BLERelay, message: "Received unknown message")
         }
     }
     
+    /// Received BLE  advertisment relayed by external source
+    /// - Parameter message: the message data encoded with JSON
     func receivedAdvertisement(message: Data) {
         //Decode the json to a relayed advertisement
         do {
@@ -84,6 +90,33 @@ class BLERelayReceiver: NSObject, ObservableObject, BLEReceiverProtocol {
             
             self.delegate?.didReceive(advertisement: bleAdv)
             
+        }catch let error {
+            Log.error(system: .BLERelay, message: "Could not decode JSON %@", String(describing: error))
+        }
+    }
+    
+    /// Received BLE service information relayed by external source
+    /// - Parameter message: the message encoded with JSON
+    func receivedServices(message: Data) {
+        do {
+            let relayedServices = try JSONDecoder().decode(BLERelayedServices.self, from: message)
+            let services = relayedServices.services.map{BLEService(with: $0)}
+            self.delegate?.didUpdateServices(services: services, forDevice: relayedServices.macAddress)
+        }catch let error {
+            Log.error(system: .BLERelay, message: "Could not decode JSON %@", String(describing: error))
+        }
+        
+    }
+    
+    
+    /// Received BLE service characteristics relayed by external source
+    /// - Parameter message: the message encoded with JSON
+    func receivedServiceCharacteristics(message: Data) {
+        do {
+            let relayedChars = try JSONDecoder().decode(BLERelayCharacteristics.self, from: message)
+            let characteristics = relayedChars.characteristics.map({BLECharacteristic(with: $0)})
+            let service = BLEService(with: relayedChars.service)
+            self.delegate?.didUpdateCharacteristics(characteristics: characteristics, andDevice: relayedChars.macAddress)
         }catch let error {
             Log.error(system: .BLERelay, message: "Could not decode JSON %@", String(describing: error))
         }
@@ -124,6 +157,8 @@ class BLERelayReceiver: NSObject, ObservableObject, BLEReceiverProtocol {
     
     enum MessageType: UInt8 {
         case advertisement = 0x00
+        case services = 0x01
+        case serviceCharacteristicsInfo = 0x02
         case unknown = 0xf0
     }
 }

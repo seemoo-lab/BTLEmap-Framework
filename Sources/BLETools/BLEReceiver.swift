@@ -27,18 +27,18 @@ protocol BLEReceiverDelegate {
     ///   - device: CoreBluetooth Peripheral device
     func didReceive(advertisementData: [String: Any], rssi: NSNumber, from device: CBPeripheral)
     
-    /// Did update the model number string for a peripheral
-    /// - Parameters:
-    ///   - modelNumber: The model number that has been received
-    ///   - peripheral: The peripheral to which the model number belongs
-    func didUpdateModelNumber(_ modelNumber: String, for peripheral: CBPeripheral)
     
-    
-    /// The services for a peripheral have been updated
+    /// The services for a device have been updated
     /// - Parameters:
     ///   - services: Array of services
-    ///   - peripheral: peripheral that has this services
-    func didUpdateServices(services: [CBService], for peripheral: CBPeripheral)
+    ///   - id: Device id (UUID for CBPeripheral, MAC address for external receivers)
+    func didUpdateServices(services: [BLEService], forDevice id: String)
+    
+    /// Updated characteristics for service and device
+    /// - Parameters:
+    ///   - characteristics: Array of characteristics available for this service
+    ///   - id: Device id (UUID for CBPeripheral, MAC address for external receivers)
+    func didUpdateCharacteristics(characteristics: [BLECharacteristic], andDevice id: String)
 }
 
 
@@ -174,12 +174,14 @@ extension BLEReceiver: CBPeripheralDelegate {
         
         print(peripheral.services?.map{$0.uuid} ?? "None")
         
-        guard let services = peripheral.services,
-            let deviceInfoService = services.first(where: {$0.uuid == CBServiceUUIDs.deviceInformation.uuid}) else {return}
+        guard let services = peripheral.services else {return}
         
-        peripheral.discoverCharacteristics(nil, for: deviceInfoService)
+        self.delegate?.didUpdateServices(services: services.map{BLEService(with: $0)}, forDevice: peripheral.identifier.uuidString)
         
-        self.delegate?.didUpdateServices(services: services, for: peripheral)
+        for s in services {
+            peripheral.discoverCharacteristics(nil, for: s)
+        }
+            
     }
     
     func peripheralDidUpdateName(_ peripheral: CBPeripheral) {
@@ -201,10 +203,11 @@ extension BLEReceiver: CBPeripheralDelegate {
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         // Updated the value for model number
-        guard characteristic.uuid == CBCharacteristicsUUIDs.modelNumber.uuid,
-            let modelNumber = characteristic.value?.stringUTF8 else {return}
+//        guard characteristic.uuid == CBCharacteristicsUUIDs.modelNumber.uuid,
+//            let modelNumber = characteristic.value?.stringUTF8 else {return}
         
-        self.delegate?.didUpdateModelNumber(modelNumber, for: peripheral)
+        self.delegate?.didUpdateCharacteristics(characteristics: [BLECharacteristic(with: characteristic)], andDevice: peripheral.identifier.uuidString)
+        
     }
 
 }

@@ -24,14 +24,4 @@ public struct BLEMACAddress {
     }
 }
 
-public struct BLEService {
-    public internal(set) var uuidString: String
-    public internal(set) var description: String?
-    public internal(set) var isPrimary: Bool
-    
-    init(with cbService: CBService) {
-        self.uuidString = cbService.uuid.uuidString
-        self.isPrimary = cbService.isPrimary
-        self.description = cbService.uuid.description
-    }
-}
+

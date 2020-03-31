@@ -38,6 +38,8 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
         }
     }
     
+    @Published public internal(set) var isActive: Bool = false
+        
     public internal(set) var peripheral: CBPeripheral?
     
     /// The UUID of the peripheral
@@ -125,6 +127,8 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
         self.convertAdvertisementsToCSV()
     }
     
+    internal var activityTimer: Timer?
+    
     init(peripheral: CBPeripheral, and advertisement: BLEAdvertisment) {
         
         self.peripheral = peripheral
@@ -177,6 +181,11 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
             self.lastRSSI = rssi
         }
         
+        self.isActive = true
+        self.activityTimer?.invalidate()
+        self.activityTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { (_) in
+            self.isActive = false 
+        }
     }
     
     private func detectOSVersion(from advertisement: BLEAdvertisment) {

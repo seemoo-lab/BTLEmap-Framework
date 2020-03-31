@@ -29,8 +29,6 @@ class BLEToolsTests: XCTestCase, BLEScannerDelegate {
         let attributedString = adv.dataAttributedString
         
         print(attributedString)
-        
-        
     }
     
     
@@ -52,12 +50,33 @@ class BLEToolsTests: XCTestCase, BLEScannerDelegate {
         scanner.scanForAppleAdvertisements()
         scanner.receiverType = .external
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 15.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 20.0) {
             if scanner.connectedToReceiver {
                 expect.fulfill()
             }
         }
 
+        scanner.scanForAppleAdvertisements()
+        
+        wait(for: [expect], timeout: 60.0)
+    }
+    
+    func testGetCharacteristicsFromExternalSource() throws {
+        let expect = expectation(description: "BLE Scanner")
+        
+        let scanner = BLEScanner(delegate: self,receiverType: .external)
+        scanner.scanForAppleAdvertisements()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 20.0) {
+            if let characteristics = scanner.deviceList.first(where: {$0.characteristics.count > 0}) {
+                print("Received characteristics")
+            }else {
+                XCTFail()
+            }
+            
+            expect.fulfill()
+        }
+        
         scanner.scanForAppleAdvertisements()
         
         wait(for: [expect], timeout: 60.0)

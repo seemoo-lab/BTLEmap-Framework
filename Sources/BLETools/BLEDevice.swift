@@ -30,7 +30,13 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     
     @Published public internal(set) var services = Set<BLEService>()
     
-    @Published public internal(set) var characteristics = Set<BLECharacteristic>()
+    @Published public internal(set) var characteristics = Set<BLECharacteristic>() {
+        didSet {
+            if let modelNumber = characteristics.first(where: {$0.uuid == CBCharacteristicsUUIDs.modelNumber.uuid}) {
+                self.modelNumber = modelNumber.value?.stringUTF8
+            }
+        }
+    }
     
     public internal(set) var peripheral: CBPeripheral?
     

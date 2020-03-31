@@ -52,11 +52,11 @@ public struct BLECharacteristic: Equatable, Hashable, CustomStringConvertible {
         "BLECharacteristic:\n\(String(describing: commonName)) - \(value != nil ? String(data: value!, encoding: .ascii) ?? value!.hexadecimal : "empty")"
     }
     
-    init(with cbChar: CBCharacteristic, and value: Data?=nil) {
+    init(with cbChar: CBCharacteristic) {
         self.uuid = cbChar.uuid
         self.commonName = cbChar.uuid.description
         self.properties = cbChar.properties
-        self.value = value
+        self.value = cbChar.value
     }
     
     init(with relayedCharacteristic: BLERelayCharacteristic) {

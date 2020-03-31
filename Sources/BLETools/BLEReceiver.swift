@@ -192,22 +192,25 @@ extension BLEReceiver: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         
         guard service.uuid == CBServiceUUIDs.deviceInformation.uuid,
-            let characteristics = service.characteristics,
-            let modelNumberCharacteristic = characteristics.first(where: {$0.uuid == CBCharacteristicsUUIDs.modelNumber.uuid})  else {return}
+            let characteristics = service.characteristics else {return}
         
         //Read model name
         print(characteristics)
+        characteristics.forEach { (c) in
+            peripheral.readValue(for: c)
+        }
         
-        peripheral.readValue(for: modelNumberCharacteristic)
     }
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         // Updated the value for model number
 //        guard characteristic.uuid == CBCharacteristicsUUIDs.modelNumber.uuid,
 //            let modelNumber = characteristic.value?.stringUTF8 else {return}
-        
+        if let error = error {
+            //Error occurred
+            Log.error(system: .ble, message: "Failed updating characteristic \n%@", String(describing: error))
+        }
         self.delegate?.didUpdateCharacteristics(characteristics: [BLECharacteristic(with: characteristic)], andDevice: peripheral.identifier.uuidString)
-        
     }
 
 }

@@ -213,22 +213,32 @@ extension BLEReceiver: CBPeripheralDelegate {
 }
 
 
-enum CBServiceUUIDs {
+public enum CBServiceUUIDs {
     case deviceInformation
     
-    var uuid: CBUUID {
+    public var uuid: CBUUID {
         switch self {
         case .deviceInformation: return CBUUID(data: Data([0x18, 0x0A]))
         }
     }
 }
 
-enum CBCharacteristicsUUIDs {
+public enum CBCharacteristicsUUIDs {
     case modelNumber
+    case deviceName
+    case batteryLevel
+    case appearance
+    case serialNumberString
+    case hardwareRevisionString
     
-    var uuid: CBUUID {
+    public var uuid: CBUUID {
         switch self {
         case .modelNumber: return CBUUID(data: Data([0x2A,0x24]))
+        case .deviceName: return CBUUID(data: "00002a0000001000800000805f9b34fb".hexadecimal!)
+        case .batteryLevel: return CBUUID(data: "00002a1900001000800000805f9b34fb".hexadecimal!)
+        case .appearance: return CBUUID(data: "00002a0100001000800000805f9b34fb".hexadecimal!)
+        case .serialNumberString: return CBUUID(data: "00002a2500001000800000805f9b34fb".hexadecimal!)
+        case .hardwareRevisionString: return CBUUID(data: "00002a2700001000800000805f9b34fb".hexadecimal!)
         }
     }
 }

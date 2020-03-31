@@ -8,6 +8,7 @@
 
 import XCTest
 @testable import BLETools
+import CoreBluetooth
 
 class BLEToolsTests: XCTestCase, BLEScannerDelegate {
 
@@ -75,11 +76,37 @@ class BLEToolsTests: XCTestCase, BLEScannerDelegate {
             }
             
             expect.fulfill()
+            scanner.scanning = false
         }
         
         scanner.scanForAppleAdvertisements()
         
         wait(for: [expect], timeout: 60.0)
+    }
+    
+    static var raspiBooted = false
+    static var bootExpect: XCTestExpectation!
+    static var raspiConnected: (()->())!
+    
+    func testRaspiBootUpTime() {
+        let start = Date() 
+        let relayReceiver = BLERelayReceiver()
+        let delegate = TestRelayDelegate()
+        delegate.connectedExpect = self.expectation(description: "Raspi connection")
+        delegate.connectedExpect.assertForOverFulfill = false
+        relayReceiver.delegate = delegate
+        BLEToolsTests.raspiConnected = {
+            relayReceiver.stopScanningForAdvertisements()
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            relayReceiver.scanForAdvertisements(filterDuplicates: false)
+        }
+        
+        self.waitForExpectations(timeout: 60.0) { (error) in
+            XCTAssertNil(error)
+            print(error)
+            print("Execution took \(-start.timeIntervalSinceNow) seconds")
+        }
     }
     
     func scanner(_ scanner: BLEScanner, didReceiveNewAdvertisement advertisement: BLEAdvertisment, forDevice device: BLEDevice) {
@@ -92,5 +119,36 @@ class BLEToolsTests: XCTestCase, BLEScannerDelegate {
         print(device)
     }
     
+    class TestRelayDelegate: BLEReceiverDelegate {
+        
+        var connected = false
+        var connectedExpect: XCTestExpectation!
+        
+        func didStartScanning() {
+            
+        }
+        
+        func didReceive(advertisement: BLEAdvertisment) {
+            
+            self.connectedExpect.fulfill()
+            print("Expectation fullfilled")
+//            BLEToolsTests.raspiConnected()
+            self.connected = true
+        }
+        
+        func didReceive(advertisementData: [String : Any], rssi: NSNumber, from device: CBPeripheral) {
+            
+        }
+        
+        func didUpdateServices(services: [BLEService], forDevice id: String) {
+            
+        }
+        
+        func didUpdateCharacteristics(characteristics: [BLECharacteristic], andDevice id: String) {
+            
+        }
+        
+        
+    }
 }
 

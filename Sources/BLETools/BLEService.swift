@@ -53,6 +53,23 @@ public struct BLECharacteristic: Equatable, Hashable, CustomStringConvertible {
         "BLECharacteristic:\n\(String(describing: commonName)) - \(value != nil ? String(data: value!, encoding: .ascii) ?? value!.hexadecimal : "empty")"
     }
     
+    /// String description for the value
+    public var valueDescription: String {
+        if let value = self.value {
+            if self.commonName.lowercased().contains("string") {
+                return String(data: value, encoding: .utf8) ?? value.hexadecimal
+            }else {
+                if let intVal = value.uint {
+                    return "\(value.hexadecimal) - \(intVal)"
+                }
+                
+                return value.hexadecimal
+            }
+        }
+        
+        return "nil"
+    }
+    
     init(with cbChar: CBCharacteristic) {
         self.uuid = cbChar.uuid
         self.commonName = cbChar.uuid.description

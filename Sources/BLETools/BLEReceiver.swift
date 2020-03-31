@@ -209,6 +209,7 @@ extension BLEReceiver: CBPeripheralDelegate {
         if let error = error {
             //Error occurred
             Log.error(system: .ble, message: "Failed updating characteristic \n%@", String(describing: error))
+            return 
         }
         self.delegate?.didUpdateCharacteristics(characteristics: [BLECharacteristic(with: characteristic)], andDevice: peripheral.identifier.uuidString)
     }

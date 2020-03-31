@@ -197,10 +197,14 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
         device.services = Set(services)
     }
     
-    func didUpdateCharacteristics(characteristics: [BLECharacteristic], andDevice id: String) {
-        guard let device = self.devices[id] else {return}
-        let allChars = device.characteristics.union(characteristics)
-        device.characteristics = allChars
+    func didUpdateCharacteristics(characteristics: [BLECharacteristic],forService service: BLEService, andDevice id: String) {
+        guard let device = self.devices[id], var service = device.services.first(where: {$0.uuid == service.uuid}) else {return}
+        
+        //Get characteristics for service
+        let allChars = Set(characteristics).union(service.characteristics)
+        service.characteristics = allChars
+        
+        device.services.update(with: service)
     }
     
     

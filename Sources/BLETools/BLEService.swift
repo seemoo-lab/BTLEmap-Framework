@@ -14,6 +14,7 @@ public struct BLEService: Equatable, Hashable {
     public internal(set) var commonName: String
     public internal(set) var isPrimary: Bool?
     public internal(set) var cbService: CBService?
+    public internal(set) var characteristics = Set<BLECharacteristic>()
     
     public var uuidString: String {
         uuid.uuidString

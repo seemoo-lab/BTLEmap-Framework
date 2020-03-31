@@ -116,7 +116,7 @@ class BLERelayReceiver: NSObject, ObservableObject, BLEReceiverProtocol {
             let relayedChars = try JSONDecoder().decode(BLERelayCharacteristics.self, from: message)
             let characteristics = relayedChars.characteristics.map({BLECharacteristic(with: $0)})
             let service = BLEService(with: relayedChars.service)
-            self.delegate?.didUpdateCharacteristics(characteristics: characteristics, andDevice: relayedChars.macAddress)
+            self.delegate?.didUpdateCharacteristics(characteristics: characteristics,forService: service, andDevice: relayedChars.macAddress)
         }catch let error {
             Log.error(system: .BLERelay, message: "Could not decode JSON %@", String(describing: error))
         }

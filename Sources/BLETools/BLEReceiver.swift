@@ -38,7 +38,7 @@ protocol BLEReceiverDelegate {
     /// - Parameters:
     ///   - characteristics: Array of characteristics available for this service
     ///   - id: Device id (UUID for CBPeripheral, MAC address for external receivers)
-    func didUpdateCharacteristics(characteristics: [BLECharacteristic], andDevice id: String)
+    func didUpdateCharacteristics(characteristics: [BLECharacteristic], forService service: BLEService, andDevice id: String)
 }
 
 
@@ -209,9 +209,9 @@ extension BLEReceiver: CBPeripheralDelegate {
         if let error = error {
             //Error occurred
             Log.error(system: .ble, message: "Failed updating characteristic \n%@", String(describing: error))
-            return 
+            return
         }
-        self.delegate?.didUpdateCharacteristics(characteristics: [BLECharacteristic(with: characteristic)], andDevice: peripheral.identifier.uuidString)
+        self.delegate?.didUpdateCharacteristics(characteristics: [BLECharacteristic(with: characteristic)],forService: BLEService(with: characteristic.service), andDevice: peripheral.identifier.uuidString)
     }
 
 }

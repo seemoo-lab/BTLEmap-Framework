@@ -28,11 +28,10 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     }
     @Published public private (set) var advertisements = [BLEAdvertisment]()
     
-    @Published public internal(set) var services = Set<BLEService>()
-    
-    @Published public internal(set) var characteristics = Set<BLECharacteristic>() {
+    @Published public internal(set) var services = Set<BLEService>() {
         didSet {
-            if let modelNumber = characteristics.first(where: {$0.uuid == CBCharacteristicsUUIDs.modelNumber.uuid}) {
+            let deviceInformation = services.first(where: {$0.uuid == CBServiceUUIDs.deviceInformation.uuid})
+            if let modelNumber = deviceInformation?.characteristics.first(where: {$0.uuid == CBCharacteristicsUUIDs.modelNumber.uuid}) {
                 self.modelNumber = modelNumber.value?.stringUTF8
             }
         }
@@ -184,7 +183,7 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
         self.isActive = true
         self.activityTimer?.invalidate()
         self.activityTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { (_) in
-            self.isActive = false 
+            self.isActive = false
         }
     }
     

@@ -28,14 +28,7 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     }
     @Published public private (set) var advertisements = [BLEAdvertisment]()
     
-    @Published public internal(set) var services = Set<BLEService>() {
-        didSet {
-            let deviceInformation = services.first(where: {$0.uuid == CBServiceUUIDs.deviceInformation.uuid})
-            if let modelNumber = deviceInformation?.characteristics.first(where: {$0.uuid == CBCharacteristicsUUIDs.modelNumber.uuid}) {
-                self.modelNumber = modelNumber.value?.stringUTF8
-            }
-        }
-    }
+    @Published public private(set) var services = Set<BLEService>()
     
     @Published public internal(set) var isActive: Bool = false
         
@@ -185,6 +178,19 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
         self.activityTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { (_) in
             self.isActive = false
         }
+    }
+    
+    func addServices(services: [BLEService]) {
+        self.services = Set(services)
+        
+    }
+    
+    func updateService(service: BLEService) {
+        if service.uuid == CBServiceUUIDs.deviceInformation.uuid,
+            let modelNumber = service.characteristics.first(where: {$0.uuid == CBCharacteristicsUUIDs.modelNumber.uuid}){
+            self.modelNumber = modelNumber.value?.stringUTF8
+        }
+        self.services.update(with: service)
     }
     
     private func detectOSVersion(from advertisement: BLEAdvertisment) {

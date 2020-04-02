@@ -198,7 +198,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
     
     func didUpdateServices(services: [BLEService], forDevice id: String) {
         guard let device = self.devices[id] else {return}
-        device.services = Set(services)
+        device.addServices(services: services)
     }
     
     func didUpdateCharacteristics(characteristics: [BLECharacteristic],forService service: BLEService, andDevice id: String) {
@@ -208,7 +208,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
         let allChars = Set(characteristics).union(service.characteristics)
         service.characteristics = allChars
         
-        device.services.update(with: service)
+        device.updateService(service: service)
     }
     
     

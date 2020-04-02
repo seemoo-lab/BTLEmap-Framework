@@ -29,7 +29,7 @@ public struct BLEService: Equatable, Hashable {
     
     init(with relayedService: BLERelayedService) {
         self.uuid = relayedService.uuid
-        self.commonName = relayedService.commonName
+        self.commonName = relayedService.uuid.description
     }
     
     public static func == (lhs: BLEService, rhs: BLEService) -> Bool {
@@ -79,7 +79,7 @@ public struct BLECharacteristic: Equatable, Hashable, CustomStringConvertible {
     
     init(with relayedCharacteristic: BLERelayCharacteristic) {
         self.uuid = relayedCharacteristic.uuid
-        self.commonName = relayedCharacteristic.commonName
+        self.commonName = relayedCharacteristic.uuid.description
         self.value = relayedCharacteristic.value
     }
     

@@ -56,7 +56,8 @@ public struct BLECharacteristic: Equatable, Hashable, CustomStringConvertible {
     /// String description for the value
     public var valueDescription: String {
         if let value = self.value {
-            if self.commonName.lowercased().contains("string") {
+            let cName = self.commonName.lowercased()
+            if cName.contains("string") || cName.contains("name") {
                 return String(data: value, encoding: .utf8) ?? value.hexadecimal
             }else {
                 if let intVal = value.uint {

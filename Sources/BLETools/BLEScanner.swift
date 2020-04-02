@@ -190,6 +190,10 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
                 Log.error(system: .ble, message: "Failed setting up device %@", String(describing: error))
             }
         }
+        
+        if self.devicesCanTimeout {
+            checkForTimeouts()
+        }
     }
     
     func didUpdateServices(services: [BLEService], forDevice id: String) {

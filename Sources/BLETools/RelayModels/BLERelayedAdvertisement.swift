@@ -13,7 +13,7 @@ struct BLERelayedAdvertisement: Codable {
     var macAddress: String
     var rssi: Int
     var name: String?
-    var flags: String
+    var flags: String?
     var addressType: String
     var connectable: Bool
 }

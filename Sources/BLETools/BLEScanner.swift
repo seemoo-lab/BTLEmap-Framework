@@ -137,7 +137,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
                 let advertisement = try BLEAdvertisment(advertisementData: advertisementData, rssi: rssi)
                 bleDevice.add(advertisement: advertisement)
                 delegate?.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: bleDevice)
-                if let recv = self.receiver as? BLEReceiver, bleDevice.deviceType == nil {
+                if let recv = self.receiver as? BLEReceiver, bleDevice.deviceType == .other {
                     recv.detectDeviceType(for: bleDevice)
                 }
                 self.newAdvertisementSubject.send(BLE_Event(advertisement: advertisement, device: bleDevice))

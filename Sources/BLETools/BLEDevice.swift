@@ -49,7 +49,7 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     }
     
     /// Device type can be retrieved from device information or advertisement data
-    @Published public internal(set) var deviceType: DeviceType?
+    @Published public internal(set) var deviceType: DeviceType = .other
     /// Model number string received from device information service
     @Published public internal(set) var modelNumber: String? {
         // Set the device type to the according model number

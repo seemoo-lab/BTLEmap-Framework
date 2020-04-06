@@ -133,6 +133,17 @@ extension BLEReceiver: CBCentralManagerDelegate {
         peripheral.discoverServices(nil)
     }
     
+    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        Log.error(system: .ble, message: "Connection failed:\n %@", String(describing: error))
+    }
+    
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        Log.debug(system: .ble, message: "Disconnected from peripheral")
+        if let error = error {
+            Log.error(system: .ble, message: "Error while disconnecting", String(describing: error))
+        }
+    }
+    
 }
 
 extension BLEReceiver: CBPeripheralDelegate {
@@ -141,10 +152,6 @@ extension BLEReceiver: CBPeripheralDelegate {
         
         //Set to other initially to prevent from multiple calls
         device.deviceType = .other
-        
-        
-        //Make GATT connection
-        peripheral.delegate = self
         
         // Embedded Apple devices don't offer GATT by default.
         // We can detect the device type from their advertisements
@@ -167,8 +174,13 @@ extension BLEReceiver: CBPeripheralDelegate {
             return
         }
         
+        //Make GATT connection
+        peripheral.delegate = self
+        
         self.centralManager.connect(peripheral, options: nil)
     }
+    
+
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         

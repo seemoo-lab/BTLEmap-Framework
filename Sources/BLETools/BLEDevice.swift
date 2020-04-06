@@ -293,8 +293,8 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
                     
                     let typeString = BLEAdvertisment.AppleAdvertisementType(rawValue: tlv.type)?.description ?? "Unknown type"
                     
-                    let descriptionString = ((try? AppleBLEDecoding.decoder(forType: UInt8(tlv.type)).decode(tlv.value)) ?? ["unkowntype": tlv.type])
-                        .flatMap({ (key, value) -> String in
+                    let descriptionString = ((try? AppleBLEDecoding.decoder(forType: UInt8(tlv.type)).decode(tlv.value)))?.map({($0.0, $0.1)})
+                        .compactMap({ (key, value) -> String in
                             if let data = value as? Data {
                                 return "\(key): \t\(data.hexadecimal.separate(every: 8, with: " ")) \t"
                             }
@@ -305,9 +305,9 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
                             
                             return "\(key):\t\(value),\t"
                             
-                        })
+                        }) ?? ["unknown type"]
                     
-                    return typeString + "\t: " + descriptionString
+                    return typeString + "\t: " + descriptionString.joined(separator: " ")
                 }
                 }?.joined(separator: ",\t") ?? "no data"
             

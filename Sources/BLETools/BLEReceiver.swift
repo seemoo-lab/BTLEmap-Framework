@@ -39,6 +39,11 @@ protocol BLEReceiverDelegate {
     ///   - characteristics: Array of characteristics available for this service
     ///   - id: Device id (UUID for CBPeripheral, MAC address for external receivers)
     func didUpdateCharacteristics(characteristics: [BLECharacteristic], forService service: BLEService, andDevice id: String)
+    
+    /// Reports errors that occurred to the delegate
+    /// - Parameter error: An error that occured. Might be during connections, scanning, etc
+    func didFail(with error: Error)
+    
 }
 
 
@@ -47,12 +52,16 @@ protocol BLEReceiverProtocol {
     func stopScanningForAdvertisements()
     
     var delegate: BLEReceiverDelegate? { get set }
+    
+    /// Defines if the Receiver should automatically connect to devices to get more information
+    var autoconnectToDevices: Bool {get set}
 }
 
 /// Class used to scan for BLE Advertisements and receiving them. Uses delegate to inform about advertisements sent by Apple devices
 class BLEReceiver: NSObject, BLEReceiverProtocol {
     var centralManager: CBCentralManager!
     var delegate: BLEReceiverDelegate?
+    var autoconnectToDevices: Bool = true
     private var isScanning = false
     
     private var shouldScanForAdvertisements = false
@@ -176,8 +185,9 @@ extension BLEReceiver: CBPeripheralDelegate {
         
         //Make GATT connection
         peripheral.delegate = self
-        
-        self.centralManager.connect(peripheral, options: nil)
+        if autoconnectToDevices {
+            self.centralManager.connect(peripheral, options: nil)
+        }
     }
     
 

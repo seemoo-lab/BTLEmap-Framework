@@ -65,6 +65,12 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
         }
     }
     
+    /// Automatically connect to all discovered devices. Used to request services
+    @Published public var autoconnect: Bool {
+        didSet {
+            self.receiver.autoconnectToDevices = autoconnect
+        }
+    }
     
     /// If set to false much more advertisements will be received, this might block parts of the UI thread
     @Published public var filterDuplicates: Bool = true {
@@ -79,12 +85,13 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
     public let newAdvertisementSubject = PassthroughSubject<BLE_Event,Never>()
     public let newDeviceSubject = PassthroughSubject<BLEDevice,Never>()
     
-    public init(delegate: BLEScannerDelegate? = nil, devicesCanTimeout:Bool = false, timeoutInterval: TimeInterval = 5.0 * 60.0, filterDuplicates: Bool=false, receiverType: Receiver = .coreBluetooth) {
+    public init(delegate: BLEScannerDelegate? = nil, devicesCanTimeout:Bool = false, timeoutInterval: TimeInterval = 5.0 * 60.0, filterDuplicates: Bool=false, receiverType: Receiver = .coreBluetooth, autoconnect: Bool = true) {
         self.delegate = delegate
         self.receiverType = receiverType
         self.devicesCanTimeout = devicesCanTimeout
         self.timeoutInterval = timeoutInterval
         self.filterDuplicates = filterDuplicates
+        self.autoconnect = autoconnect
         self.changeReceiver(to: self.receiverType)
     }
     
@@ -93,6 +100,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
     
     /// Start scanning for Apple advertisements
     func scanForAppleAdvertisements() {
+        receiver.autoconnectToDevices = self.autoconnect
         receiver.scanForAdvertisements(filterDuplicates: self.filterDuplicates)
     }
     
@@ -209,6 +217,11 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
         service.characteristics = allChars
         
         device.updateService(service: service)
+    }
+    
+    func didFail(with error: Error) {
+        //TODO: Forward error
+        Log.error(system: .ble, message: "Error occurred %@", String(describing: error))
     }
     
     

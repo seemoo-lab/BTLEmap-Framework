@@ -43,6 +43,7 @@
 		788D98DF240D4686005FC745 /* DataIntExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76F523FADA5500E34241 /* DataIntExtensions.swift */; };
 		788D98E0240D4686005FC745 /* HexToDataExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76F623FADA5500E34241 /* HexToDataExtensions.swift */; };
 		78B8661E2410E88F003761D0 /* CBCentralManagerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B8661D2410E88F003761D0 /* CBCentralManagerExtension.swift */; };
+		78F5BBB0243CC4E6002091CA /* BLERelayCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F5BBAF243CC4E6002091CA /* BLERelayCommand.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,6 +88,7 @@
 		788D98C2240D4674005FC745 /* BLETools_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BLETools_iOS.h; sourceTree = "<group>"; };
 		788D98C3240D4674005FC745 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		78B8661D2410E88F003761D0 /* CBCentralManagerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBCentralManagerExtension.swift; sourceTree = "<group>"; };
+		78F5BBAF243CC4E6002091CA /* BLERelayCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLERelayCommand.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +124,7 @@
 				7888CFD7242D168900A2C971 /* BLERelayedAdvertisement.swift */,
 				782FBA1B24323F180003F070 /* BLERelayedServices.swift */,
 				782FBA1D243241CD0003F070 /* BLERelayCharacteristics.swift */,
+				78F5BBAF243CC4E6002091CA /* BLERelayCommand.swift */,
 			);
 			path = RelayModels;
 			sourceTree = "<group>";
@@ -386,6 +389,7 @@
 				7888CFDA242D3AAE00A2C971 /* BLEAdditional.swift in Sources */,
 				78232036240EA6FC00D4FDE3 /* BLEManufacturer.swift in Sources */,
 				784B76F423FAD8EC00E34241 /* Log.swift in Sources */,
+				78F5BBB0243CC4E6002091CA /* BLERelayCommand.swift in Sources */,
 				782FBA1C24323F180003F070 /* BLERelayedServices.swift in Sources */,
 				78844DEC240D08C900B8DA67 /* TLV.swift in Sources */,
 				784B76F823FADA5500E34241 /* HexToDataExtensions.swift in Sources */,

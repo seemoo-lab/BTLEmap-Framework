@@ -202,7 +202,11 @@ class BLERelayReceiver: NSObject, ObservableObject, BLEReceiverProtocol {
             
             //Send
             self.outputStreams.forEach { (stream) in
-                stream.write(&message, maxLength: message.count)
+                guard stream.write(&message, maxLength: message.count) > 0 else {
+                    Log.error(system: .BLERelay, message: "Failed sending to Relay service")
+                    return
+                }
+                
             }
         }catch let error {
             self.delegate?.didFail(with: error)
@@ -233,10 +237,13 @@ extension BLERelayReceiver: NetServiceDelegate {
 
         self.connected = true
         self.delegate?.didStartScanning()
-
+        
+        outputStream.delegate = self
+        
         //Open the streams
         inputStream.open()
         outputStream.open()
+        
 
         Log.default(system: .BLERelay, message: "Connection opened")
 
@@ -244,7 +251,7 @@ extension BLERelayReceiver: NetServiceDelegate {
         outputStreams.append(outputStream)
         
         //Send start command
-        self.sendCommand(command: BLERelayCommand(scanning: true))
+       self.sendCommand(command: BLERelayCommand(scanning: true))
         
         self.receivingQueue.async {
             self.read(from: inputStream)

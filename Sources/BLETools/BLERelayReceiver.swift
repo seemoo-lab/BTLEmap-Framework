@@ -251,7 +251,7 @@ extension BLERelayReceiver: NetServiceDelegate {
         outputStreams.append(outputStream)
         
         //Send start command
-       self.sendCommand(command: BLERelayCommand(scanning: true))
+        self.sendCommand(command: BLERelayCommand(scanning: true, autoconnect: self.autoconnectToDevices))
         
         self.receivingQueue.async {
             self.read(from: inputStream)

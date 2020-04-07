@@ -55,6 +55,7 @@ class BLERelayReceiver: NSObject, ObservableObject, BLEReceiverProtocol {
     }
 
     func stopScanningForAdvertisements() {
+        self.sendCommand(command: BLERelayCommand(scanning: false))
         self.service.stop()
         self.inputStreams.forEach({ $0.close() })
         self.inputStreams.removeAll()
@@ -241,7 +242,10 @@ extension BLERelayReceiver: NetServiceDelegate {
 
         inputStreams.append(inputStream)
         outputStreams.append(outputStream)
-
+        
+        //Send start command
+        self.sendCommand(command: BLERelayCommand(scanning: true))
+        
         self.receivingQueue.async {
             self.read(from: inputStream)
         }

@@ -82,6 +82,8 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
         }
     }
     
+    @Published public var lastError: Error?
+    
     public let newAdvertisementSubject = PassthroughSubject<BLE_Event,Never>()
     public let newDeviceSubject = PassthroughSubject<BLEDevice,Never>()
     
@@ -222,6 +224,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
     func didFail(with error: Error) {
         //TODO: Forward error
         Log.error(system: .ble, message: "Error occurred %@", String(describing: error))
+        self.lastError = error
     }
     
     

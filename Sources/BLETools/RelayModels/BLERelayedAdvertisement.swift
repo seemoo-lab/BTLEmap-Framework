@@ -16,6 +16,8 @@ struct BLERelayedAdvertisement: Codable {
     var flags: String?
     var addressType: String
     var connectable: Bool
+    var rawData: String
+    var scanData: [String : String?]
 }
 
 

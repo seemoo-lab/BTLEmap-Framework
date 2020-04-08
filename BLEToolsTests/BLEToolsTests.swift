@@ -53,7 +53,7 @@ class BLEToolsTests: XCTestCase, BLEScannerDelegate {
         
         DispatchQueue.global(qos: .background).async {
             while true {
-                if scanner.connectedToReceiver > 0 {
+                if scanner.connectedToReceiver {
                     DispatchQueue.main.async {
                         expect.fulfill()
                     }
@@ -113,6 +113,7 @@ class BLEToolsTests: XCTestCase, BLEScannerDelegate {
             while true {
                 if scanner.devices.count > 0 {
                     DispatchQueue.main.async {
+                        scanner.scanning = false 
                         expect.fulfill()
                     }
                     break

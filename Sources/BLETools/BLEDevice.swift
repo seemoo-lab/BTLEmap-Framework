@@ -43,50 +43,12 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     public private(set) var manufacturer: BLEManufacturer {
         didSet {
             if self.manufacturer == .seemoo {
-                self.deviceType = .seemoo 
+                self.deviceModel?.deviceType = .seemoo
             }
         }
     }
     
-    /// Device type can be retrieved from device information or advertisement data
-    @Published public internal(set) var deviceType: DeviceType = .other
-    /// Model number string received from device information service
-    @Published public internal(set) var modelNumber: String? {
-        // Set the device type to the according model number
-        didSet {
-            guard let modelNumber = self.modelNumber else {return}
-            
-            switch modelNumber {
-            case let s where s.lowercased().contains("macbook"):
-                self.deviceType = .macBook
-                
-            case let s where s.lowercased().contains("imac"):
-                self.deviceType = .iMac
-                
-            case let s where s.lowercased().contains("iphone"):
-                self.deviceType = .iPhone
-                
-            case let s where s.lowercased().contains("ipad"):
-                self.deviceType = .iPad
-                
-            case let s where s.lowercased().contains("ipod"):
-                self.deviceType = .iPod
-            
-            case let s where s.lowercased().contains("airpods"):
-                self.deviceType = .AirPods
-                
-            case let s where s.lowercased().contains("watch"):
-                self.deviceType = .AppleWatch
-                
-            default:
-                self.deviceType = .other
-            }
-            
-            if self.deviceType != .other && self.manufacturer == .unknown {
-                self.manufacturer = .apple
-            }
-        }
-    }
+    @Published public internal(set) var deviceModel: BLEDeviceModel?
     
     
     /// Last RSSI value that has been received
@@ -189,7 +151,10 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     func updateService(service: BLEService) {
         if service.uuid == CBServiceUUIDs.deviceInformation.uuid,
             let modelNumber = service.characteristics.first(where: {$0.uuid == CBCharacteristicsUUIDs.modelNumber.uuid}){
-            self.modelNumber = modelNumber.value?.stringUTF8
+            if let modelNumberString = modelNumber.value?.stringUTF8 {
+                self.deviceModel = BLEDeviceModel(modelNumberString)
+            }
+            
         }
         self.services.update(with: service)
     }
@@ -206,7 +171,7 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
             case .iOS11:
                 self.osVersion = "iOS 11"
             case .iOS12OrIPadOS13WiFiOn:
-                if self.modelNumber?.lowercased().contains("ipad") == true {
+                if self.deviceModel?.deviceType == BLEDeviceModel.DeviceType.iPad {
                     self.osVersion = "iPadOS 13"
                 }else {
                     self.osVersion = "iOS 12"
@@ -214,7 +179,7 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
                 
                 self.wiFiOn = true
             case .iOS12WiFiOn:
-                if self.modelNumber?.lowercased().contains("mac") == true {
+                if self.deviceModel?.modelName.lowercased().contains("mac") == true {
                     self.osVersion = "macOS"
                 }else {
                     self.osVersion = "iOS 12"
@@ -222,7 +187,7 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
                 
                 self.wiFiOn = true
             case .iOS12WiFiOff:
-                if self.modelNumber?.lowercased().contains("mac") == true {
+                if self.deviceModel?.modelName.lowercased().contains("mac") == true {
                     self.osVersion = "macOS"
                 }else {
                     self.osVersion = "iOS 12"
@@ -230,7 +195,7 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
                 
                 self.wiFiOn = false
             case .iOS12OrMacOSWifiOn:
-                if self.modelNumber?.lowercased().contains("mac") == true {
+                if self.deviceModel?.modelName.lowercased().contains("mac") == true {
                     self.osVersion = "macOS"
                 }else {
                     self.osVersion = "iOS 12"
@@ -322,41 +287,6 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
 //    public override func hash(into hasher: inout Hasher) {
 //        return hasher.combine(id)
 //    }
-
-    public enum DeviceType {
-        case iPhone
-        case macBook
-        case iMac
-        case iPad
-        case iPod
-        case AirPods
-        case Pencil
-        case AppleWatch
-        case appleEmbedded
-        case seemoo
-        case other
-        
-        public var string: String {
-            switch self {
-            case .AirPods:
-                return "AirPods"
-            case .appleEmbedded:
-                return "Embedded"
-            case .iMac:
-                return "iMac"
-            case .AppleWatch:
-                return "Apple Watch"
-            case .iPad: return "iPad"
-            case .iPod: return "iPod"
-            case .iPhone: return "iPhone"
-            case .macBook: return "MacBook"
-            case .other:
-                return "BluetoothDevice"
-            case .Pencil: return "Pencil"
-            case .seemoo: return "seemoo"
-            }
-        }
-    }
     
     public enum Error: Swift.Error {
         case noMacAddress

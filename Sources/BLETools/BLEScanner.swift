@@ -147,7 +147,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
                 let advertisement = try BLEAdvertisment(advertisementData: advertisementData, rssi: rssi)
                 bleDevice.add(advertisement: advertisement)
                 delegate?.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: bleDevice)
-                if let recv = self.receiver as? BLEReceiver, bleDevice.deviceType == .other {
+                if let recv = self.receiver as? BLEReceiver, bleDevice.deviceModel == nil {
                     recv.detectDeviceType(for: bleDevice)
                 }
                 self.newAdvertisementSubject.send(BLE_Event(advertisement: advertisement, device: bleDevice))
@@ -234,7 +234,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
     
     func didUpdateModelNumber(_ modelNumber: String, for peripheral: CBPeripheral) {
         guard let device = self.devices[peripheral.identifier.uuidString] else {return}
-        device.modelNumber = modelNumber
+        device.deviceModel = BLEDeviceModel(modelNumber)
     }
     
     

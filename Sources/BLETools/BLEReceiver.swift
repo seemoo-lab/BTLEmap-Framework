@@ -67,6 +67,8 @@ class BLEReceiver: NSObject, BLEReceiverProtocol {
     private var shouldScanForAdvertisements = false
     private var filterDuplicates = true
     
+    private var connectedPeripherals = [CBPeripheral]()
+    
     override init() {
         super.init()
         self.centralManager = CBCentralManager(delegate: self, queue: nil)
@@ -149,7 +151,7 @@ extension BLEReceiver: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         Log.debug(system: .ble, message: "Disconnected from peripheral")
         if let error = error {
-            Log.error(system: .ble, message: "Error while disconnecting", String(describing: error))
+            Log.error(system: .ble, message: "Error while disconnecting\n %@", String(describing: error))
         }
     }
     
@@ -158,9 +160,8 @@ extension BLEReceiver: CBCentralManagerDelegate {
 extension BLEReceiver: CBPeripheralDelegate {
     func detectDeviceType(for device: BLEDevice) {
         guard let peripheral = device.peripheral else {return}
+
         
-        //Set to other initially to prevent from multiple calls
-        device.deviceType = .other
         
         // Embedded Apple devices don't offer GATT by default.
         // We can detect the device type from their advertisements
@@ -171,15 +172,16 @@ extension BLEReceiver: CBPeripheralDelegate {
             
             if deviceTypeByte == 0x01 {
                 //AirPods
-                device.deviceType = .AirPods
+                device.deviceModel = BLEDeviceModel("AirPods")
             }else if deviceTypeByte == 0x03 {
-                device.deviceType = .Pencil
+                device.deviceModel = BLEDeviceModel("Apple Pencil 2")
             }
             
             return
         }
         
-        guard device.connectable else {
+        
+        guard device.connectable && !self.connectedPeripherals.contains(peripheral) else {
             return
         }
         
@@ -187,6 +189,7 @@ extension BLEReceiver: CBPeripheralDelegate {
         peripheral.delegate = self
         if autoconnectToDevices {
             self.centralManager.connect(peripheral, options: nil)
+            self.connectedPeripherals.append(peripheral)
         }
     }
     
@@ -233,6 +236,7 @@ extension BLEReceiver: CBPeripheralDelegate {
             Log.error(system: .ble, message: "Failed updating characteristic \n%@", String(describing: error))
             return
         }
+        
         self.delegate?.didUpdateCharacteristics(characteristics: [BLECharacteristic(with: characteristic)],forService: BLEService(with: characteristic.service), andDevice: peripheral.identifier.uuidString)
     }
 

@@ -11,6 +11,7 @@
 		782FBA1C24323F180003F070 /* BLERelayedServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782FBA1B24323F180003F070 /* BLERelayedServices.swift */; };
 		782FBA1E243241CD0003F070 /* BLERelayCharacteristics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782FBA1D243241CD0003F070 /* BLERelayCharacteristics.swift */; };
 		782FBA20243244DB0003F070 /* BLEService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782FBA1F243244DB0003F070 /* BLEService.swift */; };
+		782FCF9524519CE80014082E /* BLEDeviceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782FCF9424519CE80014082E /* BLEDeviceModel.swift */; };
 		783926832417CA0200919DE9 /* BLETracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783926822417CA0200919DE9 /* BLETracker.swift */; };
 		784B76E123FAD83B00E34241 /* BLETools.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 784B76D723FAD83B00E34241 /* BLETools.framework */; };
 		784B76E623FAD83B00E34241 /* BLEToolsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76E523FAD83B00E34241 /* BLEToolsTests.swift */; };
@@ -42,6 +43,7 @@
 		788D98DE240D4686005FC745 /* InttoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DED240D09C100B8DA67 /* InttoData.swift */; };
 		788D98DF240D4686005FC745 /* DataIntExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76F523FADA5500E34241 /* DataIntExtensions.swift */; };
 		788D98E0240D4686005FC745 /* HexToDataExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76F623FADA5500E34241 /* HexToDataExtensions.swift */; };
+		789BE5072451DE7A00A1C54C /* BLEDeviceParsingTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789BE5062451DE7A00A1C54C /* BLEDeviceParsingTest.swift */; };
 		78B8661E2410E88F003761D0 /* CBCentralManagerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B8661D2410E88F003761D0 /* CBCentralManagerExtension.swift */; };
 		78F5BBB0243CC4E6002091CA /* BLERelayCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F5BBAF243CC4E6002091CA /* BLERelayCommand.swift */; };
 /* End PBXBuildFile section */
@@ -61,6 +63,7 @@
 		782FBA1B24323F180003F070 /* BLERelayedServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLERelayedServices.swift; sourceTree = "<group>"; };
 		782FBA1D243241CD0003F070 /* BLERelayCharacteristics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLERelayCharacteristics.swift; sourceTree = "<group>"; };
 		782FBA1F243244DB0003F070 /* BLEService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEService.swift; sourceTree = "<group>"; };
+		782FCF9424519CE80014082E /* BLEDeviceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEDeviceModel.swift; sourceTree = "<group>"; };
 		783926822417CA0200919DE9 /* BLETracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLETracker.swift; sourceTree = "<group>"; };
 		784B76D723FAD83B00E34241 /* BLETools.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BLETools.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		784B76DA23FAD83B00E34241 /* BLETools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BLETools.h; sourceTree = "<group>"; };
@@ -87,6 +90,7 @@
 		788D98C0240D4674005FC745 /* BLETools_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BLETools_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		788D98C2240D4674005FC745 /* BLETools_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BLETools_iOS.h; sourceTree = "<group>"; };
 		788D98C3240D4674005FC745 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		789BE5062451DE7A00A1C54C /* BLEDeviceParsingTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEDeviceParsingTest.swift; sourceTree = "<group>"; };
 		78B8661D2410E88F003761D0 /* CBCentralManagerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBCentralManagerExtension.swift; sourceTree = "<group>"; };
 		78F5BBAF243CC4E6002091CA /* BLERelayCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLERelayCommand.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -161,6 +165,7 @@
 				784B76FB23FADA8E00E34241 /* BLEAdvertisement.swift */,
 				782FBA1F243244DB0003F070 /* BLEService.swift */,
 				784B76FF23FAE01B00E34241 /* BLEDevice.swift */,
+				782FCF9424519CE80014082E /* BLEDeviceModel.swift */,
 				78232035240EA6FC00D4FDE3 /* BLEManufacturer.swift */,
 				7888CFD9242D3AAE00A2C971 /* BLEAdditional.swift */,
 				783926822417CA0200919DE9 /* BLETracker.swift */,
@@ -176,6 +181,7 @@
 			isa = PBXGroup;
 			children = (
 				784B76E523FAD83B00E34241 /* BLEToolsTests.swift */,
+				789BE5062451DE7A00A1C54C /* BLEDeviceParsingTest.swift */,
 				78844DF1240D117B00B8DA67 /* TLVTests.swift */,
 				784B76E723FAD83B00E34241 /* Info.plist */,
 			);
@@ -386,6 +392,7 @@
 				784B76FE23FADFB200E34241 /* BLEScanner.swift in Sources */,
 				784B770023FAE01B00E34241 /* BLEDevice.swift in Sources */,
 				784B76F723FADA5500E34241 /* DataIntExtensions.swift in Sources */,
+				782FCF9524519CE80014082E /* BLEDeviceModel.swift in Sources */,
 				7888CFDA242D3AAE00A2C971 /* BLEAdditional.swift in Sources */,
 				78232036240EA6FC00D4FDE3 /* BLEManufacturer.swift in Sources */,
 				784B76F423FAD8EC00E34241 /* Log.swift in Sources */,
@@ -411,6 +418,7 @@
 			files = (
 				78844DF2240D117B00B8DA67 /* TLVTests.swift in Sources */,
 				784B76E623FAD83B00E34241 /* BLEToolsTests.swift in Sources */,
+				789BE5072451DE7A00A1C54C /* BLEDeviceParsingTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

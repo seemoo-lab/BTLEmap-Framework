@@ -92,6 +92,7 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     /// Last RSSI value that has been received
     @Published public var lastRSSI: Float = -100
     
+    
 //    public var lastRSSI: NSNumber {
 //        return self.advertisements.first?.rssi.last ?? NSNumber(value: -100)
 //    }

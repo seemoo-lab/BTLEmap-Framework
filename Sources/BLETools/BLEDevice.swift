@@ -12,7 +12,7 @@ import Combine
 import AppleBLEDecoder
 
 public class BLEDevice: NSObject, Identifiable, ObservableObject {
-    public var id: String
+    public let id: String
     private var _name: String?
     public internal(set) var name: String? {
         get {

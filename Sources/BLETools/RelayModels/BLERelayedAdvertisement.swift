@@ -9,7 +9,7 @@
 import Foundation
 
 struct BLERelayedAdvertisement: Codable {
-    var manufacturerDataHex: String
+    var manufacturerDataHex: String?
     var macAddress: String
     var rssi: Int
     var name: String?

@@ -150,9 +150,9 @@ extension BLEReceiver: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        Log.debug(system: .ble, message: "Did disconnect from peripheral")
+        Log.debug(system: .ble, message: "Did disconnect from peripheral %@", String(describing: peripheral))
         if let error = error {
-            Log.error(system: .ble, message: "Error while disconnecting\n %@", String(describing: error))
+            Log.error(system: .ble, message: "Disconnecting error \n %@", String(describing: error))
         }
     }
     

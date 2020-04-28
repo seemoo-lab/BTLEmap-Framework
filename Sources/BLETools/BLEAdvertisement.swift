@@ -77,7 +77,7 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
     /// - Parameters:
     ///   - advertisementData: Dictionary with advertisement data containing keys: `"kCBAdvDataChannel"`, `"kCBAdvDataIsConnectable"`, `"kCBAdvDataAppleMfgData"`, `"kCBAdvDataManufacturerData"`, `"kCBAdvDataTxPowerLevel"`
     ///   - rssi: RSSI in decibels
-    public init(advertisementData: [String: Any], rssi: NSNumber) throws {
+    public init(advertisementData: [String: Any], rssi: NSNumber) {
         
         self.channel = advertisementData["kCBAdvDataChannel"] as? Int
         self.connectable = advertisementData["kCBAdvDataIsConnectable"] as? Bool ?? false
@@ -89,7 +89,7 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
             self.intializeManufacturer()
             
             if  manufacturer == .apple {
-                try self.intitializeTLVForApple()
+                try? self.intitializeTLVForApple()
             }
         }else {
             manufacturer = .unknown

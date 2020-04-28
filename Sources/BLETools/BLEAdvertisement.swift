@@ -103,7 +103,7 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
     
     /// Intialize the BLE advertisement with the data of a relayed advertisement
     /// - Parameter relayedAdvertisement: Relayed advertisements are received by external sources, like a raspberry pi
-    init(relayedAdvertisement: BLERelayedAdvertisement) throws {
+    init(relayedAdvertisement: BLERelayedAdvertisement) {
         self.manufacturerData = relayedAdvertisement.manufacturerDataHex?.hexadecimal
         self.rssi.append(NSNumber(value: relayedAdvertisement.rssi))
         self.deviceName = relayedAdvertisement.name
@@ -113,7 +113,7 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
         self.intializeManufacturer()
         
         if  manufacturer == .apple {
-            try self.intitializeTLVForApple()
+            try? self.intitializeTLVForApple()
         }
         
         self.receptionDates.append(Date())

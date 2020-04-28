@@ -128,6 +128,24 @@ class BLEToolsTests: XCTestCase, BLEScannerDelegate {
         wait(for: [expect], timeout: 60.0)
     }
     
+    func testLongRunningScanner() {
+        let expect = expectation(description: "BLE Scanner")
+               
+               let scanner = BLEScanner(delegate: self, receiverType: .external)
+               scanner.scanForAppleAdvertisements()
+               
+               DispatchQueue.global(qos: .background).async {
+                   while true {
+                       sleep(2)
+                   }
+               }
+               
+
+               scanner.scanForAppleAdvertisements()
+               
+        wait(for: [expect], timeout: 120.0)
+    }
+    
     static var raspiBooted = false
     static var bootExpect: XCTestExpectation!
     static var raspiConnected: (()->())!

@@ -71,9 +71,6 @@ class BLERelayReceiver: NSObject, ObservableObject, BLEReceiverProtocol {
     /// Received a message from the BLE receiver (Raspberry Pi)
     /// - Parameter message: Message as Data that has been received
     func received(message: Data, of type: MessageType) {
-        Log.debug(
-            system: .BLERelay, message: "Received packet from BLE Relay\n %@",
-            String(data: message, encoding: .ascii) ?? "nil")
         self.receivedMessages.append(message)
 
         switch type {
@@ -149,8 +146,8 @@ class BLERelayReceiver: NSObject, ObservableObject, BLEReceiverProtocol {
 
         while true {
             //Read how many bytes the next packet will have
-            var lenBuffer = [UInt8](repeatElement(0x00, count: 5))
-            guard inputStream.read(&lenBuffer, maxLength: lenBuffer.count) > 0 else {
+            var headerBuffer = [UInt8](repeatElement(0x00, count: 5))
+            guard inputStream.read(&headerBuffer, maxLength: headerBuffer.count) > 0 else {
                 Log.error(
                     system: .BLERelay,
                     message: "Did not receive bytes. Waiting until new bytes are available")
@@ -167,16 +164,31 @@ class BLERelayReceiver: NSObject, ObservableObject, BLEReceiverProtocol {
                 break
             }
             //Get type
-            let typeByte = lenBuffer[0]
+            let typeByte = headerBuffer[0]
             //Get message length
-            lenBuffer = Array(lenBuffer[1...])
+            let lenArray = Array(headerBuffer[1...])
             let packetLength = UInt32(
                 littleEndian: unsafeBitCast(
-                    (lenBuffer[0], lenBuffer[1], lenBuffer[2], lenBuffer[3]), to: UInt32.self))
-            var packetBuffer = [UInt8](repeatElement(0x00, count: Int(packetLength)))
+                    (lenArray[0], lenArray[1], lenArray[2], lenArray[3]), to: UInt32.self))
+            var packetBuffer = [UInt8]()
 
             //Read packet
-            guard inputStream.read(&packetBuffer, maxLength: packetBuffer.count) > 0 else {
+            var bytesRead = 0
+            while bytesRead < packetLength {
+                //Read bytes from socket
+                //Calculate the remaining bytes
+                let remainingLength = Int(packetLength) - bytesRead
+                // Create a large enough buffer
+                var buffer = [UInt8](repeatElement(0x00, count: remainingLength))
+                //Read bytes and save the number of bytes read in `bRead`
+                let bRead = inputStream.read(&buffer, maxLength: remainingLength)
+                //Append the number of bytes read
+                packetBuffer.append(contentsOf: buffer[..<bRead])
+                //Add to the get the total number of bytes read and check if another read need to be done
+                bytesRead += bRead
+            }
+            
+            guard bytesRead == packetLength else {
                 Log.error(
                     system: .BLERelay,
                     message: "Did not receive bytes that have been expected. Stopping.")
@@ -186,9 +198,19 @@ class BLERelayReceiver: NSObject, ObservableObject, BLEReceiverProtocol {
 
             //Call receive method
             let message = Data(packetBuffer)
-            DispatchQueue.main.async {
-                self.received(message: message, of: MessageType(rawValue: typeByte) ?? .unknown)
+            Log.debug(system: .BLERelay, message: "Message Header: %@", Data(headerBuffer).hexadecimal)
+            Log.debug(
+                      system: .BLERelay, message: "Received packet from BLE Relay\n %@",
+                      String(data: message, encoding: .ascii) ?? "nil")
+            
+            if message.count != packetLength {
+                fatalError("Should not happen")
             }
+            
+            self.received(message: message, of: MessageType(rawValue: typeByte) ?? .unknown)
+//            DispatchQueue.main.async {
+//                self.received(message: message, of: MessageType(rawValue: typeByte) ?? .unknown)
+//            }
         }
     }
     

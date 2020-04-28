@@ -30,8 +30,22 @@ public protocol BLEScannerDelegate {
 
 /// BLE Scanner can be used to discover BLE devices sending advertisements over one of the advertisement channels
 public class BLEScanner: BLEReceiverDelegate, ObservableObject {
+    /// The receiver that is used to scan for BLE advertisements
     var receiver: BLEReceiverProtocol! = BLEReceiver()
+    public var delegate: BLEScannerDelegate?
     
+
+    //MARK: State
+    @Published public var connectedToReceiver: Bool = true
+    @Published public var devices = [String: BLEDevice]()
+    @Published public var deviceList = Array<BLEDevice>()
+    @Published public var lastError: Error?
+    
+    @Published public var scanStartTime: Date = Date()
+    
+    //MARK: Settings
+    
+    /// Multiple receivers are supported. This type defines which one should be used
     public var receiverType: Receiver = .coreBluetooth {
         didSet {
             if oldValue != receiverType {
@@ -39,12 +53,6 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
             }
         }
     }
-    
-    @Published public var connectedToReceiver: Bool = true
-    
-    @Published public var devices = [String: BLEDevice]()
-    @Published public var deviceList = Array<BLEDevice>()
-    public var delegate: BLEScannerDelegate?
     
     /// If set to false no timeouts will happen
     public var devicesCanTimeout = true
@@ -60,7 +68,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
             if scanning {
                 self.scanForAppleAdvertisements()
             }else {
-                self.receiver.stopScanningForAdvertisements()
+                self.stopScanning()
             }
         }
     }
@@ -82,7 +90,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
         }
     }
     
-    @Published public var lastError: Error?
+    //MARK: Subjects
     
     public let newAdvertisementSubject = PassthroughSubject<BLE_Event,Never>()
     public let newDeviceSubject = PassthroughSubject<BLEDevice,Never>()
@@ -102,8 +110,17 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
     
     /// Start scanning for Apple advertisements
     func scanForAppleAdvertisements() {
+        //Clear all state variables
+        self.deviceList = []
+        self.devices = [:]
+        self.scanStartTime = Date()
+        //Start scanning
         receiver.autoconnectToDevices = self.autoconnect
         receiver.scanForAdvertisements(filterDuplicates: self.filterDuplicates)
+    }
+    
+    func stopScanning() {
+        self.receiver.stopScanningForAdvertisements()
     }
     
     
@@ -141,38 +158,39 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
     }
     
     func didReceive(advertisementData: [String : Any], rssi: NSNumber, from device: CBPeripheral) {
-        do {
+        
+        let receptionDate = Date()
+        
+        if let bleDevice = devices[device.identifier.uuidString] {
+            let advertisement = BLEAdvertisment(advertisementData: advertisementData, rssi: rssi)
+            bleDevice.add(advertisement: advertisement, time: receptionDate.timeIntervalSince(self.scanStartTime))
             
-            if let bleDevice = devices[device.identifier.uuidString] {
-                let advertisement = try BLEAdvertisment(advertisementData: advertisementData, rssi: rssi)
-                bleDevice.add(advertisement: advertisement)
-                delegate?.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: bleDevice)
-                if let recv = self.receiver as? BLEReceiver, bleDevice.deviceModel == nil {
-                    recv.detectDeviceType(for: bleDevice)
-                }
-                self.newAdvertisementSubject.send(BLE_Event(advertisement: advertisement, device: bleDevice))
-                
-            }else {
-                //Add a new device
-                let advertisement = try BLEAdvertisment(advertisementData: advertisementData, rssi: rssi)
-                let bleDevice = BLEDevice(peripheral: device, and: advertisement)
-                self.devices[device.identifier.uuidString] = bleDevice
-                delegate?.scanner(self, didDiscoverNewDevice: bleDevice)
-                delegate?.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: bleDevice)
-                
-                if !self.deviceList.contains(bleDevice) {
-                    self.deviceList.append(bleDevice)
-                }
-                
-                if let recv = self.receiver as? BLEReceiver {
-                    recv.detectDeviceType(for: bleDevice)
-                }
-                self.newDeviceSubject.send(bleDevice)
-                self.newAdvertisementSubject.send(BLE_Event(advertisement: advertisement, device: bleDevice))
+            delegate?.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: bleDevice)
+            if let recv = self.receiver as? BLEReceiver, bleDevice.deviceModel == nil {
+                recv.detectDeviceType(for: bleDevice)
             }
-        }catch {
-            return
+            self.newAdvertisementSubject.send(BLE_Event(advertisement: advertisement, device: bleDevice))
+            
+        }else {
+            //Add a new device
+            let advertisement = BLEAdvertisment(advertisementData: advertisementData, rssi: rssi)
+            let bleDevice = BLEDevice(peripheral: device, and: advertisement, at: receptionDate.timeIntervalSince(self.scanStartTime))
+            
+            self.devices[device.identifier.uuidString] = bleDevice
+            delegate?.scanner(self, didDiscoverNewDevice: bleDevice)
+            delegate?.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: bleDevice)
+            
+            if !self.deviceList.contains(bleDevice) {
+                self.deviceList.append(bleDevice)
+            }
+            
+            if let recv = self.receiver as? BLEReceiver {
+                recv.detectDeviceType(for: bleDevice)
+            }
+            self.newDeviceSubject.send(bleDevice)
+            self.newAdvertisementSubject.send(BLE_Event(advertisement: advertisement, device: bleDevice))
         }
+        
         
         if self.devicesCanTimeout {
             checkForTimeouts()
@@ -185,15 +203,16 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
             return
         }
         
+        let receptionDate = advertisement.receptionDates.first!
         
         if let bleDevice = devices[macAddress] {
-            bleDevice.add(advertisement: advertisement)
+            bleDevice.add(advertisement: advertisement, time: receptionDate.timeIntervalSince(self.scanStartTime))
             delegate?.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: bleDevice)
             self.newAdvertisementSubject.send(BLE_Event(advertisement: advertisement, device: bleDevice))
         }else {
             do {
                 //Add new device
-                let bleDevice = try BLEDevice(with: advertisement)
+                let bleDevice = try BLEDevice(with: advertisement, at: receptionDate.timeIntervalSince(self.scanStartTime))
                 self.devices[macAddress] = bleDevice
                 delegate?.scanner(self, didDiscoverNewDevice: bleDevice)
                 delegate?.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: bleDevice)

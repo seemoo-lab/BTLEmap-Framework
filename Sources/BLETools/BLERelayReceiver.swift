@@ -198,10 +198,10 @@ class BLERelayReceiver: NSObject, ObservableObject, BLEReceiverProtocol {
 
             //Call receive method
             let message = Data(packetBuffer)
-            Log.debug(system: .BLERelay, message: "Message Header: %@", Data(headerBuffer).hexadecimal)
-            Log.debug(
-                      system: .BLERelay, message: "Received packet from BLE Relay\n %@",
-                      String(data: message, encoding: .ascii) ?? "nil")
+//            Log.debug(system: .BLERelay, message: "Message Header: %@", Data(headerBuffer).hexadecimal)
+//            Log.debug(
+//                      system: .BLERelay, message: "Received packet from BLE Relay\n %@",
+//                      String(data: message, encoding: .ascii) ?? "nil")
             
             if message.count != packetLength {
                 fatalError("Should not happen")

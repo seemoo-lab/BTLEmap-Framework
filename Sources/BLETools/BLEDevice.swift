@@ -54,10 +54,8 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     /// Last RSSI value that has been received
     @Published public var lastRSSI: Float = -100
     
-    
-//    public var lastRSSI: NSNumber {
-//        return self.advertisements.first?.rssi.last ?? NSNumber(value: -100)
-//    }
+    /// All RSSI values received in sorted array. The array values are a tuple of time interval when it was received +  the RSSI as a float
+    @Published public var allRSSIs = [(time: TimeInterval, rssi: Float)]()
     
     /// True if the device marks itself as connectable
     public var connectable: Bool {
@@ -84,7 +82,7 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     
     internal var activityTimer: Timer?
     
-    init(peripheral: CBPeripheral, and advertisement: BLEAdvertisment) {
+    init(peripheral: CBPeripheral, and advertisement: BLEAdvertisment, at time: TimeInterval) {
         
         self.peripheral = peripheral
         self._name = peripheral.name
@@ -94,13 +92,13 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
         self.advertisements.append(advertisement)
         self.detectOSVersion(from: advertisement)
         self.lastRSSI = advertisement.rssi.last?.floatValue ?? -100.0
-        
+        self.allRSSIs.append((time, self.lastRSSI))
     }
     
     /// Initializer for using other inputsources than CoreBluetooth. This needs a **MAC address** in the advertisement
     /// - Parameter advertisement: BLE Advertisement
     /// - Throws:Error if no **MAC address** is passed in the advertisement
-    init(with advertisement: BLEAdvertisment) throws {
+    init(with advertisement: BLEAdvertisment, at time: TimeInterval) throws {
 //        self._name =
         guard let macAddress = advertisement.macAddress else {
             throw Error.noMacAddress
@@ -112,6 +110,7 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
         self.advertisements.append(advertisement)
         self.detectOSVersion(from: advertisement)
         self.lastRSSI = advertisement.rssi.last?.floatValue ?? -100.0
+        self.allRSSIs.append((time, self.lastRSSI))
         self._name = advertisement.deviceName
     }
     
@@ -121,7 +120,7 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     
     /// Add a received advertisement to the device
     /// - Parameter advertisement: received BLE advertisement
-    func add(advertisement: BLEAdvertisment) {
+    func add(advertisement: BLEAdvertisment, time: TimeInterval) {
         // Check if that advertisement has been received before
         if let matching = self.advertisements.first(where: {$0.manufacturerData == advertisement.manufacturerData}) {
             matching.update(with: advertisement)
@@ -134,6 +133,7 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
         self.detectOSVersion(from: advertisement)
         if let rssi = advertisement.rssi.last?.floatValue {
             self.lastRSSI = rssi
+            self.allRSSIs.append((time, rssi))
         }
         
         self.isActive = true

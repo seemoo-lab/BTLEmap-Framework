@@ -207,10 +207,10 @@ class BLERelayReceiver: NSObject, ObservableObject, BLEReceiverProtocol {
                 fatalError("Should not happen")
             }
             
-            self.received(message: message, of: MessageType(rawValue: typeByte) ?? .unknown)
-//            DispatchQueue.main.async {
-//                self.received(message: message, of: MessageType(rawValue: typeByte) ?? .unknown)
-//            }
+//            self.received(message: message, of: MessageType(rawValue: typeByte) ?? .unknown)
+            DispatchQueue.main.async {
+                self.received(message: message, of: MessageType(rawValue: typeByte) ?? .unknown)
+            }
         }
     }
     

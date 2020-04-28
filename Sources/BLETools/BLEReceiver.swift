@@ -140,16 +140,17 @@ extension BLEReceiver: CBCentralManagerDelegate {
         //Connected to peripheral
         // Request device infos
         
+        Log.default(system: .ble, message: "Connected to %@", String(describing: peripheral))
         peripheral.delegate = self
         peripheral.discoverServices(nil)
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        Log.error(system: .ble, message: "Connection failed:\n %@", String(describing: error))
+        Log.error(system: .ble, message: "Failed to connect to %@ with error :\n %@", String(describing: peripheral), String(describing: error))
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        Log.debug(system: .ble, message: "Disconnected from peripheral")
+        Log.debug(system: .ble, message: "Did disconnect from peripheral")
         if let error = error {
             Log.error(system: .ble, message: "Error while disconnecting\n %@", String(describing: error))
         }
@@ -203,6 +204,8 @@ extension BLEReceiver: CBPeripheralDelegate {
         
         self.delegate?.didUpdateServices(services: services.map{BLEService(with: $0)}, forDevice: peripheral.identifier.uuidString)
         
+        Log.default(system: .ble, message: "Did discover services for %@\n %@", String(describing: peripheral), services)
+        
         for s in services {
             peripheral.discoverCharacteristics(nil, for: s)
         }
@@ -218,6 +221,8 @@ extension BLEReceiver: CBPeripheralDelegate {
         
         guard service.uuid == CBServiceUUIDs.deviceInformation.uuid,
             let characteristics = service.characteristics else {return}
+        
+        Log.default(system: .ble, message: "Did discover characteristics for %@\n in service: %@ \n %@", String(describing: peripheral), service, characteristics)
         
         //Read model name
         print(characteristics)

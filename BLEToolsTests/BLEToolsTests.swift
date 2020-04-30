@@ -128,7 +128,7 @@ class BLEToolsTests: XCTestCase, BLEScannerDelegate {
         wait(for: [expect], timeout: 60.0)
     }
     
-    func testLongRunningScanner() {
+    func testLongRunningExternalScanner() {
         let expect = expectation(description: "BLE Scanner")
         
         let scanner = BLEScanner(delegate: self, receiverType: .external)
@@ -138,6 +138,26 @@ class BLEToolsTests: XCTestCase, BLEScannerDelegate {
             //Check state
             let receiver = scanner.receiver as! BLERelayReceiver
             XCTAssert(receiver.inputStreams.count > 0 && receiver.outputStreams.count > 0 )
+            
+            expect.fulfill()
+        }
+        
+        
+        scanner.scanForAppleAdvertisements()
+               
+        wait(for: [expect], timeout: 120.0)
+    }
+    
+    func testLongRunningCBScanner() {
+        let expect = expectation(description: "BLE Scanner")
+        
+        let scanner = BLEScanner(delegate: self, receiverType: .coreBluetooth)
+        scanner.scanForAppleAdvertisements()
+        
+        Timer.scheduledTimer(withTimeInterval: 110.0, repeats: false) { (_) in
+            //Check state
+            let receiver = scanner.receiver as! BLEReceiver
+            XCTAssert(receiver.centralManager.isScanning)
             
             expect.fulfill()
         }

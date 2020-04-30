@@ -134,6 +134,7 @@ extension BLEReceiver: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
 
         self.delegate?.didReceive(advertisementData: advertisementData, rssi: RSSI, from: peripheral)
+        Log.default(system: .ble, message: "Advertisement data %@", String(describing: advertisementData))
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {

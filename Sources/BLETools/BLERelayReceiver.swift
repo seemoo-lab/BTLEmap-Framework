@@ -104,8 +104,8 @@ class BLERelayReceiver: NSObject, ObservableObject, BLEReceiverProtocol {
             self.delegate?.didReceive(advertisement: bleAdv)
 
         } catch let error {
-            Log.error(
-                system: .BLERelay, message: "Could not decode JSON %@", String(describing: error))
+            Log.error(system: .BLERelay, message: "Could not decode JSON %@", String(describing: error))
+            Log.error(system: .BLERelay, message: "JSON\n %@", String(data: message, encoding: .utf8) ?? "Not valid data")
         }
     }
 

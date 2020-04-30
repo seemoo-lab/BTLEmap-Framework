@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import CoreBluetooth
+
 #if os(macOS)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -58,6 +60,15 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
     /// Optional device name that can be part of an advertisement
     public private(set) var deviceName: String?
     
+    /// Advertisement can contain service UUIDs. If the advertising device uses a primary service this one will be advertised here
+    public private(set) var serviceUUIDs: [CBUUID]?
+    
+    /// Advertisements with service data can share data for a specific service.
+    public private(set) var serviceData: [CBUUID: Data]?
+    
+    /// The power levels at which this advertisement has been transmitted
+    public private(set) var txPowerLevels = [Int]()
+    
     /// Initialize an advertisement sent by Apple devices and parse it's TLV content
     /// - Parameter manufacturerData: BLE manufacturer Data that has been received
     public init(manufacturerData: Data, id: Int) throws {
@@ -96,9 +107,7 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
             self.advertisementTLV = nil
         }
         
-        self.receptionDates.append(Date())
-        self.rssi.append(rssi)
-        
+        self.update(with: advertisementData, rssi: rssi)
     }
     
     /// Intialize the BLE advertisement with the data of a relayed advertisement
@@ -150,8 +159,33 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
     func update(with advertisementData: [String: Any], rssi: NSNumber) {
         self.rssi.append(rssi)
         self.receptionDates.append(Date())
-        
         self.numberOfTimesReceived += 1
+        
+        if let services = advertisementData[CBAdvertisementDataServiceUUIDsKey] as? [CBUUID] {
+            self.serviceUUIDs = services
+        }
+        
+        if let serviceData = advertisementData[CBAdvertisementDataServiceDataKey] as? [CBUUID: Data] {
+            self.serviceData = serviceData
+        }
+        
+        if let overflowServices = advertisementData[CBAdvertisementDataOverflowServiceUUIDsKey] as? [CBUUID] {
+            var services = self.serviceUUIDs ?? []
+            services.append(contentsOf: overflowServices)
+        }
+        
+        if let solicitedServices = advertisementData[CBAdvertisementDataSolicitedServiceUUIDsKey] as? [CBUUID] {
+            var services = self.serviceUUIDs ?? []
+            services.append(contentsOf: solicitedServices)
+        }
+        
+        if let localName = advertisementData[CBAdvertisementDataLocalNameKey] as? String {
+            self.deviceName = localName
+        }
+        
+        if let powerLevel = advertisementData[CBAdvertisementDataTxPowerLevelKey] as? NSNumber {
+            self.txPowerLevels.append(powerLevel.intValue)
+        }
     }
     
     

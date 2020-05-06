@@ -55,7 +55,7 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     @Published public var lastRSSI: Float = -100
     
     /// All RSSI values received in sorted array. The array values are a tuple of time interval when it was received +  the RSSI as a float
-    @Published public var allRSSIs = [(time: TimeInterval, rssi: Float)]()
+    public var allRSSIs = [(time: TimeInterval, rssi: Float)]()
     
     /// True if the device marks itself as connectable
     public var connectable: Bool {

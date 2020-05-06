@@ -28,9 +28,9 @@ public struct BLEMACAddress {
         
         switch addressTypeInt {
         case 0:
-            self.addressType = .random
-        case 1:
             self.addressType = .public
+        case 1:
+            self.addressType = .random
         default:
             self.addressType = .unknown
         }

@@ -194,7 +194,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
             self.devices[device.identifier.uuidString] = bleDevice
             delegate?.scanner(self, didDiscoverNewDevice: bleDevice)
             delegate?.scanner(self, didReceiveNewAdvertisement: advertisement, forDevice: bleDevice)
-            
+            self.updateDeviceList()
             
             if let recv = self.receiver as? BLEReceiver {
                 recv.detectDeviceType(for: bleDevice)

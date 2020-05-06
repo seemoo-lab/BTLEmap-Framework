@@ -69,6 +69,28 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
     /// The power levels at which this advertisement has been transmitted
     public private(set) var txPowerLevels = [Int]()
     
+    /// Can be null, if run on iOS without special entitlements
+    public private(set) var wlanRSSI: Int?
+    
+    /// Can be null, if run on iOS without special entitlements
+    public private(set) var rxPrimaryPHY: Int?
+    
+    /// Can be null, if run on iOS without special entitlements
+    public private(set) var rxSecondaryPHY: Int?
+    
+    /// Can be null, if run on iOS without special entitlements
+    public private(set) var timestamp: Float?
+    
+    /// Can be null, if run on iOS without special entitlements
+    public private(set) var wSaturated: Bool?
+    
+    /// Can be null, if run on iOS without special entitlements
+    public private(set) var deviceAddressType: Int?
+    
+    /// Can be null, if run on iOS without special entitlements
+    public private(set) var deviceAddress: Data?
+    
+    
     /// Initialize an advertisement sent by Apple devices and parse it's TLV content
     /// - Parameter manufacturerData: BLE manufacturer Data that has been received
     public init(manufacturerData: Data, id: Int) throws {
@@ -186,6 +208,43 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
         if let powerLevel = advertisementData[CBAdvertisementDataTxPowerLevelKey] as? NSNumber {
             self.txPowerLevels.append(powerLevel.intValue)
         }
+        
+        //With extra BTLE entitlements we get even more information from an advertisement. This information will be accessed here
+        if let wlanRSSI = advertisementData["kCBAdvDataWlanRSSI"] as? NSNumber {
+            //A WLAN RSSI value
+            self.wlanRSSI = wlanRSSI.intValue
+        }
+        
+        if let rxPrimaryPhy = advertisementData["kCBAdvDataRxPrimaryPHY"] as? NSNumber {
+            // RX primary phy
+            self.rxPrimaryPHY = rxPrimaryPhy.intValue
+        }
+        
+        if let rxSecondaryPhy = advertisementData["kCBAdvDataRxSecondaryPHY"] as? NSNumber {
+            // RX secondary phy
+            self.rxSecondaryPHY = rxSecondaryPhy.intValue
+        }
+        
+        if let timeStamp = advertisementData["kCBAdvDataTimestamo"] as?  NSNumber {
+            //Timestamp
+            self.timestamp = timeStamp.floatValue
+        }
+        
+        if let wSaturated = advertisementData["kCBAdvDataWSaturated"] as? NSNumber {
+            //Saturated
+            self.wSaturated  = wSaturated.boolValue
+        }
+        
+        if let deviceAddressType = advertisementData["kCBAdvDataDeviceAddressType"] as? NSNumber {
+            //Device address type
+            self.deviceAddressType = deviceAddressType.intValue
+        }
+        
+        if let deviceAddress = advertisementData["kCBAdvDataDeviceAddress"] as? Data {
+            //MAC address
+            self.deviceAddress = deviceAddress
+        }
+        
     }
     
     

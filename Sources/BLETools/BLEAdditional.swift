@@ -16,11 +16,30 @@ public struct BLEMACAddress {
     public lazy var addressData  = {
         return addressString.replacingOccurrences(of: ":", with: "").hexadecimal!
     }()
-
+    
+    init(addressString: String, addressType: BLEAddressType) {
+        self.addressString = addressString
+        self.addressType = addressType
+    }
+    
+    init(addressData: Data, addressTypeInt: Int) {
+        //Convert to address string
+        self.addressString = addressData.hexadecimal.separate(every: 2, with: ":")
+        
+        switch addressTypeInt {
+        case 0:
+            self.addressType = .random
+        case 1:
+            self.addressType = .public
+        default:
+            self.addressType = .unknown
+        }
+    }
     
     public enum BLEAddressType: String {
         case random
         case `public`
+        case unknown
     }
 }
 

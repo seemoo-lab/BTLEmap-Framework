@@ -141,6 +141,12 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
         self.activityTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { (_) in
             self.isActive = false
         }
+        
+        //Add device address if available
+        if let deviceAddress = advertisement.deviceAddress,
+            let deviceAddressType = advertisement.deviceAddressType {
+            self.macAddress = BLEMACAddress(addressData: deviceAddress, addressTypeInt: deviceAddressType)
+        }
     }
     
     func addServices(services: [BLEService]) {

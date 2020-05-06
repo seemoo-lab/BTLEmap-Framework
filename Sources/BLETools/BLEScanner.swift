@@ -39,7 +39,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
     @Published public var connectedToReceiver: Bool = true
     @Published public var devices = [String: BLEDevice]()
     @Published public var deviceList = Array<BLEDevice>()
-    @Published public var advertisements = Array<BLEAdvertisment>()
+    public var advertisements = Array<BLEAdvertisment>()
     
     @Published public var lastError: Error?
     

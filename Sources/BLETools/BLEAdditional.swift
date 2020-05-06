@@ -24,7 +24,7 @@ public struct BLEMACAddress {
     
     init(addressData: Data, addressTypeInt: Int) {
         //Convert to address string
-        self.addressString = addressData.hexadecimal.separate(every: 2, with: ":")
+        self.addressString = addressData.hexadecimal.uppercased().separate(every: 2, with: ":")
         
         switch addressTypeInt {
         case 0:

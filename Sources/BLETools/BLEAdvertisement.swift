@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import BLEDissector
 import CoreBluetooth
 
 #if os(macOS)
@@ -90,6 +91,10 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
     /// Can be null, if run on iOS without special entitlements
     public private(set) var deviceAddress: Data?
     
+    //MARK: Dissected Information
+    
+    /// If the application contains service data it will be automatically dissected and stored here
+    public private(set) var dissectedServiceData: [DissectedEntry]?
     
     /// Initialize an advertisement sent by Apple devices and parse it's TLV content
     /// - Parameter manufacturerData: BLE manufacturer Data that has been received
@@ -243,6 +248,16 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
         if let deviceAddress = advertisementData["kCBAdvDataDeviceAddress"] as? Data {
             //MAC address
             self.deviceAddress = deviceAddress
+        }
+        
+        
+        // Try to dissect services
+        if let serviceData = self.serviceData {
+            let dissected = serviceData.map { (uuid, data) in
+                ServiceDissectors.dissect(data: data, for: uuid.uuidString)
+            }.sorted(by: {$0.name < $1.name})
+            
+            self.dissectedServiceData = dissected
         }
         
     }

@@ -9,7 +9,7 @@
 import Foundation
 import CoreBluetooth
 import Combine
-import AppleBLEDecoder
+import BLEDissector
 
 public class BLEDevice: NSObject, Identifiable, ObservableObject {
     public let id: String

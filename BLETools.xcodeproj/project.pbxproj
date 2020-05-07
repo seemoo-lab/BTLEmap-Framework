@@ -24,7 +24,6 @@
 		784B76FE23FADFB200E34241 /* BLEScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76FD23FADFB200E34241 /* BLEScanner.swift */; };
 		784B770023FAE01B00E34241 /* BLEDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76FF23FAE01B00E34241 /* BLEDevice.swift */; };
 		7879E3B92417D4B1003AA8DF /* TLV_Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7879E3B82417D4B1003AA8DF /* TLV_Decoder.swift */; };
-		7879E3C92418F355003AA8DF /* AppleBLEDecoder in Frameworks */ = {isa = PBXBuildFile; productRef = 7879E3C82418F355003AA8DF /* AppleBLEDecoder */; };
 		78844DD1240D076600B8DA67 /* ProtocolParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DD0240D076600B8DA67 /* ProtocolParser.swift */; };
 		78844DEC240D08C900B8DA67 /* TLV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DEB240D08C900B8DA67 /* TLV.swift */; };
 		78844DEE240D09C100B8DA67 /* InttoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DED240D09C100B8DA67 /* InttoData.swift */; };
@@ -44,6 +43,7 @@
 		788D98DF240D4686005FC745 /* DataIntExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76F523FADA5500E34241 /* DataIntExtensions.swift */; };
 		788D98E0240D4686005FC745 /* HexToDataExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76F623FADA5500E34241 /* HexToDataExtensions.swift */; };
 		789BE5072451DE7A00A1C54C /* BLEDeviceParsingTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789BE5062451DE7A00A1C54C /* BLEDeviceParsingTest.swift */; };
+		78A6199D24645FF6000F5712 /* BLEDissector in Frameworks */ = {isa = PBXBuildFile; productRef = 78A6199C24645FF6000F5712 /* BLEDissector */; };
 		78B8661E2410E88F003761D0 /* CBCentralManagerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B8661D2410E88F003761D0 /* CBCentralManagerExtension.swift */; };
 		78F5BBB0243CC4E6002091CA /* BLERelayCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F5BBAF243CC4E6002091CA /* BLERelayCommand.swift */; };
 /* End PBXBuildFile section */
@@ -100,7 +100,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7879E3C92418F355003AA8DF /* AppleBLEDecoder in Frameworks */,
+				78A6199D24645FF6000F5712 /* BLEDissector in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -271,7 +271,7 @@
 			);
 			name = BLETools;
 			packageProductDependencies = (
-				7879E3C82418F355003AA8DF /* AppleBLEDecoder */,
+				78A6199C24645FF6000F5712 /* BLEDissector */,
 			);
 			productName = BLETools;
 			productReference = 784B76D723FAD83B00E34241 /* BLETools.framework */;
@@ -764,10 +764,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		7879E3C82418F355003AA8DF /* AppleBLEDecoder */ = {
+		78A6199C24645FF6000F5712 /* BLEDissector */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 783926842417CE1100919DE9 /* XCRemoteSwiftPackageReference "apple-ble-decoder" */;
-			productName = AppleBLEDecoder;
+			productName = BLEDissector;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -8,7 +8,7 @@
 
 import Foundation
 import Combine
-import AppleBLEDecoder
+import BLEDissector
 
 /// A class that can track devices over a longer period than the reassignment of the BLE address
 public class BLETracker {

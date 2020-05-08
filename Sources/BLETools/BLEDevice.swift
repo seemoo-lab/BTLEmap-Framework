@@ -122,7 +122,7 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
     /// - Parameter advertisement: received BLE advertisement
     func add(advertisement: BLEAdvertisment, time: TimeInterval) {
         // Check if that advertisement has been received before
-        if let matching = self.advertisements.first(where: {$0.manufacturerData == advertisement.manufacturerData}) {
+        if let matching = self.findDuplicated(advertisement: advertisement) {
             matching.update(with: advertisement)
         }else {
             self.advertisements.append(advertisement)
@@ -147,6 +147,12 @@ public class BLEDevice: NSObject, Identifiable, ObservableObject {
             let deviceAddressType = advertisement.deviceAddressType {
             self.macAddress = BLEMACAddress(addressData: deviceAddress, addressTypeInt: deviceAddressType)
         }
+    }
+    
+    private func findDuplicated(advertisement: BLEAdvertisment) -> BLEAdvertisment? {
+        self.advertisements.first(where: { (adv) in
+            adv.manufacturerData == advertisement.manufacturerData && adv.serviceData == advertisement.serviceData && adv.serviceUUIDs == advertisement.serviceUUIDs
+        })
     }
     
     func addServices(services: [BLEService]) {

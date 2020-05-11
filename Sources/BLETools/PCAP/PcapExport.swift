@@ -18,16 +18,23 @@ public struct PcapExport {
         let pcapHeader = GeneralPcapHeader()
         
         //Generate pcap data
-        let pcapPackets =  advertisements.compactMap { advertisement in
+        var pcapPackets =  advertisements.flatMap { advertisement in
             self.advertisementToPcapPacket(advertisement)
         }
         
-        let packetsData = pcapPackets.reduce(Data(), +)
+        //Sort by date
+        pcapPackets.sort { (lfs, rfs) -> Bool in
+            lfs.0 < rfs.0
+        }
+        
+        let packetsData = pcapPackets.reduce(Data(), {$0 + $1.1})
         
         return pcapHeader.bytes + packetsData
     }
     
-    static func advertisementToPcapPacket(_ advertisement: BLEAdvertisment) -> Data?  {
+    
+    
+    static func advertisementToPcapPacket(_ advertisement: BLEAdvertisment) -> [(Date, Data)]  {
         var advertisementParts = [AdvDataStructure]()
         
         if let manufacturerData = advertisement.manufacturerData {
@@ -78,17 +85,7 @@ public struct PcapExport {
                 advertisementParts.append(AdvDataStructure(adType: .completeServiceUUIDs16Bit, data: serviceUUIDs128Bit.reduce(Data(), +)))
             }
         }
-        
-        let timestamp: UInt32 = {
-            if let timestamp = advertisement.timestamp {
-                return UInt32(timestamp)
-            }
-            if let date = advertisement.receptionDates.last {
-                return UInt32(date.timeIntervalSince1970)
-            }
-            
-            return UInt32(Date().timeIntervalSince1970)
-        }()
+    
         
         let advertisementData = AdvertisingData(content: advertisementParts).bytes
         
@@ -110,25 +107,24 @@ public struct PcapExport {
             return .random
         }()
         
-        let hciPacket: HCI_EventAdvertisementResponse? = {
-            
-            if var macAddress = advertisement.macAddress {
-                return HCI_EventAdvertisementResponse(eventType: eventType, addressType: addressType, address: macAddress.addressData, data: advertisementData, rssi: advertisement.rssi.last!.int8Value)
-            }else if let peripheralUUID = advertisement.peripheralUUID {
-                
-                return HCI_EventAdvertisementResponse(eventType: eventType, addressType: addressType, addressUUID: peripheralUUID, data: advertisementData, rssi: advertisement.rssi.last!.int8Value)
-            }
-            
-            return nil
-            }()
+        // The packet might be received multiple times such that we need to generate multiple pcap entries for one BLEAdvertisement
     
+        let macAddress = advertisement.macAddress?.addressData ?? HCI_EventAdvertisementResponse.uuidToMacAddress(uuid: advertisement.peripheralUUID ?? UUID())
         
-        guard let hciData = hciPacket?.bytes else {return nil }
-        
-        let uartData = UART_HCI_Packet(hciPacketType: .event, hciPacket: hciData)
-        
-        let packetHeader = PcapPacketHeader(timestampSeconds: timestamp, timestampMicroseconds: 0, packetLength: UInt32(uartData.bytes.count), originalPacketLength: UInt32(uartData.bytes.count))
-        
-        return packetHeader.bytes + uartData.bytes
+        var pcapPackets = Array<(Date, Data)>.init()
+        for (idx, date) in advertisement.receptionDates.enumerated() {
+            
+            let rssi = idx < advertisement.rssi.count ?  advertisement.rssi[idx] : advertisement.rssi.last!
+            
+            let hciEvent = HCI_EventAdvertisementResponse(eventType: eventType, addressType: addressType, address: macAddress, data: advertisementData, rssi: rssi.int8Value)
+            
+            let uartPacket = UART_HCI_Packet(hciPacketType: .event, hciPacket: hciEvent.bytes)
+            
+            let packetHeader = PcapPacketHeader(timestampSeconds: UInt32(date.timeIntervalSince1970), timestampMicroseconds: 0, packetLength: UInt32(uartPacket.bytes.count), originalPacketLength: UInt32(uartPacket.bytes.count))
+            
+            pcapPackets.append((date, (packetHeader.bytes + uartPacket.bytes)))
+        }
+
+        return pcapPackets
     }
 }

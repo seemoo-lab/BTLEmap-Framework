@@ -57,6 +57,14 @@ public struct HCI_EventAdvertisementResponse {
         let generatedAddress = Data(bytes: &addressUUIDBytes, count: MemoryLayout.size(ofValue: addressUUIDBytes))[0..<6]
         self.init(eventType: eventType, addressType: addressType, address: generatedAddress, data: data, rssi: rssi)
     }
+    
+    /// Generate a MAC address like 6 bytes from a UUID
+    /// - Returns: The first 6 bytes of a uuid
+    static func uuidToMacAddress(uuid: UUID) -> Data {
+        var addressUUIDBytes = uuid.uuid
+        let generatedAddress = Data(bytes: &addressUUIDBytes, count: MemoryLayout.size(ofValue: addressUUIDBytes))[0..<6]
+        return generatedAddress
+    }
 }
 
 

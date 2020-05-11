@@ -13,9 +13,9 @@ public struct BLEMACAddress {
     public private(set) var addressString: String
     public private(set)var addressType: BLEAddressType
     
-    public lazy var addressData  = {
+    public var addressData: Data {
         return addressString.replacingOccurrences(of: ":", with: "").hexadecimal!
-    }()
+    }
     
     init(addressString: String, addressType: BLEAddressType) {
         self.addressString = addressString

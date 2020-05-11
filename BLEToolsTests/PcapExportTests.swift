@@ -28,7 +28,7 @@ class PcapExportTests: XCTestCase {
         
         DispatchQueue.global(qos: .background).async {
             while true {
-                if scanner.advertisements.count > 100 {
+                if scanner.advertisements.count > 500 {
                     
                     DispatchQueue.main.async {
                         scanner.scanning = false

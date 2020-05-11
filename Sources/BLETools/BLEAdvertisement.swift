@@ -25,6 +25,8 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
     /// The **MAC address** of the device that sent the advertisement to the time of sending
     @Published public private(set) var macAddress: BLEMACAddress?
     
+    public var peripheralUUID: UUID?
+    
     /// An array of all advertisement types that are contained in this advertisement
     @Published public var advertisementTypes = [AppleAdvertisementType]()
     
@@ -115,11 +117,12 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
     /// - Parameters:
     ///   - advertisementData: Dictionary with advertisement data containing keys: `"kCBAdvDataChannel"`, `"kCBAdvDataIsConnectable"`, `"kCBAdvDataAppleMfgData"`, `"kCBAdvDataManufacturerData"`, `"kCBAdvDataTxPowerLevel"`
     ///   - rssi: RSSI in decibels
-    public init(advertisementData: [String: Any], rssi: NSNumber) {
+    public init(advertisementData: [String: Any], rssi: NSNumber, peripheralUUID: UUID) {
         
         self.channel = advertisementData["kCBAdvDataChannel"] as? Int
         self.connectable = advertisementData["kCBAdvDataIsConnectable"] as? Bool ?? false
         self.appleMfgData = advertisementData["kCBAdvDataAppleMfgData"] as? [String : Any]
+        self.peripheralUUID = peripheralUUID
         
         if let manufacturerData = advertisementData["kCBAdvDataManufacturerData"] as? Data {
             self.manufacturerData = manufacturerData

@@ -175,7 +175,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
     func didReceive(advertisementData: [String : Any], rssi: NSNumber, from device: CBPeripheral) {
         
         let receptionDate = Date()
-        let advertisement = BLEAdvertisment(advertisementData: advertisementData, rssi: rssi)
+        let advertisement = BLEAdvertisment(advertisementData: advertisementData, rssi: rssi, peripheralUUID: device.identifier)
         self.advertisements.append(advertisement)
         
         if let bleDevice = devices[device.identifier.uuidString] {

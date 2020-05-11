@@ -50,16 +50,18 @@ public struct PcapExport {
             var serviceUUIDs32Bit = [Data]()
             var serviceUUIDs128Bit = [Data]()
             
+            //We need to reverse the bytes, because of the byte order in a pcap file
             services.forEach { (uuid) in
+                let data = Data(uuid.data.reversed())
                 if uuid.data.count == 2 {
                     //16 bit
-                    serviceUUIDs16Bit.append(uuid.data)
+                    serviceUUIDs16Bit.append(data)
                 }else if uuid.data.count == 4 {
                     //32 bit
-                    serviceUUIDs32Bit.append(uuid.data)
+                    serviceUUIDs32Bit.append(data)
                 }else if uuid.data.count == 16 {
                     //128 bit
-                    serviceUUIDs128Bit.append(uuid.data)
+                    serviceUUIDs128Bit.append(data)
                 }
             }
             

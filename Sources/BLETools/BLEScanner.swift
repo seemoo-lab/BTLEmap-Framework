@@ -165,7 +165,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
         self.deviceList = Array(self.devices.values).sorted(by: {$0.id < $1.id})
     }
     
-    func importPcap(from data: Data, finished: @escaping (Result<Void, PcapImportError>)->()) {
+    public func importPcap(from data: Data, finished: @escaping (Result<Void, PcapImportError>)->()) {
         self.scanning = false
         
         DispatchQueue.global(qos: .userInitiated).async {

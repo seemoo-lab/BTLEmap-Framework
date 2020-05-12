@@ -171,9 +171,10 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
         DispatchQueue.global(qos: .userInitiated).async {
             do {
                 let advertisements = try PcapImport.from(data: data)
-                self.clear()
                 
                 DispatchQueue.main.async {
+                    self.clear()
+                    
                     advertisements.forEach { (advertisement) in
                         self.didReceive(advertisement: advertisement)
                     }

@@ -74,7 +74,7 @@ public struct PcapImport {
             let serviceSize = 2
             var index = 0
             while index + serviceSize <= serviceData.count {
-                let uuid = serviceData.subdata(in: index..<index+serviceSize)
+                let uuid = Data(serviceData.subdata(in: index..<index+serviceSize).reversed())
                 services.append(CBUUID(data: uuid))
                 index += serviceSize
             }
@@ -85,7 +85,7 @@ public struct PcapImport {
             let serviceSize = 4
             var index = 0
             while index + serviceSize <= serviceData.count {
-                let uuid = serviceData.subdata(in: index..<index+serviceSize)
+                let uuid = Data(serviceData.subdata(in: index..<index+serviceSize).reversed())
                 services.append(CBUUID(data: uuid))
                 index += serviceSize
             }
@@ -96,7 +96,7 @@ public struct PcapImport {
             let serviceSize = 16
             var index = 0
             while index + serviceSize <= serviceData.count {
-                let uuid = serviceData.subdata(in: index..<index+serviceSize)
+                let uuid = Data(serviceData.subdata(in: index..<index+serviceSize).reversed())
                 services.append(CBUUID(data: uuid))
                 index += serviceSize
             }
@@ -109,7 +109,7 @@ public struct PcapImport {
         
         let packetDate = Date(timeIntervalSince1970: TimeInterval(timestamp))
         
-        let advertisement = BLEAdvertisment(macAddress: macAddress, receptionDate: packetDate, services: services, serviceData: nil, txPowerLevel: txValue, deviceName: deviceName, manufacturerData: manufacturerData, rssi: hciPacket.rssi)
+        let advertisement = BLEAdvertisment(macAddress: macAddress, receptionDate: packetDate, services: services.count > 0 ? services : nil, serviceData: nil, txPowerLevel: txValue, deviceName: deviceName, manufacturerData: manufacturerData, rssi: hciPacket.rssi)
         
         return advertisement
     }

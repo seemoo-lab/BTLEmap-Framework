@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import CoreBluetooth
 @testable import BLETools
 
 class PcapTests: XCTestCase {
@@ -116,6 +117,23 @@ class PcapTests: XCTestCase {
         
         
         self.wait(for: [expect], timeout: .infinity)
+    }
+    
+    func testServices() {
+        let macAddress = BLEMACAddress(addressString: "00:00:00:00:00:00", addressType: .random)
+        let bleAdvertisement = BLEAdvertisment(macAddress: macAddress, receptionDate: Date() , services: [CBUUID(string: "07FE")], serviceData: nil, txPowerLevel: nil, deviceName: nil, manufacturerData: nil, rssi: -56)
+        
+        do {
+            
+            let exported =  PcapExport.export(advertisements: [bleAdvertisement])
+            let importedAdvertisement = try PcapImport.from(data: exported).first!
+            XCTAssertEqual(bleAdvertisement.serviceUUIDs, importedAdvertisement.serviceUUIDs)
+            
+        }catch {
+            XCTFail()
+        }
+        
+        
     }
 
 }

@@ -31,6 +31,10 @@ public struct BLEMACAddress {
             self.addressType = .public
         case 1:
             self.addressType = .random
+        case 2:
+            self.addressType = .publicIdentity
+        case 3:
+            self.addressType = .randomStaticIdentity
         default:
             self.addressType = .unknown
         }
@@ -39,6 +43,8 @@ public struct BLEMACAddress {
     public enum BLEAddressType: String {
         case random
         case `public`
+        case publicIdentity
+        case randomStaticIdentity
         case unknown
     }
 }

@@ -165,6 +165,32 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
         self.deviceList = Array(self.devices.values).sorted(by: {$0.id < $1.id})
     }
     
+    func importPcap(from data: Data, finished: @escaping (Result<Void, PcapImportError>)->()) {
+        self.scanning = false
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            do {
+                let advertisements = try PcapImport.from(data: data)
+                self.clear()
+                
+                advertisements.forEach { (advertisement) in
+                    self.didReceive(advertisement: advertisement)
+                }
+                
+                finished(.success(()))
+                
+            }catch let error as PcapImportError {
+                DispatchQueue.main.async {
+                    finished(.failure(error))
+                }
+            }catch let error {
+                DispatchQueue.main.async {
+                    finished(.failure(.wrongFormat(description: String(describing: error))))
+                }
+            }
+        }
+    }
+    
     //MARK:- BLE Receiver Delegate
     
     func didStartScanning() {

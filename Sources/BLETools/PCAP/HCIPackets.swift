@@ -58,6 +58,36 @@ public struct HCI_EventAdvertisementResponse {
         self.init(eventType: eventType, addressType: addressType, address: generatedAddress, data: data, rssi: rssi)
     }
     
+    /// Parse the HCI Event message from raw data
+    /// - Parameter data: Data that is parsed to the HCI event message
+    /// - Throws: Erorrs when parsing fails
+    init(from data: Data) throws {
+        guard data.count > 13 else {throw PcapImportError.wrongFormat(description: "Too short")}
+        
+//        self.eventCode = data[0]
+//        self.parameterTotalLength = data[1]
+//        self.subEventCode = data[2]
+//        self.numberOfReports = data[3]
+        guard let eventType = AdvertisementType(rawValue: data[4]) else {throw PcapImportError.wrongFormat(description: "Not supported even type")}
+        self.eventType = eventType
+        guard let addressType = BLE_AddressType(rawValue: data[5]) else {
+            throw PcapImportError.wrongFormat(description: "Not supported address type")
+        }
+        self.addressType = addressType
+        
+        var index = 6
+        self.address = data.subdata(in: index..<index+6)
+        index+=6
+        self.lengthData = data[index]
+        index+=1
+        
+        self.data = data.subdata(in: index..<index+Int(self.lengthData))
+        index += Int(self.lengthData)
+        self.rssi = Int8(bitPattern: data[index])
+        
+        self.bytes = data
+    }
+    
     /// Generate a MAC address like 6 bytes from a UUID
     /// - Returns: The first 6 bytes of a uuid
     static func uuidToMacAddress(uuid: UUID) -> Data {

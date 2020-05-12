@@ -140,6 +140,28 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
         self.update(with: advertisementData, rssi: rssi)
     }
     
+    /// Initialize a BLE advertisement with direct input. Can be used to init the BLE advertisement from other sources
+    /// - Parameters:
+    ///   - macAddress: The MAC address of the sending device
+    ///   - receptionDate: The date when this advertisement has been received
+    ///   - services: The services that have been advertised by this advertisement
+    ///   - txPowerLevel: The power level of the transmitting device
+    ///   - deviceName: Device name if it has been part of the advertisement
+    ///   - manufacturerData: Manudacturer data if it has been part of the advertisement
+    ///   - rssi: The RSSI value 
+    public init(macAddress: BLEMACAddress, receptionDate: Date, services: [CBUUID]?, serviceData: [CBUUID: Data]?, txPowerLevel: Int8?, deviceName: String?, manufacturerData: Data?, rssi: Int8) {
+        self.macAddress = macAddress
+        self.receptionDates.append(receptionDate)
+        self.serviceUUIDs = services
+        self.serviceData = serviceData
+        if let txPowerLevel = txPowerLevel {
+            self.txPowerLevels.append(Int(txPowerLevel))
+        }
+        self.deviceName = deviceName
+        self.manufacturerData = manufacturerData
+        self.rssi.append(NSNumber(integerLiteral: Int(rssi)))
+    }
+    
     /// Intialize the BLE advertisement with the data of a relayed advertisement
     /// - Parameter relayedAdvertisement: Relayed advertisements are received by external sources, like a raspberry pi
     init(relayedAdvertisement: BLERelayedAdvertisement) {

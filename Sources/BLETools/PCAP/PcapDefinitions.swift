@@ -9,16 +9,25 @@
 import Foundation
 
 struct PcapPacketHeader {
-    var timestampSeconds: UInt32 = 1588951154
-    var timestampMicroseconds: UInt32 = 0
-    var packetLength: UInt32
-    var originalPacketLength: UInt32
+    var timestampSeconds: UInt32 // 4
+    var timestampMicroseconds: UInt32 // 4
+    var packetLength: UInt32 // 4
+    var originalPacketLength: UInt32 // 4
     
     init(timestampSeconds: UInt32, timestampMicroseconds: UInt32, packetLength: UInt32, originalPacketLength: UInt32) {
         self.timestampSeconds = timestampSeconds
         self.timestampMicroseconds = timestampMicroseconds
         self.packetLength = packetLength
         self.originalPacketLength = originalPacketLength
+    }
+    
+    init(from data: Data) throws {
+        guard data.count == 16 else {throw PcapImportError.wrongFormat(description: "Too short. Missing header")}
+        
+        self.timestampSeconds = data.subdata(in: 0..<4).uint32
+        self.timestampMicroseconds = data.subdata(in: 4..<8).uint32
+        self.packetLength = data.subdata(in: 8..<12).uint32
+        self.originalPacketLength = data.subdata(in: 12..<16).uint32
     }
     
     var bytes: Data {
@@ -37,14 +46,16 @@ struct PcapPacketHeader {
 }
 
 struct GeneralPcapHeader {
-    var magicNumber: UInt32 = 0xA1B2C3D4
-    var majorVersion = UInt16(2)
-    var minorVersion = UInt16(4)
-    var timeZone = UInt32(0)
-    var accuracy = UInt32(0)
-    var snaplen = UInt32(65535)
+    var magicNumber: UInt32 = 0xA1B2C3D4 // 4 byte
+    var majorVersion = UInt16(2) // 2 bytes
+    var minorVersion = UInt16(4) // 2
+    var timeZone = UInt32(0) // 4
+    var accuracy = UInt32(0) // 4
+    var snaplen = UInt32(65535) // 4
     //LINKTYPE_BLUETOOTH_HCI_H4 (HCI Commands/Events as specified by the Bluetooth Core Spec)
-    var networkType = UInt32(187)
+    var networkType = UInt32(187) // 4
+    
+    var isLittleEndian = true
     
     var bytes: Data {
         var bytes = Data()
@@ -65,4 +76,31 @@ struct GeneralPcapHeader {
         
         return bytes
     }
+    
+    init() {}
+    
+    init(from data: Data) throws {
+        guard data.count == 24 else {throw PcapImportError.wrongFormat(description: "Too short. Missing header")}
+        
+        let magicNumber = data.subdata(in: 0..<4).uint32
+        guard magicNumber == 0xA1B2C3D4 else {
+            throw PcapImportError.wrongEndianess
+        }
+        
+        self.majorVersion = data.subdata(in: 4..<6).uint16
+        self.minorVersion = data.subdata(in: 6..<8).uint16
+        
+        guard majorVersion == 2 && minorVersion >= 4 else {
+            throw PcapImportError.wrongVersion
+        }
+        
+        self.timeZone = data.subdata(in: 8..<12).uint32
+        self.accuracy = data.subdata(in: 12..<16).uint32
+        self.snaplen = data.subdata(in: 16..<20).uint32
+        self.networkType = data.subdata(in: 20..<24).uint32
+        
+        guard networkType == 187 else {throw PcapImportError.wrongFormat(description: "Only supports HCI logs of Network type 187")}
+    }
 }
+
+

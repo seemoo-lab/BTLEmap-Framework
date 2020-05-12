@@ -12,7 +12,6 @@
 		782FBA1E243241CD0003F070 /* BLERelayCharacteristics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782FBA1D243241CD0003F070 /* BLERelayCharacteristics.swift */; };
 		782FBA20243244DB0003F070 /* BLEService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782FBA1F243244DB0003F070 /* BLEService.swift */; };
 		782FCF9524519CE80014082E /* BLEDeviceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782FCF9424519CE80014082E /* BLEDeviceModel.swift */; };
-		7834772F24698D9D00E27F27 /* PcapExportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7834772E24698D9D00E27F27 /* PcapExportTests.swift */; };
 		783926832417CA0200919DE9 /* BLETracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783926822417CA0200919DE9 /* BLETracker.swift */; };
 		784B76E123FAD83B00E34241 /* BLETools.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 784B76D723FAD83B00E34241 /* BLETools.framework */; };
 		784B76E623FAD83B00E34241 /* BLEToolsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76E523FAD83B00E34241 /* BLEToolsTests.swift */; };
@@ -24,6 +23,9 @@
 		784B76FC23FADA8E00E34241 /* BLEAdvertisement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76FB23FADA8E00E34241 /* BLEAdvertisement.swift */; };
 		784B76FE23FADFB200E34241 /* BLEScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76FD23FADFB200E34241 /* BLEScanner.swift */; };
 		784B770023FAE01B00E34241 /* BLEDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B76FF23FAE01B00E34241 /* BLEDevice.swift */; };
+		7859DB6B246A9CF60079D19C /* PcapImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7859DB6A246A9CF60079D19C /* PcapImport.swift */; };
+		7859DB6C246ADBD20079D19C /* PcapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7834772E24698D9D00E27F27 /* PcapTests.swift */; };
+		7859DB6E246AE51F0079D19C /* exported.pcap in Resources */ = {isa = PBXBuildFile; fileRef = 7859DB6D246AE51F0079D19C /* exported.pcap */; };
 		7879E3B92417D4B1003AA8DF /* TLV_Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7879E3B82417D4B1003AA8DF /* TLV_Decoder.swift */; };
 		78844DD1240D076600B8DA67 /* ProtocolParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DD0240D076600B8DA67 /* ProtocolParser.swift */; };
 		78844DEC240D08C900B8DA67 /* TLV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844DEB240D08C900B8DA67 /* TLV.swift */; };
@@ -70,7 +72,7 @@
 		782FBA1D243241CD0003F070 /* BLERelayCharacteristics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLERelayCharacteristics.swift; sourceTree = "<group>"; };
 		782FBA1F243244DB0003F070 /* BLEService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEService.swift; sourceTree = "<group>"; };
 		782FCF9424519CE80014082E /* BLEDeviceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEDeviceModel.swift; sourceTree = "<group>"; };
-		7834772E24698D9D00E27F27 /* PcapExportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PcapExportTests.swift; sourceTree = "<group>"; };
+		7834772E24698D9D00E27F27 /* PcapTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PcapTests.swift; sourceTree = "<group>"; };
 		783926822417CA0200919DE9 /* BLETracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLETracker.swift; sourceTree = "<group>"; };
 		784B76D723FAD83B00E34241 /* BLETools.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BLETools.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		784B76DA23FAD83B00E34241 /* BLETools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BLETools.h; sourceTree = "<group>"; };
@@ -85,6 +87,8 @@
 		784B76FB23FADA8E00E34241 /* BLEAdvertisement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEAdvertisement.swift; sourceTree = "<group>"; };
 		784B76FD23FADFB200E34241 /* BLEScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEScanner.swift; sourceTree = "<group>"; };
 		784B76FF23FAE01B00E34241 /* BLEDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEDevice.swift; sourceTree = "<group>"; };
+		7859DB6A246A9CF60079D19C /* PcapImport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PcapImport.swift; sourceTree = "<group>"; };
+		7859DB6D246AE51F0079D19C /* exported.pcap */ = {isa = PBXFileReference; lastKnownFileType = file; path = exported.pcap; sourceTree = "<group>"; };
 		7879E3B82417D4B1003AA8DF /* TLV_Decoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLV_Decoder.swift; sourceTree = "<group>"; };
 		78844DD0240D076600B8DA67 /* ProtocolParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolParser.swift; sourceTree = "<group>"; };
 		78844DEB240D08C900B8DA67 /* TLV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLV.swift; sourceTree = "<group>"; };
@@ -193,11 +197,12 @@
 		784B76E423FAD83B00E34241 /* BLEToolsTests */ = {
 			isa = PBXGroup;
 			children = (
+				7859DB6D246AE51F0079D19C /* exported.pcap */,
 				784B76E523FAD83B00E34241 /* BLEToolsTests.swift */,
 				789BE5062451DE7A00A1C54C /* BLEDeviceParsingTest.swift */,
 				78844DF1240D117B00B8DA67 /* TLVTests.swift */,
 				784B76E723FAD83B00E34241 /* Info.plist */,
-				7834772E24698D9D00E27F27 /* PcapExportTests.swift */,
+				7834772E24698D9D00E27F27 /* PcapTests.swift */,
 			);
 			path = BLEToolsTests;
 			sourceTree = "<group>";
@@ -256,6 +261,7 @@
 				78CDF62C24697EC000BD27B8 /* HCIPackets.swift */,
 				78CDF62E24697ED700BD27B8 /* PcapDefinitions.swift */,
 				78CDF63024697EEC00BD27B8 /* PcapExport.swift */,
+				7859DB6A246A9CF60079D19C /* PcapImport.swift */,
 			);
 			path = PCAP;
 			sourceTree = "<group>";
@@ -396,6 +402,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7859DB6E246AE51F0079D19C /* exported.pcap in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -419,6 +426,7 @@
 				784B76FE23FADFB200E34241 /* BLEScanner.swift in Sources */,
 				78CDF62D24697EC000BD27B8 /* HCIPackets.swift in Sources */,
 				784B770023FAE01B00E34241 /* BLEDevice.swift in Sources */,
+				7859DB6B246A9CF60079D19C /* PcapImport.swift in Sources */,
 				784B76F723FADA5500E34241 /* DataIntExtensions.swift in Sources */,
 				782FCF9524519CE80014082E /* BLEDeviceModel.swift in Sources */,
 				78CDF62B24697EB300BD27B8 /* AdvertisingPackets.swift in Sources */,
@@ -448,7 +456,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				78844DF2240D117B00B8DA67 /* TLVTests.swift in Sources */,
-				7834772F24698D9D00E27F27 /* PcapExportTests.swift in Sources */,
+				7859DB6C246ADBD20079D19C /* PcapTests.swift in Sources */,
 				784B76E623FAD83B00E34241 /* BLEToolsTests.swift in Sources */,
 				789BE5072451DE7A00A1C54C /* BLEDeviceParsingTest.swift in Sources */,
 			);

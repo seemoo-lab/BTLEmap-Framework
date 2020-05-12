@@ -27,6 +27,25 @@ struct AdvDataStructure {
         self.data = data
         self.bytes = adStructure
     }
+    
+    static func parse(from data: Data) -> [AdvDataStructure] {
+        
+        var index = 0
+        var structures = [AdvDataStructure]()
+        while index < data.count {
+            let length = data[index] - 1
+            index += 1
+            let adTypeVal = data[index]
+            guard let adType = ADType(rawValue: adTypeVal) else {continue}
+            index += 1
+            let data = data.subdata(in: index..<index+Data.Index(length))
+            index += Int(length)
+            
+            structures.append(AdvDataStructure(adType: adType, data: data))
+        }
+        
+        return structures
+    }
 }
 
 

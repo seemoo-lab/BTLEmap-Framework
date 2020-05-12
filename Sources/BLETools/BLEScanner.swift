@@ -173,11 +173,13 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
                 let advertisements = try PcapImport.from(data: data)
                 self.clear()
                 
-                advertisements.forEach { (advertisement) in
-                    self.didReceive(advertisement: advertisement)
+                DispatchQueue.main.async {
+                    advertisements.forEach { (advertisement) in
+                        self.didReceive(advertisement: advertisement)
+                    }
+                    
+                    finished(.success(()))
                 }
-                
-                finished(.success(()))
                 
             }catch let error as PcapImportError {
                 DispatchQueue.main.async {

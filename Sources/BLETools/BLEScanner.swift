@@ -37,13 +37,22 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
 
     //MARK: State
     @Published public var connectedToReceiver: Bool = true
-    @Published public var devices = [String: BLEDevice]()
-    @Published public var deviceList = Array<BLEDevice>()
+    public var devices = [String: BLEDevice]()
+    public var deviceList = Array<BLEDevice>()
     public var advertisements = Array<BLEAdvertisment>()
     
     @Published public var lastError: Error?
     
     @Published public var scanStartTime: Date = Date()
+    
+    //MARK: Update
+    
+    /// Defines how often the object should publish its updates at maximum
+    public var updateInterval: TimeInterval = 0.5
+    /// Timer used to schedule how often the object publishes changes. Realtime updates would need to redraw the view every 0,01-0,3s
+    private var updateTimer: Timer?
+    /// Set to true if the object has changed since the last update
+    private var objectChanged = false
     
     //MARK: Settings
     
@@ -126,11 +135,15 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
         self.clear()
         self.scanStartTime = Date()
         //Start scanning
+        self.updateTimer = Timer.scheduledTimer(withTimeInterval: self.updateInterval, repeats: true, block: self.updateObjectChanged(_:))
         receiver.autoconnectToDevices = self.autoconnect
         receiver.scanForAdvertisements(filterDuplicates: self.filterDuplicates)
     }
     
     func stopScanning() {
+        self.updateTimer?.invalidate()
+        self.updateTimer = nil
+        self.objectChanged = false
         self.receiver.stopScanningForAdvertisements()
     }
     
@@ -194,6 +207,12 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
         }
     }
     
+    private func updateObjectChanged(_ timer: Timer) {
+        guard self.scanning && self.objectChanged else {return}
+        self.objectChanged = false 
+        self.objectWillChange.send()
+    }
+    
     //MARK:- BLE Receiver Delegate
     
     func didStartScanning() {
@@ -206,6 +225,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
         let receptionDate = Date()
         let advertisement = BLEAdvertisment(advertisementData: advertisementData, rssi: rssi, peripheralUUID: device.identifier)
         self.advertisements.append(advertisement)
+        self.objectChanged = true
         
         if let bleDevice = devices[device.identifier.uuidString] {
             //Add advertisement to device
@@ -243,6 +263,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
             Log.error(system: .BLERelay, message: "Received corrupted advertisement without mac address")
             return
         }
+        self.objectChanged = true
         
         let receptionDate = advertisement.receptionDates.first!
         self.advertisements.append(advertisement)
@@ -275,6 +296,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
     func didUpdateServices(services: [BLEService], forDevice id: String) {
         guard let device = self.devices[id] else {return}
         device.addServices(services: services)
+        self.objectChanged = true
     }
     
     func didUpdateCharacteristics(characteristics: [BLECharacteristic],forService service: BLEService, andDevice id: String) {
@@ -285,6 +307,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
         service.characteristics = allChars
         
         device.updateService(service: service)
+        self.objectChanged = true
     }
     
     func didFail(with error: Error) {
@@ -297,6 +320,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
     func didUpdateModelNumber(_ modelNumber: String, for peripheral: CBPeripheral) {
         guard let device = self.devices[peripheral.identifier.uuidString] else {return}
         device.deviceModel = BLEDeviceModel(modelNumber)
+        self.objectChanged = true
     }
     
     
@@ -306,6 +330,7 @@ public class BLEScanner: BLEReceiverDelegate, ObservableObject {
             self.devices[d.uuid.uuidString] = nil
         }
         self.updateDeviceList()
+        self.objectChanged = true
     }
     
     //MARK: - Structs

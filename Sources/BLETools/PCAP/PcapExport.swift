@@ -89,11 +89,11 @@ public struct PcapExport {
             }
             
             if serviceUUIDs32Bit.count > 0 {
-                advertisementParts.append(AdvDataStructure(adType: .completeServiceUUIDs16Bit, data: serviceUUIDs32Bit.reduce(Data(), +)))
+                advertisementParts.append(AdvDataStructure(adType: .completeServiceUUIDs32Bit, data: serviceUUIDs32Bit.reduce(Data(), +)))
             }
             
             if serviceUUIDs128Bit.count > 0 {
-                advertisementParts.append(AdvDataStructure(adType: .completeServiceUUIDs16Bit, data: serviceUUIDs128Bit.reduce(Data(), +)))
+                advertisementParts.append(AdvDataStructure(adType: .completeServiceUUIDs128Bit, data: serviceUUIDs128Bit.reduce(Data(), +)))
             }
         }
         

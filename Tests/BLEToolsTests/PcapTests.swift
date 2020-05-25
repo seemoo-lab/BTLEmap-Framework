@@ -40,6 +40,7 @@ class PcapTests: XCTestCase {
                         //Store to file
                         let desktopUrl = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!
                         let exportUrl = desktopUrl.appendingPathComponent("exported.pcap")
+                        try! FileManager.default.removeItem(at: exportUrl)
                         
                         try! exported.write(to: exportUrl)
                         expect.fulfill()

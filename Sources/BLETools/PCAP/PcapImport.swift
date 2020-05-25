@@ -102,6 +102,29 @@ public struct PcapImport {
             }
         }
         
+        //Get the service data
+        var serviceData = [CBUUID : Data]()
+        for adv in advStructures.filter({$0.adType == .serviceData16BitUUID}) {
+            let serviceUUID = CBUUID(data: adv.data.subdata(in: 0..<2))
+            let data = adv.data.subdata(in: 2..<adv.data.endIndex)
+            
+            serviceData[serviceUUID] = data
+        }
+        
+        for adv in advStructures.filter({$0.adType == .serviceData32BitUUID}) {
+            let serviceUUID = CBUUID(data: adv.data.subdata(in: 0..<4))
+            let data = adv.data.subdata(in: 4..<adv.data.endIndex)
+            
+            serviceData[serviceUUID] = data
+        }
+        
+        for adv in advStructures.filter({$0.adType == .serviceData128BitUUID}) {
+            let serviceUUID = CBUUID(data: adv.data.subdata(in: 0..<16))
+            let data = adv.data.subdata(in: 16..<adv.data.endIndex)
+            
+            serviceData[serviceUUID] = data
+        }
+        
         //Currently not supported more
         //Create the advertisement
         let macAddress = BLEMACAddress(addressData: hciPacket.address, addressTypeInt: Int(hciPacket.addressType.rawValue))
@@ -109,7 +132,15 @@ public struct PcapImport {
         
         let packetDate = Date(timeIntervalSince1970: TimeInterval(timestamp))
         
-        let advertisement = BLEAdvertisment(macAddress: macAddress, receptionDate: packetDate, services: services.count > 0 ? services : nil, serviceData: nil, txPowerLevel: txValue, deviceName: deviceName, manufacturerData: manufacturerData, rssi: hciPacket.rssi)
+        let advertisement = BLEAdvertisment(
+            macAddress: macAddress,
+            receptionDate: packetDate,
+            services: services.count > 0 ? services : nil,
+            serviceData: serviceData.count > 0 ? serviceData : nil ,
+            txPowerLevel: txValue,
+            deviceName: deviceName,
+            manufacturerData: manufacturerData,
+            rssi: hciPacket.rssi)
         
         return advertisement
     }

@@ -33,13 +33,20 @@ public struct PcapExport {
     }
     
     
-    
+    // Structure defined in: https://www.bluetooth.com/specifications/bluetooth-core-specification/
+    //
+    // Core Specification Supplement (CSS)
+    //
     static func advertisementToPcapPacket(_ advertisement: BLEAdvertisment) -> [(Date, Data)]  {
         var advertisementParts = [AdvDataStructure]()
+        
+        // Manufacturer Data
         
         if let manufacturerData = advertisement.manufacturerData {
             advertisementParts.append( AdvDataStructure(adType: .manufacturerData, data: manufacturerData) )
         }
+        
+        // TX Power Level
         
         if let txPower = advertisement.txPowerLevels.last {
             var txPower8 = Int8(txPower)
@@ -47,10 +54,14 @@ public struct PcapExport {
             advertisementParts.append(AdvDataStructure(adType: .txPowerLevel, data: txPowerData))
         }
         
+        // Device name
+        
         if let deviceName = advertisement.deviceName,
             let nameData = deviceName.data(using: .ascii) {
             advertisementParts.append(AdvDataStructure(adType: .completeLocalName, data: nameData))
         }
+        
+        // Services
         
         if let services = advertisement.serviceUUIDs {
             var serviceUUIDs16Bit = [Data]()
@@ -85,8 +96,32 @@ public struct PcapExport {
                 advertisementParts.append(AdvDataStructure(adType: .completeServiceUUIDs16Bit, data: serviceUUIDs128Bit.reduce(Data(), +)))
             }
         }
-    
         
+        //Service Data
+        
+        if let serviceData = advertisement.serviceData {
+            for (serviceUUID, data) in serviceData {
+                var adType: ADType
+                switch serviceUUID.data.count {
+                case 2:
+                    adType = .serviceData16BitUUID
+                case 4:
+                    adType = .serviceData32BitUUID
+                case 16:
+                    adType = .serviceData128BitUUID
+                default:
+                    continue
+                }
+                
+                //Create the data for the PDU
+                let pduData = serviceUUID.data + data
+                let dataStructure = AdvDataStructure(adType: adType, data: pduData)
+                //Add to the parts
+                advertisementParts.append(dataStructure)
+            }
+        }
+        
+        // Create PDU
         let advertisementData = AdvertisingData(content: advertisementParts).bytes
         
         let eventType: AdvertisementType = {
@@ -110,6 +145,9 @@ public struct PcapExport {
         // The packet might be received multiple times such that we need to generate multiple pcap entries for one BLEAdvertisement
     
         let macAddress = advertisement.macAddress?.addressData ?? HCI_EventAdvertisementResponse.uuidToMacAddress(uuid: advertisement.peripheralUUID ?? UUID())
+        
+        
+        //Create PCAP packets
         
         var pcapPackets = Array<(Date, Data)>.init()
         for (idx, date) in advertisement.receptionDates.enumerated() {

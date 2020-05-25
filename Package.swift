@@ -17,6 +17,7 @@ let package = Package(
         .target(name: "BLEDissector", dependencies: []),
         .target(name: "BLETools", dependencies: ["BLEDissector"]),
         // Tests 
-        .testTarget(name: "BLEDissectorTests", dependencies: ["BLEDissector"])
+        .testTarget(name: "BLEDissectorTests", dependencies: ["BLEDissector"]),
+        .testTarget(name: "BLEToolsTests", dependencies: ["BLETools"])
     ]
 )

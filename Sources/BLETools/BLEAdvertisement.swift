@@ -64,10 +64,10 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
     public private(set) var deviceName: String?
     
     /// Advertisement can contain service UUIDs. If the advertising device uses a primary service this one will be advertised here
-    public private(set) var serviceUUIDs: [CBUUID]?
+    public internal(set) var serviceUUIDs: [CBUUID]?
     
     /// Advertisements with service data can share data for a specific service.
-    public private(set) var serviceData: [CBUUID: Data]?
+    public internal(set) var serviceData: [CBUUID: Data]?
     
     /// The power levels at which this advertisement has been transmitted
     public private(set) var txPowerLevels = [Int]()

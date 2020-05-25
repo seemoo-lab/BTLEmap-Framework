@@ -8,12 +8,15 @@ let package = Package(
         .iOS(.v13)
     ],
     products: [
+        .library(name: "BLEDissector", targets: ["BLEDissector"]),
         .library(name: "BLETools", targets: ["BLETools"]),
     ],
     dependencies: [
-        .package(url:"https://dev.seemoo.tu-darmstadt.de/aheinrich/apple-ble-decoder.git", .branch("master"))
     ],
     targets: [
+        .target(name: "BLEDissector", dependencies: []),
         .target(name: "BLETools", dependencies: ["BLEDissector"]),
+        // Tests 
+        .testTarget(name: "BLEDissectorTests", dependencies: ["BLEDissector"])
     ]
 )

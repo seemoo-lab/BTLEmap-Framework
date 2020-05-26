@@ -99,7 +99,7 @@ class BLERelayReceiver: NSObject, ObservableObject, BLEReceiverProtocol {
         do {
             let adv = try JSONDecoder().decode(BLERelayedAdvertisement.self, from: message)
 
-            let bleAdv = try BLEAdvertisment(relayedAdvertisement: adv)
+            let bleAdv = BLEAdvertisment(relayedAdvertisement: adv)
 
             self.delegate?.didReceive(advertisement: bleAdv)
 

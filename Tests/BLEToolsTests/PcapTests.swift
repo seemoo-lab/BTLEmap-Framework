@@ -114,9 +114,6 @@ class PcapTests: XCTestCase {
             XCTAssert(scanner.deviceList.count > 0)
         }
         
-        
-        
-        
         self.wait(for: [expect], timeout: .infinity)
     }
     

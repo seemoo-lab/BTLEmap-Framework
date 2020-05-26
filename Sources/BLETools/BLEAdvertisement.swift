@@ -171,12 +171,15 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
         self.macAddress = BLEMACAddress(addressString: relayedAdvertisement.macAddress, addressType: BLEMACAddress.BLEAddressType(rawValue: relayedAdvertisement.addressType) ?? .random)
         self.connectable = relayedAdvertisement.connectable
         
+        self.serviceUUIDs = relayedAdvertisement.serviceUUIDs?.map {CBUUID(string: $0)}
+        
+        self.serviceData = Dictionary(uniqueKeysWithValues: relayedAdvertisement.serviceData.map({ (key, value) -> (CBUUID, Data) in (CBUUID(data: key), value) }))
+        
         self.intializeManufacturer()
         
         if  manufacturer == .apple {
             try? self.intitializeTLVForApple()
         }
-        
         self.receptionDates.append(Date())
     }
     

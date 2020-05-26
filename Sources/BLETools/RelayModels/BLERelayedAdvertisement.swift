@@ -23,7 +23,7 @@ struct BLERelayedAdvertisement: Codable {
     var serviceData128Bit: String?
     
     /// Service Data part of the advertisement. The Key is the UUID data and the value the assigned data
-    var serviceData: [Data: Data] {
+    func serviceData() -> [Data: Data] {
         var serviceData = [Data: Data]()
         if let s16 = serviceData16Bit?.hexadecimal {
             let uuid = s16.subdata(in: 0..<2)

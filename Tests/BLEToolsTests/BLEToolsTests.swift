@@ -71,7 +71,7 @@ class BLEToolsTests: XCTestCase, BLEScannerDelegate {
     func testGetCharacteristicsFromExternalSource() throws {
         let expect = expectation(description: "BLE Scanner")
         
-        let scanner = BLEScanner(delegate: self,receiverType: .external)
+        let scanner = BLEScanner(delegate: self,receiverType: .external, autoconnect: true)
         scanner.scanForAppleAdvertisements()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 20.0) {

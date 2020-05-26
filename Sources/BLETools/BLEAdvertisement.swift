@@ -173,7 +173,7 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
         
         self.serviceUUIDs = relayedAdvertisement.serviceUUIDs?.map {CBUUID(string: $0)}
         
-        self.serviceData = Dictionary(uniqueKeysWithValues: relayedAdvertisement.serviceData.map({ (key, value) -> (CBUUID, Data) in (CBUUID(data: key), value) }))
+        self.serviceData = Dictionary(uniqueKeysWithValues: relayedAdvertisement.serviceData().map({ (key, value) -> (CBUUID, Data) in (CBUUID(data: key), value) }))
         
         self.intializeManufacturer()
         

@@ -105,21 +105,24 @@ public struct PcapImport {
         //Get the service data
         var serviceData = [CBUUID : Data]()
         for adv in advStructures.filter({$0.adType == .serviceData16BitUUID}) {
-            let serviceUUID = CBUUID(data: adv.data.subdata(in: 0..<2))
+            let serviceUUIDData = Data(adv.data.subdata(in: 0..<2).reversed())
+            let serviceUUID = CBUUID(data: serviceUUIDData)
             let data = adv.data.subdata(in: 2..<adv.data.endIndex)
             
             serviceData[serviceUUID] = data
         }
         
         for adv in advStructures.filter({$0.adType == .serviceData32BitUUID}) {
-            let serviceUUID = CBUUID(data: adv.data.subdata(in: 0..<4))
+            let serviceUUIDData = Data(adv.data.subdata(in: 0..<4).reversed())
+            let serviceUUID = CBUUID(data: serviceUUIDData)
             let data = adv.data.subdata(in: 4..<adv.data.endIndex)
             
             serviceData[serviceUUID] = data
         }
         
         for adv in advStructures.filter({$0.adType == .serviceData128BitUUID}) {
-            let serviceUUID = CBUUID(data: adv.data.subdata(in: 0..<16))
+            let serviceUUIDData = Data(adv.data.subdata(in: 0..<16).reversed())
+            let serviceUUID = CBUUID(data: serviceUUIDData)
             let data = adv.data.subdata(in: 16..<adv.data.endIndex)
             
             serviceData[serviceUUID] = data

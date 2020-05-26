@@ -114,7 +114,7 @@ public struct PcapExport {
                 }
                 
                 //Create the data for the PDU
-                let pduData = serviceUUID.data + data
+                let pduData = serviceUUID.data.reversed() + data
                 let dataStructure = AdvDataStructure(adType: adType, data: pduData)
                 //Add to the parts
                 advertisementParts.append(dataStructure)

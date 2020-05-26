@@ -173,7 +173,10 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
         
         self.serviceUUIDs = relayedAdvertisement.serviceUUIDs?.map {CBUUID(string: $0)}
         
-        self.serviceData = Dictionary(uniqueKeysWithValues: relayedAdvertisement.serviceData().map({ (key, value) -> (CBUUID, Data) in (CBUUID(data: key), value) }))
+        let serviceData = relayedAdvertisement.serviceData()
+        if serviceData.count > 0 {
+            self.serviceData = Dictionary(uniqueKeysWithValues: serviceData.map({ (key, value) -> (CBUUID, Data) in (CBUUID(data: key), value) }))
+        }
         
         self.intializeManufacturer()
         
@@ -181,6 +184,8 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
             try? self.intitializeTLVForApple()
         }
         self.receptionDates.append(Date())
+        
+        self.dissectContent()
     }
     
     func intializeManufacturer() {
@@ -278,6 +283,11 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
             self.deviceAddress = deviceAddress
         }
         
+
+        
+    }
+    
+    func dissectContent() {
         
         // Try to dissect services
         if let serviceData = self.serviceData {
@@ -287,7 +297,6 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
             
             self.dissectedServiceData = dissected
         }
-        
     }
     
     

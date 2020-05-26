@@ -26,19 +26,20 @@ struct BLERelayedAdvertisement: Codable {
     func serviceData() -> [Data: Data] {
         var serviceData = [Data: Data]()
         if let s16 = serviceData16Bit?.hexadecimal {
-            let uuid = s16.subdata(in: 0..<2)
+            //Reveres due to endianess
+            let uuid = Data(s16.subdata(in: 0..<2).reversed())
             let data = s16.subdata(in: 2..<s16.endIndex)
             serviceData[uuid] = data
         }
         
         if let s32 = serviceData32Bit?.hexadecimal {
-            let uuid = s32.subdata(in: 0..<4)
+            let uuid = Data(s32.subdata(in: 0..<4).reversed())
             let data = s32.subdata(in: 4..<s32.endIndex)
             serviceData[uuid] = data
         }
         
         if let s128 = serviceData128Bit?.hexadecimal {
-            let uuid = s128.subdata(in: 0..<16)
+            let uuid = Data(s128.subdata(in: 0..<16).reversed())
             let data = s128.subdata(in: 16..<s128.endIndex)
             serviceData[uuid] = data
         }

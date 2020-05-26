@@ -62,6 +62,17 @@ class BLERelayReceiver: NSObject, ObservableObject, BLEReceiverProtocol {
         self.outputStreams.forEach({ $0.close() })
         self.outputStreams.removeAll()
     }
+    
+    /// TCP socket connections may fail. Therefore we want to reconnect after any issues
+    func reconnectServiceAfterFailure() {
+        //Close the connections
+        self.inputStreams.forEach({ $0.close() })
+        self.inputStreams.removeAll()
+        self.outputStreams.forEach({ $0.close() })
+        self.outputStreams.removeAll()
+        //Announce the service
+        self.announceService()
+    }
 
     /// Announce the service on all interfaces
     func announceService() {
@@ -155,7 +166,7 @@ class BLERelayReceiver: NSObject, ObservableObject, BLEReceiverProtocol {
                 if failedAttempts > 5 {
                     //Failed too often. Disconnect
                     Log.error(system: .BLERelay, message: "Failed reading too often. Disconnecting")
-                    self.stopScanningForAdvertisements()
+                    self.reconnectServiceAfterFailure()
                 } else {
                     self.receivingQueue.asyncAfter(deadline: .now() + 5.0) {
                         self.read(from: inputStream, failedAttempts: failedAttempts + 1)
@@ -300,6 +311,9 @@ extension BLERelayReceiver: StreamDelegate {
             ////                        self.read(from: inputStream)
             ////                    }
             //                }
+                
+                //Reconnect
+                self.reconnectServiceAfterFailure()
 
             default:
                 Log.info(

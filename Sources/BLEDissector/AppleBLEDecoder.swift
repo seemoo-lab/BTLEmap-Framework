@@ -34,7 +34,7 @@ struct AppleMDataDissector {
             dI += 1
             let advLength = data[dI]
             dI += 1
-            guard Int(advLength) + dI <= data.endIndex else {break}
+            guard advLength > 0 && Int(advLength) + dI <= data.endIndex else {break}
             let range = dI...dI+Int(advLength)-1
             let advData = data[range]
             

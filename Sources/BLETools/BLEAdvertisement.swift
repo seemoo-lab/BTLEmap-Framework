@@ -162,6 +162,8 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
         self.deviceName = deviceName
         self.manufacturerData = manufacturerData
         self.rssi.append(NSNumber(integerLiteral: Int(rssi)))
+        
+        self.dissectContent()
     }
     
     /// Intialize the BLE advertisement with the data of a relayed advertisement

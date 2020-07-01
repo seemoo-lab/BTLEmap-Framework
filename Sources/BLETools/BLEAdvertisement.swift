@@ -140,6 +140,7 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
         }
         
         self.update(with: advertisementData, rssi: rssi)
+        self.dissectContent()
     }
     
     /// Initialize a BLE advertisement with direct input. Can be used to init the BLE advertisement from other sources

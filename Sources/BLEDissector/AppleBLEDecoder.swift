@@ -34,7 +34,7 @@ struct AppleMDataDissector {
             dI += 1
             let advLength = data[dI]
             dI += 1
-            guard Int(advLength) + dI < data.endIndex else {break}
+            guard Int(advLength) + dI <= data.endIndex else {break}
             let range = dI...dI+Int(advLength)-1
             let advData = data[range]
             
@@ -69,7 +69,7 @@ struct AppleMDataDissector {
             
             for (description, decodedEntry) in sortedEntries {
                 
-                let bRange = Int(decodedEntry.byteRange.lowerBound)...Int(decodedEntry.byteRange.upperBound)
+                let bRange = advData.startIndex +  Int(decodedEntry.byteRange.lowerBound)...Int(decodedEntry.byteRange.upperBound) + advData.startIndex
                 
                 let subEntry = DissectedEntry(name: description, value: decodedEntry.value, data: advData[bRange], byteRange: bRange, subEntries: [])
                 

@@ -69,7 +69,14 @@ struct AppleMDataDissector {
             
             for (description, decodedEntry) in sortedEntries {
                 
-                let bRange = advData.startIndex +  Int(decodedEntry.byteRange.lowerBound)...Int(decodedEntry.byteRange.upperBound) + advData.startIndex
+                var bRange = advData.startIndex +  Int(decodedEntry.byteRange.lowerBound)...Int(decodedEntry.byteRange.upperBound) + advData.startIndex
+                
+                if bRange.upperBound >= advData.endIndex {
+                    bRange = bRange.lowerBound...advData.endIndex-1
+                }
+                if bRange.lowerBound < advData.startIndex {
+                    bRange = advData.startIndex...bRange.upperBound
+                }
                 
                 let subEntry = DissectedEntry(name: description, value: decodedEntry.value, data: advData[bRange], byteRange: bRange, subEntries: [])
                 

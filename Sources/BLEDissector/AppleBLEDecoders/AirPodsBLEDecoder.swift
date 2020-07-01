@@ -68,7 +68,7 @@ struct AirPodsBLEDecoder: AppleBLEDecoder {
         
         //Encrypted message until the end (9...)
         let encryptedMessage = data[sI...]
-        let encryptedRange = 9...UInt(sI.distance(to: data.endIndex)+9)
+        let encryptedRange = 9...data.endIndex-1
             describingDict["encrypted"] = DecodedEntry(value: encryptedMessage, byteRange:encryptedRange)
         
         //TODO: Ask Jiska if we have AirPods in da house

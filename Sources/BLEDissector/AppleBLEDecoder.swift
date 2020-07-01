@@ -8,7 +8,7 @@
 import Foundation
 
 public struct ManufacturerDataDissector {
-    static func dissect(data: Data) -> DissectedEntry {
+    public static func dissect(data: Data) -> DissectedEntry {
         var manufacturerData = DissectedEntry(name: "Manufacturer Data", value: data, data: data, byteRange: data.startIndex...data.endIndex, subEntries: [], explanatoryText: nil)
         
         
@@ -26,10 +26,6 @@ public struct ManufacturerDataDissector {
 
 struct AppleMDataDissector {
     static func dissect(data: Data) -> [DissectedEntry] {
-        //Get advertisement type
-        let advertisementType = data[0]
-        //All advertisements, but Offline Finding use TLVs
-        
         //Decode TLV
         var entries = [DissectedEntry]()
         var dI = 0
@@ -46,9 +42,6 @@ struct AppleMDataDissector {
         }
         
         return entries
-        
-        
-        
     }
     
     fileprivate static func dissectPart(advertisementType: UInt8, advData: Data, range: ClosedRange<Data.Index>) -> DissectedEntry {

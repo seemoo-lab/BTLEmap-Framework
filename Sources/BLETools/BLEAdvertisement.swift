@@ -37,6 +37,8 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
     /// Manufacturer Data of the advertisement
     public private(set) var manufacturerData: Data?
     
+    public private(set) var dissectedManufacturerData: Data?
+    
     /// True if the device marked itself as connectable
     @Published public var connectable: Bool = false
     
@@ -296,6 +298,10 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
             }.sorted(by: {$0.name < $1.name})
             
             self.dissectedServiceData = dissected
+        }
+        
+        if let manufacturerData = self.manufacturerData {
+            self.dissectedManufacturerData = ManufacturerDataDissector.dissect(data: manufacturerData)
         }
     }
     

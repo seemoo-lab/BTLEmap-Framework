@@ -47,7 +47,7 @@ public extension AppleBLEDecoding {
             //Additional not revered data
             
             if data.endIndex > i+1 {
-                let range = i...data.endIndex-1
+                let range = UInt(i)...UInt(data.endIndex-1)
                 let missingData = data[i..<data.endIndex]
                 describingDict["notParsed"] = DecodedEntry(value:  missingData, byteRange: range)
             }

@@ -108,7 +108,8 @@ extension Data {
     }
     
     func byteRangeToEnd(from index: Data.Index) -> ClosedRange<UInt> {
-        UInt(self.startIndex.distance(to: index))...UInt(startIndex.distance(to: self.endIndex))
+        //End index is not part of the accessible bytes. It's last + 1
+        UInt(self.startIndex.distance(to: index))...UInt(startIndex.distance(to: self.endIndex)-1)
     }
     
     func byteRange(from index: Data.Index, to toIndex: Data.Index) -> ClosedRange<UInt> {

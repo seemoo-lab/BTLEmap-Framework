@@ -420,7 +420,7 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
         case magicSwitch = 0x0B // Apple watch lost connection
 //        case nearbyAction = 0x0f // Change of device state e.g. joining wiFi
         
-        case unknownApple = 0x12
+        case offlineFinding = 0x12
         
         case unknown = 0x00
         
@@ -452,8 +452,8 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
                 return "HomeKit"
             case .magicSwitch:
                 return "Apple Watch Pairing"
-            case .unknownApple:
-                return "Unknown Apple"
+            case .offlineFinding:
+                return "Offline Finding"
             case .unknown:
                 return "Unknown"
             }

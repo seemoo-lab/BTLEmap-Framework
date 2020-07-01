@@ -37,7 +37,7 @@ public class BLEAdvertisment: CustomDebugStringConvertible, Identifiable, Observ
     /// Manufacturer Data of the advertisement
     public private(set) var manufacturerData: Data?
     
-    public private(set) var dissectedManufacturerData: Data?
+    public private(set) var dissectedManufacturerData: DissectedEntry?
     
     /// True if the device marked itself as connectable
     @Published public var connectable: Bool = false

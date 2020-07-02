@@ -18,57 +18,59 @@ struct AirPodsBLEDecoder: AppleBLEDecoder {
         
         var sI = data.startIndex
         let fixedNumber = data[sI] //Should 0x01 for AirPods and 0x03 for Apple Pencil
-        sI = sI.advanced(by: 1)
+        sI += 1
         
         guard fixedNumber == 0x01 else {throw Error.incorrectType}
         
         //2 bytes are the device model 1...2
-        let deviceModel = data[sI..<sI.advanced(by: 2)]
+        let deviceModel = data[sI...sI+1]
 //        describingDict["deviceModelHex"] = DecodedEntry(value:deviceModel.hexadecimal, byteRange:1...2)
         let deviceTypeModelName = DeviceType(rawValue: deviceModel.toUInt16(littleEndian: false))?.name ?? DeviceType.unknown.name
-        describingDict["deviceModel"] = DecodedEntry(value: deviceTypeModelName, byteRange: 1...2)
-        sI = sI.advanced(by: 2)
+        describingDict["deviceModel"] = DecodedEntry(value: deviceTypeModelName, byteRange: sI...sI+1)
+        sI += 2
         
         // 1 byte status (3)
         let status = data[sI]
-        describingDict["status"] = DecodedEntry(value: status, byteRange: 3...3)
-        sI = sI.advanced(by: 1)
+        describingDict["status"] = DecodedEntry(value: status, byteRange: sI...sI)
+        sI += 1
         
         // 1 byte battery level (4)
         let battery = data[sI]
         let leftBattery = (battery << 4) >> 4
         let rightBattery = battery >> 4
+        let batteryRange = sI...sI
         
-        describingDict["leftBattery"] = DecodedEntry(value: leftBattery, byteRange: 4...4)
-        describingDict["rightBattery"] = DecodedEntry(value: rightBattery, byteRange: 4...4)
-        sI = sI.advanced(by: 1)
+        describingDict["leftBattery"] = DecodedEntry(value: leftBattery, byteRange: batteryRange)
+        describingDict["rightBattery"] = DecodedEntry(value: rightBattery, byteRange: batteryRange)
+        sI += 1
         
         // 1 byte case state (5)
         let caseBatteryAndCharging = data[sI]
-        describingDict["caseBattery"] = DecodedEntry(value: (caseBatteryAndCharging << 4) >> 4, byteRange: 5...5)
-        describingDict["caseCharging"] = DecodedEntry(value: caseBatteryAndCharging & 0b0100_0000 > 0, byteRange: 5...5)
-        describingDict["rightCharging"] = DecodedEntry(value: caseBatteryAndCharging & 0b0010_0000 > 0, byteRange: 5...5)
-        describingDict["leftCharging"] = DecodedEntry(value: caseBatteryAndCharging & 0b0001_0000 > 0, byteRange: 5...5)
-        sI = sI.advanced(by: 1)
+        let caseRange = sI...sI
+        describingDict["caseBattery"] = DecodedEntry(value: (caseBatteryAndCharging << 4) >> 4, byteRange: caseRange)
+        describingDict["caseCharging"] = DecodedEntry(value: caseBatteryAndCharging & 0b0100_0000 > 0, byteRange: caseRange)
+        describingDict["rightCharging"] = DecodedEntry(value: caseBatteryAndCharging & 0b0010_0000 > 0, byteRange: caseRange)
+        describingDict["leftCharging"] = DecodedEntry(value: caseBatteryAndCharging & 0b0001_0000 > 0, byteRange: caseRange)
+        sI += 1
         
         // 1 byte lid open counter (6)
         let lidOpenCounter = data[sI] //Maybe used for encryption?
-        describingDict["lidOpenCounter"] = DecodedEntry(value: lidOpenCounter, byteRange: 6...6)
-        sI = sI.advanced(by: 1)
+        describingDict["lidOpenCounter"] = DecodedEntry(value: lidOpenCounter, byteRange: sI...sI)
+        sI += 1
         
         // 1 byte for device color (7)
         let deciceColorByte = data[sI]
         let deviceColor = DeviceColor(rawValue: deciceColorByte) ?? DeviceColor.unknownColor
-        describingDict["deviceColor"] = DecodedEntry(value: deviceColor, byteRange: 7...7)
-        sI = sI.advanced(by: 1)
+        describingDict["deviceColor"] = DecodedEntry(value: deviceColor, byteRange:sI...sI)
+        sI += 1
         
         // Fixed Zero (8)
         let fixedZero = data[sI] //Should be 0x00
-        sI = sI.advanced(by: 1)
+        sI += 1
         
         //Encrypted message until the end (9...)
         let encryptedMessage = data[sI...]
-        let encryptedRange: ClosedRange<UInt> = 9...UInt(data.endIndex-1)
+        let encryptedRange = sI...encryptedMessage.endIndex-1
             describingDict["encrypted"] = DecodedEntry(value: encryptedMessage, byteRange:encryptedRange)
         
         //TODO: Ask Jiska if we have AirPods in da house

@@ -13,9 +13,10 @@ public struct ManufacturerDataDissector {
         
         
         //Check if this is matches Apple's company id
-        let companyId = data.subdata(in: 0..<2)
+        
+        let companyId = data.subdata(in: data.startIndex..<data.startIndex+2)
         if companyId == Data([0x4c, 00]) {
-            let appleAdvertisement = data.subdata(in: 2..<data.endIndex)
+            let appleAdvertisement = data[(data.startIndex+2)...]
             let entries = AppleMDataDissector.dissect(data: appleAdvertisement)
             manufacturerData.subEntries.append(contentsOf: entries)
         }
@@ -28,7 +29,7 @@ struct AppleMDataDissector {
     static func dissect(data: Data) -> [DissectedEntry] {
         //Decode TLV
         var entries = [DissectedEntry]()
-        var dI = 0
+        var dI = data.startIndex
         while dI < data.endIndex {
             let advType = data[dI]
             dI += 1
@@ -69,7 +70,7 @@ struct AppleMDataDissector {
             
             for (description, decodedEntry) in sortedEntries {
                 
-                var bRange = advData.startIndex +  Int(decodedEntry.byteRange.lowerBound)...Int(decodedEntry.byteRange.upperBound) + advData.startIndex
+                var bRange = Int(decodedEntry.byteRange.lowerBound)...Int(decodedEntry.byteRange.upperBound)
                 
                 if bRange.upperBound >= advData.endIndex {
                     bRange = bRange.lowerBound...advData.endIndex-1
@@ -138,16 +139,16 @@ public struct AppleBLEDecoding {
         }
         
         public var value: Any
-        public var byteRange: ClosedRange<UInt>
+        public var byteRange: ClosedRange<Data.Index>
         
-        init(value: Any, byteRange: ClosedRange<UInt>) {
+        init(value: Any, byteRange: ClosedRange<Data.Index>) {
             self.value = value
             self.byteRange = byteRange
         }
         
         init(value: Any, dataRange: ClosedRange<Data.Index>, data: Data) {
             self.value = value
-            self.byteRange = data.byteRange(from: dataRange.lowerBound, to: dataRange.upperBound)
+            self.byteRange = dataRange
         }
     }
 }

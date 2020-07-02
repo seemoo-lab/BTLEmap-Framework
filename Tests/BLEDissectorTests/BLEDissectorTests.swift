@@ -51,8 +51,10 @@ final class Apple_BLE_DecoderTests: XCTestCase {
         let dissected = ManufacturerDataDissector.dissect(data: hexData)
         
         XCTAssertEqual(dissected.name, "Manufacturer Data")
+        XCTAssertEqual(dissected.byteRange.lowerBound, 0)
         XCTAssertEqual(dissected.subEntries.count, 1)
         XCTAssertEqual(dissected.subEntries[0].name, "Nearby")
+        XCTAssertEqual(dissected.subEntries[0].byteRange.lowerBound, 4)
     }
     
     func testOfflineFindingMfD() {

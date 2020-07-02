@@ -17,16 +17,16 @@ public extension AppleBLEDecoding {
             var i = data.startIndex
             var describingDict = [String: DecodedEntry]()
             
-            describingDict["version"] = DecodedEntry(value: data[i], byteRange: data.singleByteRange(with: i))
+            describingDict["version"] = DecodedEntry(value: data[i], byteRange: i...i)
             i+=1
-            describingDict["flags"] = DecodedEntry(value: data[i], byteRange: data.singleByteRange(with: i))
+            describingDict["flags"] = DecodedEntry(value: data[i], byteRange: i...i)
             i+=1
-            describingDict["batteryLife"] = DecodedEntry(value: data[i], byteRange: data.singleByteRange(with: i))
+            describingDict["batteryLife"] = DecodedEntry(value: data[i], byteRange: i...i)
             i+=1
-            describingDict["data"] = DecodedEntry(value: data[i], byteRange: data.singleByteRange(with: i))
+            describingDict["data"] = DecodedEntry(value: data[i], byteRange: i...i)
             i+=1
             
-            let cellularConnection = DecodedEntry(value: data[i], byteRange: data.singleByteRange(with: i))
+            let cellularConnection = DecodedEntry(value: data[i], byteRange: i...i)
             
             let connectionType = CellularConnection(rawValue: cellularConnection.value as! UInt8) ?? CellularConnection.unkown
             
@@ -34,7 +34,7 @@ public extension AppleBLEDecoding {
             describingDict["cellularConnectionRaw"] = cellularConnection
             i+=1
             
-            describingDict["cellSignal"] = DecodedEntry(value: data[i], byteRange: data.singleByteRange(with: i))
+            describingDict["cellSignal"] = DecodedEntry(value: data[i], byteRange: i...i)
             
             return describingDict
         }

@@ -18,12 +18,12 @@ public extension AppleBLEDecoding {
             var describingDict = [String: DecodedEntry]()
             
             let magicSwitchData = data[i..<i+2]
-            describingDict["magicSwitchData"] = DecodedEntry(value: magicSwitchData, byteRange: data.byteRange(from: i, to: i+1))
+            describingDict["magicSwitchData"] = DecodedEntry(value: magicSwitchData, byteRange: i...i+1)
             i+=2
             
             let watchWristInt = data[i]
             let watchOnWrist = WatchOnWrist(rawValue: watchWristInt) ?? .unknown
-            describingDict["watchOnWrist"] = DecodedEntry(value: watchOnWrist, byteRange: data.byteRange(from: i, to: i))
+            describingDict["watchOnWrist"] = DecodedEntry(value: watchOnWrist, byteRange: i...i)
             
             return describingDict
         }

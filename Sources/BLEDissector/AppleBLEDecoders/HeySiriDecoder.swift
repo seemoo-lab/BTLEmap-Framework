@@ -18,21 +18,21 @@ public extension AppleBLEDecoding {
             var describingDict = [String: DecodedEntry]()
             
             let perceptualHash = data[i..<i+2]
-            describingDict["perceptualHashHex"] = DecodedEntry(value: perceptualHash.hexadecimal, byteRange: data.byteRange(from: i, to: i+1))
+            describingDict["perceptualHashHex"] = DecodedEntry(value: perceptualHash.hexadecimal, byteRange: i...i+2)
             i+=2
             
             let snr = data[i]
-            describingDict["SNR"] = DecodedEntry(value: snr, byteRange: data.byteRange(from: i, to: i))
+            describingDict["SNR"] = DecodedEntry(value: snr, byteRange: i...i)
             i+=1
             
             let confidence = data[i]
-            describingDict["confidence"] = DecodedEntry(value: confidence, byteRange: data.byteRange(from: i, to: i))
+            describingDict["confidence"] = DecodedEntry(value: confidence, byteRange: i...i)
             i+=1
             
             let deviceClass = data[i..<i+2]
-            describingDict["deviceClassData"] = DecodedEntry(value: deviceClass.hexadecimal, byteRange: data.byteRange(from: i, to: i+1))
+//            describingDict["deviceClassData"] = DecodedEntry(value: deviceClass.hexadecimal, byteRange: i...i+1)
             let deviceClassD = DeviceClass(rawValue: deviceClass.toUInt16(littleEndian: false))  ?? DeviceClass.unknown
-            describingDict["deviceClass"] = DecodedEntry(value: deviceClassD, byteRange: data.byteRange(from: i, to: i+1))
+            describingDict["deviceClass"] = DecodedEntry(value: deviceClassD, byteRange: i...i+1)
             
             
             return describingDict

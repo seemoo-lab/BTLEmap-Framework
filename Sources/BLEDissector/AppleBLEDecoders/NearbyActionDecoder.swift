@@ -18,37 +18,37 @@ public extension AppleBLEDecoding {
             
             // Action flags one byte - 1
             let actionFlags = data[i]
-            describingDict["actionFlags"] = DecodedEntry(value: actionFlags, byteRange: 1...1)
+            describingDict["actionFlags"] = DecodedEntry(value: actionFlags, byteRange: i...i)
             i += 1
             
             // Action type one byte - 2
             let actionType = data[i]
             let actionTypeDecoded = ActionType(rawValue: actionType) ?? ActionType.unknown
-            describingDict["actionType"] = DecodedEntry(value: actionTypeDecoded, byteRange: 2...2)
-            describingDict["actionTypeFlag"] = DecodedEntry(value: actionType, byteRange: 2...2)
+            describingDict["actionType"] = DecodedEntry(value: actionTypeDecoded, byteRange: i...i)
+//            describingDict["actionTypeFlag"] = DecodedEntry(value: actionType, byteRange: 2...2)
             i += 1
             
             //Auth tag 3 bytes 2...4
             let authTag = data[i..<i+3]
-            describingDict["authTag"] = DecodedEntry(value: authTag, byteRange: 2...4)
+            describingDict["authTag"] = DecodedEntry(value: authTag, byteRange: i...i+2)
             i += 3
             
             let actionParameters = data[i..<data.endIndex]
-            describingDict["actionParameters"] = DecodedEntry(value: actionParameters, byteRange: data.byteRangeToEnd(from: i))
+            describingDict["actionParameters"] = DecodedEntry(value: actionParameters, byteRange: i...i)
             
             if actionType == ActionType.wifiPassword.rawValue && data.count >= 14 {
                 //Wi-Fi Password sharing
                 let appleIDHash = data[i...i+2]
-                describingDict["appleIdHash"] = DecodedEntry(value: appleIDHash, byteRange: data.byteRange(from: i, to: i+2))
+                describingDict["appleIdHash"] = DecodedEntry(value: appleIDHash, byteRange: i...i+2)
                 i+=3
                 let phoneNumHash = data[i...i+2]
-                describingDict["phoneNumberHash"] = DecodedEntry(value: phoneNumHash, byteRange: data.byteRange(from: i, to: i+2))
+                describingDict["phoneNumberHash"] = DecodedEntry(value: phoneNumHash, byteRange: i...i+2)
                 i+=3
                 let mailHash = data[i...i+2]
-                describingDict["emailHash"] = DecodedEntry(value: mailHash, byteRange: data.byteRange(from: i, to: i+2))
+                describingDict["emailHash"] = DecodedEntry(value: mailHash, byteRange: i...i+2)
                 i+=3
                 let ssidHash = data[i...i+2]
-                describingDict["wifiSSIDHash"] = DecodedEntry(value: ssidHash, byteRange: data.byteRange(from: i, to: i+2))
+                describingDict["wifiSSIDHash"] = DecodedEntry(value: ssidHash, byteRange: i...i+2)
                  
             }
             

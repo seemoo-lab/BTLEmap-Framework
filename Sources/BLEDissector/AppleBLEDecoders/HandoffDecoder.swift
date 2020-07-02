@@ -19,25 +19,25 @@ public extension AppleBLEDecoding {
             
             let clipboardStatus = data[i]
             let publicClipboard = PublicClipboardStatus(rawValue: clipboardStatus) ?? PublicClipboardStatus.unknown
-            describingDict["clipboardStatus"] = DecodedEntry(value: publicClipboard, byteRange: data.byteRange(from: i, to: i))
-            describingDict["clipboardStatusRaw"] = DecodedEntry(value: clipboardStatus, byteRange: data.singleByteRange(with: i))
+            describingDict["clipboardStatus"] = DecodedEntry(value: publicClipboard, byteRange: i...i)
+//            describingDict["clipboardStatusRaw"] = DecodedEntry(value: clipboardStatus, byteRange: i...i)
             i+=1
             
             let iv = data[i..<i+2]
-            describingDict["ivData"] = DecodedEntry(value: iv, dataRange: i...i+1, data: data)
+//            describingDict["ivData"] = DecodedEntry(value: iv, dataRange: i...i+1, data: data)
             describingDict["iv"] = DecodedEntry(value: iv.toUInt16(littleEndian: true), dataRange: i...i+1, data: data)
             i+=2
             
             let authTag = data[i]
-            describingDict["authTag"] = DecodedEntry(value: authTag, byteRange: data.singleByteRange(with: i))
+            describingDict["authTag"] = DecodedEntry(value: authTag, byteRange:i...i)
             i+=1
             
             let authenticatedData = data[i]
-            describingDict["authenticatedData"] = DecodedEntry(value: authenticatedData, byteRange: data.singleByteRange(with: i))
+            describingDict["authenticatedData"] = DecodedEntry(value: authenticatedData, byteRange: i...i)
             i+=1
             
             let encryptedData = data[i..<data.endIndex]
-            describingDict["encryptedData"] = DecodedEntry(value: encryptedData, byteRange: data.byteRangeToEnd(from: i))
+            describingDict["encryptedData"] = DecodedEntry(value: encryptedData, byteRange: i...data.endIndex-1)
             
             return describingDict
         }

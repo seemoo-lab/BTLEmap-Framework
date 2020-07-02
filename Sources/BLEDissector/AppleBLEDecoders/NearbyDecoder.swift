@@ -19,7 +19,7 @@ public extension AppleBLEDecoding {
             guard data.count >= 2 else {throw Error.incorrectLength}
             
             //Flags & action code 1 byte 1
-            let flagsRange = (UInt(1)...UInt(1))
+            let flagsRange = i...i
             
             let flags = data[i]
             let statusFlags = flags >> 4
@@ -27,11 +27,11 @@ public extension AppleBLEDecoding {
             let actionCode = (flags << 4) >> 4
             let actionCodeDecoded = ActionCode(rawValue: actionCode) ?? ActionCode.activityLevelUnknown
             describingDict["actionCode"] = DecodedEntry(value: actionCodeDecoded, byteRange: flagsRange)
-            i = i.advanced(by: 1)
+            i += 1
             
             // wifiState 1 byte 2
             let iOSDependent = data[i]
-            let wifiFlagRange = UInt(2)...UInt(2)
+            let wifiFlagRange = i...i
             let wifiFlags = DeviceFlags(rawValue: iOSDependent) ?? DeviceFlags.unknown
             describingDict["wiFiState"] = DecodedEntry(value: wifiFlags, byteRange: wifiFlagRange)
             describingDict["wiFiStateFlag"] = DecodedEntry(value: iOSDependent, byteRange: wifiFlagRange)
@@ -39,15 +39,16 @@ public extension AppleBLEDecoding {
             
             if data.count >= i+3 {
                 //Authentication tag 3 bytes. 3...5
+                let range = i...i+2
                 let authTag = data[i..<i+3]
-                describingDict["authTag"] = DecodedEntry(value:  authTag, byteRange:UInt(i.distance(to: data.startIndex))...UInt(i.distance(to: data.startIndex)+3))
+                describingDict["authTag"] = DecodedEntry(value:  authTag, byteRange:range)
                 i += 3
             }
             
             //Additional not revered data
             
             if data.endIndex > i+1 {
-                let range = UInt(i)...UInt(data.endIndex-1)
+                let range = i...i+1
                 let missingData = data[i..<data.endIndex]
                 describingDict["notParsed"] = DecodedEntry(value:  missingData, byteRange: range)
             }

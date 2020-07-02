@@ -19,7 +19,7 @@ public extension AppleBLEDecoding {
             var describingDict = [String: DecodedEntry]()
             
             let identifier = data[i..<i+4]
-            describingDict["identifier"] = DecodedEntry(value: identifier, byteRange: data.byteRange(from: i, to: i+3))
+            describingDict["identifier"] = DecodedEntry(value: identifier, byteRange: i...i+3)
             
             return describingDict
         }

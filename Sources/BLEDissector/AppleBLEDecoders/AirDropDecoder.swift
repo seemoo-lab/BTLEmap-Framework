@@ -23,21 +23,21 @@ public extension AppleBLEDecoding {
                 Log.error(system: .ble_decoder, message: "Expected 8 bytes of zeros")
                 return describingDict
             }
-            describingDict["zeroPadding"] = DecodedEntry(value: zeros, byteRange: data.byteRange(from: i, to: i+7))
+            describingDict["zeroPadding"] = DecodedEntry(value: zeros, byteRange: i...i+7)
             
             i += 8
             
             let airDropVersion = data[i]
-            describingDict["AirDropVersion"] = DecodedEntry(value: airDropVersion, byteRange: data.byteRange(from: i, to: i))
+            describingDict["AirDropVersion"] = DecodedEntry(value: airDropVersion, byteRange: i...i)
             i+=1
             
             var contactHashes = [Data]()
-            var hashRange = UInt(i)...UInt(i)
+            var hashRange = i...i
             
             while i+2 <= data.endIndex {
                 let hash = data[i..<i+2]
                 contactHashes.append(hash)
-                hashRange = hashRange.lowerBound...UInt(i+2)
+                hashRange = hashRange.lowerBound...i+2
                 i+=2
             }
             

@@ -66,6 +66,17 @@ final class Apple_BLE_DecoderTests: XCTestCase {
         XCTAssertEqual(dissected.subEntries.count, 1)
         XCTAssertEqual(dissected.subEntries[0].name, "Offline Finding")
     }
+    
+    func testMultipleAdvertisements() {
+        let hexData = "4C 00 0C 0E 00 31 2A 3A 3C 7D FA 7F C8 E7 C8 63 9B FC 10 05 01 18 10 96 B1".hexadecimal!
+        
+        let dissected = ManufacturerDataDissector.dissect(data: hexData)
+        XCTAssertEqual(dissected.name, "Manufacturer Data")
+        XCTAssertEqual(dissected.byteRange.lowerBound, 0)
+        XCTAssertEqual(dissected.subEntries.count, 2)
+        XCTAssertEqual(dissected.subEntries[0].name, "Handoff / UC")
+        XCTAssertEqual(dissected.subEntries[1].name, "Nearby")
+    }
 
     static var allTests = [
         ("testDecodeAirpods", testDecodeAirpods),

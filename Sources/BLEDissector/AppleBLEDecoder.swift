@@ -38,6 +38,7 @@ struct AppleMDataDissector {
             guard advLength > 0 && Int(advLength) + dI <= data.endIndex else {break}
             let range = dI...dI+Int(advLength)-1
             let advData = data[range]
+            dI += Int(advLength)
             
             entries.append(self.dissectPart(advertisementType: advType, advData: advData, range: range))
         }

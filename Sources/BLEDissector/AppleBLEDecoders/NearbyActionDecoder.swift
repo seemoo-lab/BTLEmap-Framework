@@ -37,21 +37,21 @@ public extension AppleBLEDecoding {
             
             if actionType == ActionType.wifiPassword.byteValue && data.count >= 14 {
                 //Wi-Fi Password sharing
-                let appleIDHash = data[i...i+2]
-                describingDict["appleIdHash"] = DecodedEntry(value: appleIDHash, byteRange: i...i+2)
-                i+=3
-                let phoneNumHash = data[i...i+2]
-                describingDict["phoneNumberHash"] = DecodedEntry(value: phoneNumHash, byteRange: i...i+2)
-                i+=3
-                let mailHash = data[i...i+2]
-                describingDict["emailHash"] = DecodedEntry(value: mailHash, byteRange: i...i+2)
-                i+=3
-                let ssidHash = data[i...i+2]
-                describingDict["wifiSSIDHash"] = DecodedEntry(value: ssidHash, byteRange: i...i+2)
+                let appleIDHash = data[i...i+1]
+                describingDict["appleIdHash"] = DecodedEntry(value: appleIDHash, byteRange: i...i+1)
+                i+=2
+                let phoneNumHash = data[i...i+1]
+                describingDict["phoneNumberHash"] = DecodedEntry(value: phoneNumHash, byteRange: i...i+1)
+                i+=2
+                let mailHash = data[i...i+1]
+                describingDict["emailHash"] = DecodedEntry(value: mailHash, byteRange: i...i+1)
+                i+=2
+                let ssidHash = data[i...i+1]
+                describingDict["wifiSSIDHash"] = DecodedEntry(value: ssidHash, byteRange: i...i+1)
                  
             }else {
                 let actionParameters = data[i..<data.endIndex]
-                describingDict["actionParameters"] = DecodedEntry(value: actionParameters, byteRange: i...i)
+                describingDict["actionParameters"] = DecodedEntry(value: actionParameters, byteRange: i...data.endIndex-1)
             }
             
             
@@ -68,7 +68,7 @@ public extension AppleBLEDecoding {
                 for c in ActionType.allCases {
                     if c.byteValue == rawValue {
                         self = c
-                        return 
+                        return
                     }
                 }
                 

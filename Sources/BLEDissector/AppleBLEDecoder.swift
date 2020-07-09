@@ -33,12 +33,21 @@ struct AppleMDataDissector {
         while dI < data.endIndex {
             let advType = data[dI]
             dI += 1
-            let advLength = data[dI]
-            dI += 1
+            var advLength = data[dI]
+            
+            
+            if advType == AppleAdvertisementType.homeKit.rawValue {
+                //HomeKit uses different length calculations
+                advLength = ((advLength << 3) >> 3) + 1
+            }else {
+                dI += 1
+            }
+            
             guard advLength > 0 && Int(advLength) + dI <= data.endIndex else {break}
             let range = dI...dI+Int(advLength)-1
             let advData = data[range]
             dI += Int(advLength)
+            
             
             entries.append(self.dissectPart(advertisementType: advType, advData: advData, range: range))
         }

@@ -88,6 +88,26 @@ final class Apple_BLE_DecoderTests: XCTestCase {
         XCTAssertEqual(dissected.subEntries[0].name, "Nearby Action")
         
     }
+    
+    func testdissectHomeKitVersion2() {
+        let homeKitAdvertisement = "4C 00 06 31 00 96 0A BB 96 57 6C 0A 00 8F 01 02 02 3E C6 3B BA".hexadecimal!
+        let dissected = ManufacturerDataDissector.dissect(data: homeKitAdvertisement)
+        
+        XCTAssertEqual(dissected.name, "Manufacturer Data")
+        XCTAssertEqual(dissected.byteRange.lowerBound, 0)
+        XCTAssertEqual(dissected.subEntries.count, 1)
+        XCTAssertEqual(dissected.subEntries[0].name, "HomeKit")
+    }
+    
+    func testdissectHomeKitVersion1() {
+        let homeKitAdvertisement = "4C 00 06 CD 00 9C 00 51 D1 FE B0 09 00 AD 0C 03 02".hexadecimal!
+        let dissected = ManufacturerDataDissector.dissect(data: homeKitAdvertisement)
+        
+        XCTAssertEqual(dissected.name, "Manufacturer Data")
+        XCTAssertEqual(dissected.byteRange.lowerBound, 0)
+        XCTAssertEqual(dissected.subEntries.count, 1)
+        XCTAssertEqual(dissected.subEntries[0].name, "HomeKit")
+    }
 
     static var allTests = [
         ("testDecodeAirpods", testDecodeAirpods),

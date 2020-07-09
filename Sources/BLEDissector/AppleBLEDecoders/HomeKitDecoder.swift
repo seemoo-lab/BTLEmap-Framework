@@ -17,6 +17,13 @@ public extension AppleBLEDecoding {
             var i = data.startIndex
             var describingDict = [String: DecodedEntry]()
             
+            //AIL - 8 bits for Advertising Interval and Length, the 3 significant bits specify the advertising interval currently being used by the accessory, and the remaining 5 bits is the length of the remaining bytes in the manufacturer specific data which shall be set to the value 13 (i.e the lower nibble must be set to 0xD).
+            let lengthSubtype = data[i]
+            
+            let advertisingSubtype = lengthSubtype >> 5
+            describingDict["Advertising Format Subtype"] = DecodedEntry(value: advertisingSubtype, byteRange: i...i)
+            i+=1
+            
             let status = data[i]
             describingDict["status"] = DecodedEntry(value: status, byteRange: i...i)
             i+=1
@@ -39,6 +46,12 @@ public extension AppleBLEDecoding {
             
             let compatibleversion = data[i]
             describingDict["compatibleVersion"] = DecodedEntry(value: compatibleversion, byteRange: i...i)
+            i += 1
+            
+            if i < data.endIndex {
+                let setupHash = data[i..<i+4]
+                describingDict["Setup Hash"] = DecodedEntry(value: setupHash, byteRange: i...i+3)
+            }
             
             return describingDict
         }

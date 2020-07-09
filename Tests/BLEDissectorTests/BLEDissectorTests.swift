@@ -86,6 +86,7 @@ final class Apple_BLE_DecoderTests: XCTestCase {
         XCTAssertEqual(dissected.byteRange.lowerBound, 0)
         XCTAssertEqual(dissected.subEntries.count, 1)
         XCTAssertEqual(dissected.subEntries[0].name, "Nearby Action")
+        
     }
 
     static var allTests = [

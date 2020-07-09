@@ -35,9 +35,6 @@ public extension AppleBLEDecoding {
             
             guard data.endIndex > i else {return describingDict}
             
-            let actionParameters = data[i..<data.endIndex]
-            describingDict["actionParameters"] = DecodedEntry(value: actionParameters, byteRange: i...i)
-            
             if actionType == ActionType.wifiPassword.byteValue && data.count >= 14 {
                 //Wi-Fi Password sharing
                 let appleIDHash = data[i...i+2]
@@ -52,6 +49,9 @@ public extension AppleBLEDecoding {
                 let ssidHash = data[i...i+2]
                 describingDict["wifiSSIDHash"] = DecodedEntry(value: ssidHash, byteRange: i...i+2)
                  
+            }else {
+                let actionParameters = data[i..<data.endIndex]
+                describingDict["actionParameters"] = DecodedEntry(value: actionParameters, byteRange: i...i)
             }
             
             
@@ -68,6 +68,7 @@ public extension AppleBLEDecoding {
                 for c in ActionType.allCases {
                     if c.byteValue == rawValue {
                         self = c
+                        return 
                     }
                 }
                 

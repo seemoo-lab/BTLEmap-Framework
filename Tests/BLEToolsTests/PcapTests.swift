@@ -91,31 +91,31 @@ class PcapTests: XCTestCase {
         self.wait(for: [expect], timeout: .infinity)
     }
     
-    func testBLEScannerPcapImport() {
-        
-        let pcapURL = Bundle(for: PcapTests.self).url(forResource: "exported", withExtension: "pcap")!
-        let pcapData = try! Data(contentsOf: pcapURL)
-        
-        let expect = expectation(description: "PCAP Import")
-        let scanner = BLEScanner(filterDuplicates: false, receiverType: .coreBluetooth, autoconnect: false)
-        scanner.scanning = false
-        
-        scanner.importPcap(from: pcapData) { (result) in
-            switch result {
-            case .success(_):
-                break
-            case .failure(let error):
-                XCTFail(String(describing: error))
-            }
-            
-            expect.fulfill()
-            
-            XCTAssert(scanner.advertisements.count > 0 )
-            XCTAssert(scanner.deviceList.count > 0)
-        }
-        
-        self.wait(for: [expect], timeout: .infinity)
-    }
+//    func testBLEScannerPcapImport() {
+//
+//        let pcapURL = Bundle(for: PcapTests.self).url(forResource: "exported", withExtension: "pcap")!
+//        let pcapData = try! Data(contentsOf: pcapURL)
+//
+//        let expect = expectation(description: "PCAP Import")
+//        let scanner = BLEScanner(filterDuplicates: false, receiverType: .coreBluetooth, autoconnect: false)
+//        scanner.scanning = false
+//
+//        scanner.importPcap(from: pcapData) { (result) in
+//            switch result {
+//            case .success(_):
+//                break
+//            case .failure(let error):
+//                XCTFail(String(describing: error))
+//            }
+//
+//            expect.fulfill()
+//
+//            XCTAssert(scanner.advertisements.count > 0 )
+//            XCTAssert(scanner.deviceList.count > 0)
+//        }
+//
+//        self.wait(for: [expect], timeout: .infinity)
+//    }
     
     func testServices() {
         let advertisement = self.emptyAdvertisement()

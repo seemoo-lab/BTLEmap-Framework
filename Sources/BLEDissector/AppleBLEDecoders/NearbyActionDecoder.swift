@@ -23,7 +23,7 @@ public extension AppleBLEDecoding {
             
             // Action type one byte - 2
             let actionType = data[i]
-            let actionTypeDecoded = ActionType(rawValue: actionType) ?? ActionType.unknown
+            let actionTypeDecoded = ActionType(rawValue: actionType)
             describingDict["actionType"] = DecodedEntry(value: actionTypeDecoded, byteRange: i...i)
 //            describingDict["actionTypeFlag"] = DecodedEntry(value: actionType, byteRange: 2...2)
             i += 1
@@ -33,10 +33,12 @@ public extension AppleBLEDecoding {
             describingDict["authTag"] = DecodedEntry(value: authTag, byteRange: i...i+2)
             i += 3
             
+            guard data.endIndex > i else {return describingDict}
+            
             let actionParameters = data[i..<data.endIndex]
             describingDict["actionParameters"] = DecodedEntry(value: actionParameters, byteRange: i...i)
             
-            if actionType == ActionType.wifiPassword.rawValue && data.count >= 14 {
+            if actionType == ActionType.wifiPassword.byteValue && data.count >= 14 {
                 //Wi-Fi Password sharing
                 let appleIDHash = data[i...i+2]
                 describingDict["appleIdHash"] = DecodedEntry(value: appleIDHash, byteRange: i...i+2)
@@ -56,28 +58,90 @@ public extension AppleBLEDecoding {
             return describingDict
         }
         
-        public enum ActionType: UInt8 {
-            case unknown = 0x00
-            case appleTVSetup = 0x01
-            case mobileBackup = 0x02
-            case watchSetup = 0x05
-            case appleTVPairing = 0x06
-            case interntRelay = 0x07
-            case wifiPassword = 0x08
-            case iosSetup = 0x09
-            case repair = 0x0a
-            case speakerSetup = 0x0b
-            case applePay = 0x0c
-            case homeAudioSetup = 0x0d
-            case developerToolsPairingRequest = 0x0e
-            case answeredCall = 0x0f
-            case endedCall = 0x10
-            case ddPing = 0x11
-            case ddPong = 0x12
-            case companionLinkProximity = 0x14
-            case remoteManagement = 0x15
-            case remoteAutofillPong = 0x16
-            case remoteDisplay = 0x17
+        public enum ActionType: CaseIterable {
+            public static var allCases: [AppleBLEDecoding.NearbyActionDecoder.ActionType] = [.answeredCall, .applePay, .appleTVPairing, .appleTVSetup,  .companionLinkProximity, .ddPing, .ddPong, .developerToolsPairingRequest, .endedCall, .homeAudioSetup,  .interntRelay, .iosSetup, .mobileBackup, .remoteAutofillPong, .remoteDisplay, .remoteManagement, .repair, .speakerSetup, .watchSetup, .wifiPassword]
+            
+            public typealias AllCases = [ActionType]
+            
+            
+            public init(rawValue: UInt8) {
+                for c in ActionType.allCases {
+                    if c.byteValue == rawValue {
+                        self = c
+                    }
+                }
+                
+                self = ActionType.unknown(type: rawValue)
+            }
+            
+            var byteValue: UInt8 {
+                switch self {
+                case .unknown(type: let type):
+                    return type
+                case .appleTVSetup:
+                    return 0x01
+                case .mobileBackup:
+                    return 0x02
+                case .watchSetup:
+                    return 5
+                case .appleTVPairing:
+                    return 6
+                case .interntRelay:
+                    return 7
+                case .wifiPassword:
+                    return 8
+                case .iosSetup:
+                    return 9
+                case .repair:
+                    return 0x0a
+                case .speakerSetup:
+                    return 0x0b
+                case .applePay:
+                    return 0x0c
+                case .homeAudioSetup:
+                    return 0x0d
+                case .developerToolsPairingRequest:
+                    return 0x0e
+                case .answeredCall:
+                    return 0x0f
+                case .endedCall:
+                    return 0x10
+                case .ddPing:
+                    return 0x11
+                case .ddPong:
+                    return 0x12
+                case .companionLinkProximity:
+                    return 0x14
+                case .remoteManagement:
+                    return 0x15
+                case .remoteAutofillPong:
+                    return 0x16
+                case .remoteDisplay:
+                    return 0x17
+                }
+            }
+            
+            case unknown(type: UInt8)
+            case appleTVSetup
+            case mobileBackup
+            case watchSetup
+            case appleTVPairing
+            case interntRelay
+            case wifiPassword
+            case iosSetup
+            case repair
+            case speakerSetup
+            case applePay
+            case homeAudioSetup
+            case developerToolsPairingRequest
+            case answeredCall
+            case endedCall
+            case ddPing
+            case ddPong
+            case companionLinkProximity
+            case remoteManagement
+            case remoteAutofillPong
+            case remoteDisplay
         }
         
     }

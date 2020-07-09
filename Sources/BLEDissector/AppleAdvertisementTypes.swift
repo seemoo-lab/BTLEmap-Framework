@@ -36,9 +36,9 @@ enum AppleAdvertisementType: UInt, CaseIterable {
             case .instantHotspot:
                 return "Instant Hotspot"
             case .nearby:
-                return "Nearby"
+                return "Nearby Info"
             case .wifiPasswordSharing:
-                return "Wi-Fi Password sharing"
+                return "Nearby Action"
             case .wifiSettings:
                 return "Wi-Fi Settings"
             case .airDrop:

@@ -53,7 +53,7 @@ final class Apple_BLE_DecoderTests: XCTestCase {
         XCTAssertEqual(dissected.name, "Manufacturer Data")
         XCTAssertEqual(dissected.byteRange.lowerBound, 0)
         XCTAssertEqual(dissected.subEntries.count, 1)
-        XCTAssertEqual(dissected.subEntries[0].name, "Nearby")
+        XCTAssertEqual(dissected.subEntries[0].name, "Nearby Info")
         XCTAssertEqual(dissected.subEntries[0].byteRange.lowerBound, 4)
     }
     
@@ -75,7 +75,17 @@ final class Apple_BLE_DecoderTests: XCTestCase {
         XCTAssertEqual(dissected.byteRange.lowerBound, 0)
         XCTAssertEqual(dissected.subEntries.count, 2)
         XCTAssertEqual(dissected.subEntries[0].name, "Handoff / UC")
-        XCTAssertEqual(dissected.subEntries[1].name, "Nearby")
+        XCTAssertEqual(dissected.subEntries[1].name, "Nearby Info")
+    }
+    
+    func testNearbyActionDecoder() {
+        let actionAdvData = "4c000f05a0336f0c56".hexadecimal!
+        let dissected = ManufacturerDataDissector.dissect(data: actionAdvData)
+        
+        XCTAssertEqual(dissected.name, "Manufacturer Data")
+        XCTAssertEqual(dissected.byteRange.lowerBound, 0)
+        XCTAssertEqual(dissected.subEntries.count, 1)
+        XCTAssertEqual(dissected.subEntries[0].name, "Nearby Action")
     }
 
     static var allTests = [

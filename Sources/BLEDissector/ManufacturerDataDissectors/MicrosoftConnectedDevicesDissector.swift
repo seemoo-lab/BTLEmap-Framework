@@ -13,7 +13,7 @@ public struct MicrosoftDissector: DataDissector {
         var entries = [DissectedEntry]()
         
         //Needs to be 24 bytes
-        guard data.count == 24 else {return [] }
+        guard data.count >= 24 else {return [] }
         
         var i = data.startIndex
         let scenarioType = data[i]

@@ -124,6 +124,22 @@ final class Apple_BLE_DecoderTests: XCTestCase {
         // Device
         XCTAssertEqual(entry.subEntries[1].value as? MicrosoftDissector.DeviceType ,MicrosoftDissector.DeviceType.iPhone)
     }
+    
+    func testDissectMicrosoftConnectedDevices2() {
+        let advertisement = "06 00 01 09 20 02 96 B3 66 95 13 1C 6B 9E 3D 25 19 3B FC FA A8 2A 0F 58 F2 57 DC D9 B2".hexadecimal!
+        
+        let dissected = ManufacturerDataDissector.dissect(data: advertisement)
+        
+        XCTAssertEqual(dissected.name, "Manufacturer Data")
+        XCTAssertEqual(dissected.byteRange.lowerBound, 0)
+        XCTAssertEqual(dissected.subEntries.count, 1)
+        XCTAssertEqual(dissected.subEntries[0].name, "Microsoft Connected Devices Platform")
+        let entry = dissected.subEntries[0]
+        //Version
+        XCTAssertEqual(entry.subEntries[0].data, "00".hexadecimal)
+        // Device
+        XCTAssertEqual(entry.subEntries[1].value as? MicrosoftDissector.DeviceType ,MicrosoftDissector.DeviceType.windowsDesktop)
+    }
 
     static var allTests = [
         ("testDecodeAirpods", testDecodeAirpods),

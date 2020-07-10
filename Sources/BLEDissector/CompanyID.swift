@@ -9,7 +9,7 @@
 import Foundation
 
 
-public enum BLEManufacturer: String, CaseIterable {
+public enum CompanyID: String, CaseIterable {
     case apple
     case unknown
     case samsung
@@ -42,7 +42,7 @@ public enum BLEManufacturer: String, CaseIterable {
         
     }
     
-    public static func fromCompanyId(_ companyID: Data) -> BLEManufacturer {
+    public static func fromCompanyId(_ companyID: Data) -> CompanyID {
         guard companyID.count == 2 else {return .unknown}
         
         switch Array(companyID) {

@@ -7,23 +7,6 @@
 
 import Foundation
 
-public struct ManufacturerDataDissector {
-    public static func dissect(data: Data) -> DissectedEntry {
-        var manufacturerData = DissectedEntry(name: "Manufacturer Data", value: data, data: data, byteRange: data.startIndex...data.endIndex, subEntries: [], explanatoryText: nil)
-        
-        
-        //Check if this is matches Apple's company id
-        
-        let companyId = data.subdata(in: data.startIndex..<data.startIndex+2)
-        if companyId == Data([0x4c, 00]) {
-            let appleAdvertisement = data[(data.startIndex+2)...]
-            let entries = AppleMDataDissector.dissect(data: appleAdvertisement)
-            manufacturerData.subEntries.append(contentsOf: entries)
-        }
-        
-        return manufacturerData
-    }
-}
 
 struct AppleMDataDissector {
     static func dissect(data: Data) -> [DissectedEntry] {

@@ -7,46 +7,29 @@
 
 import Foundation
 
-//TODO: Move dissectiing to this class:
+public protocol DataDissector {
+    static func dissect(data: Data) -> [DissectedEntry]
+}
 
-//public struct ManufacturerDataDissectors {
-//
-//    /// Dissect the manufacturer data
-//    /// - Parameter data: manufacturer data
-//    /// - Returns: Dissected entries with optional sub entries
-//    public static func dissect(data: Data) -> DissectedEntry {
-//        //Parse the manufacturer at first
-//        let companyRange = data.startIndex..<data.startIndex+2
-//        let companyID = data.subdata(in: companyRange)
-//        let manufacturer = BLEManufacturer.fromCompanyId(companyID)
-//
-//        let bleData = data.subdata(in: 2..<data.endIndex)
-//
-//        var dissectedEntry = DissectedEntry(name: "Manufacturer", value: manufacturer, data: companyID, byteRange: 0..<2, subEntries: [])
-//
-//        switch manufacturer {
-//        case .apple:
-//            // Apple dissectors are available
-//            self.decodeAppleManufacturerData(bleData)
-//
-//        default:
-//            break
-//        }
-//    }
-//
-////    static func decodeAppleManufacturerData(_ bleData: Data) -> DissectedEntry {
-////        // Apple uses TLVs for many advertisements, but not for all of them.
-////
-////        let advType = bleData[0]
-////        let lengthByte = bleData[1]
-////
-////        do {
-////            let decoder = AppleBLEDecoding.decoder(forType: advType)
-////
-////        }catch {
-////
-////        }
-////
-////
-////    }
-//}
+public struct ManufacturerDataDissector {
+    public static func dissect(data: Data) -> DissectedEntry {
+        var manufacturerData = DissectedEntry(name: "Manufacturer Data", value: data, data: data, byteRange: data.startIndex...data.endIndex, subEntries: [], explanatoryText: nil)
+        
+        
+        //Check if this is matches Apple's company id
+        
+        let companyIdData = data.subdata(in: data.startIndex..<data.startIndex+2)
+        let companyID = CompanyID.fromCompanyId(companyIdData)
+        if companyID == .apple {
+            let appleAdvertisement = data[(data.startIndex+2)...]
+            let entries = AppleMDataDissector.dissect(data: appleAdvertisement)
+            manufacturerData.subEntries.append(contentsOf: entries)
+        }else if companyID == .microsoft {
+            let advertisement = data[(data.startIndex+2)...]
+            let entries = MicrosoftDissector.dissect(data: advertisement)
+            manufacturerData.subEntries.append(contentsOf: entries)
+        }
+        
+        return manufacturerData
+    }
+}

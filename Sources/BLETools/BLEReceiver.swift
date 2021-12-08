@@ -243,7 +243,11 @@ extension BLEReceiver: CBPeripheralDelegate {
             return
         }
         
-        self.delegate?.didUpdateCharacteristics(characteristics: [BLECharacteristic(with: characteristic)],forService: BLEService(with: characteristic.service), andDevice: peripheral.identifier.uuidString)
+        guard let service = characteristic.service else {
+            return
+        }
+        
+        self.delegate?.didUpdateCharacteristics(characteristics: [BLECharacteristic(with: characteristic)],forService: BLEService(with: service), andDevice: peripheral.identifier.uuidString)
     }
 
 }
